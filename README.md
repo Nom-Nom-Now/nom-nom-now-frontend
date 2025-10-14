@@ -1,7 +1,11 @@
-# Num Num Now
+# Nom Nom Now
+
+---
 
 A weekly meal planner that automatically generates a meal plan based on categories (e.g., vegan, Asian, etc.) selected by the user. From the chosen recipes, a shopping list can be created.
 ## Tech Stack
+
+---
 
 ### Tools
 
@@ -21,7 +25,7 @@ A weekly meal planner that automatically generates a meal plan based on categori
 - Postgres
 - Docker
 
-## Developer Guide
+---
 
 # Getting Started
 
@@ -30,6 +34,8 @@ A weekly meal planner that automatically generates a meal plan based on categori
 npm install
 npm run dev
 ```
+
+---
 
 # Branch Naming Convention
 To keep our Git repository organized and readable, we follow a structured branch naming convention inspired by common industry practices. Each branch name starts with a type prefix followed by a short, descriptive name:
@@ -42,5 +48,7 @@ To keep our Git repository organized and readable, we follow a structured branch
 | `chore/`    | Maintenance tasks (e.g., dependency updates, cleanup) |
 | `refactor/` | Code changes that do not affect behavior              |
 | `test/`     | Adding or modifying tests                             |
+
+
 
 
