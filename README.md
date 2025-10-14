@@ -1,5 +1,46 @@
-# Vue 3 + TypeScript + Vite
+# Num Num Now
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A weekly meal planner that automatically generates a meal plan based on categories (e.g., vegan, Asian, etc.) selected by the user. From the chosen recipes, a shopping list can be created.
+## Tech Stack
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+### Tools
+
+- GitHub
+- IntelliJ (preferably)
+- Jira (Scrum Board)
+- Google Docs (Notes)
+- Discord (Communication)
+
+### Frontend
+- Vue.js
+- Vite
+- TypeScript
+
+### Backend
+- Java mit Spring Boot
+- Postgres
+- Docker
+
+## Developer Guide
+
+# Getting Started
+
+```bash
+# Setup Frontend
+npm install
+npm run dev
+```
+
+# Branch Naming Convention
+To keep our Git repository organized and readable, we follow a structured branch naming convention inspired by common industry practices. Each branch name starts with a type prefix followed by a short, descriptive name:
+
+| Prefix      | Purpose                                               |
+|-------------|-------------------------------------------------------|
+| `feat/`     | New features or major changes                         |
+| `fix/`      | Bug fixes                                             |
+| `docs/`     | Documentation updates                                 |
+| `chore/`    | Maintenance tasks (e.g., dependency updates, cleanup) |
+| `refactor/` | Code changes that do not affect behavior              |
+| `test/`     | Adding or modifying tests                             |
+
+
