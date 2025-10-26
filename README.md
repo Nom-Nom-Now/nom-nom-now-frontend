@@ -1,5 +1,49 @@
 # Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Conventions
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+To keep the repository clean and consistent, we follow clear conventions for branches, commits, and structure.
+
+### Branch Naming
+Each branch name starts with a type prefix, followed by the Jira issue ID and a short, descriptive name in kebab-case.
+
+**Format:**
+`<type>/<issue-id>-<short-description>`
+
+**Examples:**
+`feat/NNN-42-add-login-page`  
+`fix/NNN-17-resolve-null-pointer`  
+`docs/NNN-36-update-readme`
+
+| Prefix | Purpose |
+|--------|----------|
+| feat/ | New feature |
+| fix/ | Bug fix |
+| docs/ | Documentation |
+| chore/ | Maintenance or cleanup |
+| refactor/ | Code restructure |
+| test/ | Tests |
+| ci/ | CI/CD changes |
+
+### Commit Messages
+Commit messages describe what and why a change was made, in a consistent format.
+
+**Format:**
+`<type>(<scope>): <short summary>`
+
+**Example:**
+`feat(auth): add token refresh endpoint`
+
+Rules:
+- Use imperative tone (“add”, “fix”, “update”)  
+- Keep under 80 characters  
+- Reference Jira issue ID when applicable  
+
+### Repository Structure
+A clear layout helps everyone find things quickly.
+
+```text
+src/        # Application code
+docs/       # Documentation
+config/     # Configuration files
+scripts/    # Helper or deployment scripts
