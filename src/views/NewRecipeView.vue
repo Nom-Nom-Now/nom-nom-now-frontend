@@ -11,11 +11,19 @@ import {
 
 const router = useRouter();
 
-const categories = ref<Category[]>([
-  { id: 'pizza-italien', label: 'Pizza, Italien' },
-  { id: 'pasta-italien', label: 'Pasta, Italien' },
-  { id: 'dessert-frankreich', label: 'Dessert, Frankreich' },
-]);
+const categories = ref<Category[]>([]);
+
+const unitOptions = [
+  { label: 'Gramm (g)', value: 'GRAM' },
+  { label: 'Kilogramm (kg)', value: 'KILOGRAM' },
+  { label: 'Milliliter (ml)', value: 'MILLILITER' },
+  { label: 'Liter (l)', value: 'LITER' },
+  { label: 'Stück', value: 'PIECE' },
+  { label: 'Teelöffel', value: 'TEASPOON' },
+  { label: 'Esslöffel', value: 'TABLESPOON' },
+];
+
+const defaultUnit = unitOptions[0]?.value ?? 'GRAM';
 
 const recipeForm = reactive({
   name: '',
@@ -23,15 +31,15 @@ const recipeForm = reactive({
   expectedMinutes: '',
   instructions: '',
   ingredients: [
-    { name: '', amount: '', unit: 'g' },
-    { name: '', amount: '', unit: 'g' },
-    { name: '', amount: '', unit: 'g' },
+    { name: '', amount: '', unit: defaultUnit },
+    { name: '', amount: '', unit: defaultUnit },
+    { name: '', amount: '', unit: defaultUnit },
   ],
 });
 
 const categoryForm = reactive({
   name: '',
-  origin: '',
+  color: '',
 });
 
 const showCategoryCreator = ref(false);
@@ -47,8 +55,6 @@ const categoryFeedback = reactive({
 
 const hasIngredients = computed(() => recipeForm.ingredients.length > 0);
 
-const unitOptions = ['g', 'kg', 'ml', 'l', 'Stk'];
-
 function resetRecipeFeedback() {
   recipeFeedback.type = '';
   recipeFeedback.message = '';
@@ -60,7 +66,7 @@ function resetCategoryFeedback() {
 }
 
 function addIngredientRow() {
-  recipeForm.ingredients.push({ name: '', amount: '', unit: 'g' });
+  recipeForm.ingredients.push({ name: '', amount: '', unit: defaultUnit });
 }
 
 function removeIngredientRow(index: number) {
@@ -88,7 +94,7 @@ function validateRecipeInput() {
   }
   if (!recipeForm.categoryId) {
     recipeFeedback.type = 'error';
-    recipeFeedback.message = 'Bitte eine Kategorie auswählen.';
+    recipeFeedback.message = 'Bitte eine Kategorie auswählen oder erstellen.';
     return false;
   }
   if (recipeForm.expectedMinutes === '' || Number.isNaN(Number.parseInt(recipeForm.expectedMinutes, 10))) {
@@ -129,9 +135,9 @@ async function submitRecipe() {
     recipeForm.expectedMinutes = '';
     recipeForm.instructions = '';
     recipeForm.ingredients = [
-      { name: '', amount: '', unit: 'g' },
-      { name: '', amount: '', unit: 'g' },
-      { name: '', amount: '', unit: 'g' },
+      { name: '', amount: '', unit: defaultUnit },
+      { name: '', amount: '', unit: defaultUnit },
+      { name: '', amount: '', unit: defaultUnit },
     ];
   } catch (error) {
     recipeFeedback.type = 'error';
@@ -147,13 +153,13 @@ function openCategoryCreator() {
 function closeCategoryCreator() {
   showCategoryCreator.value = false;
   categoryForm.name = '';
-  categoryForm.origin = '';
+  categoryForm.color = '';
 }
 
 function validateCategoryInput(input: CategoryInput) {
-  if (input.name.trim().length === 0 || input.origin.trim().length === 0) {
+  if (input.name.trim().length === 0 || input.color.trim().length === 0) {
     categoryFeedback.type = 'error';
-    categoryFeedback.message = 'Bitte Kategorie und Herkunft angeben.';
+    categoryFeedback.message = 'Bitte Kategorie und Farbe angeben.';
     return false;
   }
   return true;
@@ -163,7 +169,7 @@ async function handleCategoryCreation() {
   resetCategoryFeedback();
   const payload = {
     name: categoryForm.name.trim(),
-    origin: categoryForm.origin.trim(),
+    color: categoryForm.color.trim(),
   };
   if (!validateCategoryInput(payload)) {
     return;
@@ -215,11 +221,11 @@ function goHome() {
             <div class="creator-fields">
               <div class="field">
                 <label for="category-name">Name</label>
-                <input id="category-name" v-model="categoryForm.name" type="text" placeholder="Pizza" />
+                <input id="category-name" v-model="categoryForm.name" type="text" placeholder="Dessert" />
               </div>
               <div class="field">
-                <label for="category-origin">Herkunft</label>
-                <input id="category-origin" v-model="categoryForm.origin" type="text" placeholder="Italien" />
+                <label for="category-color">Farbe</label>
+                <input id="category-color" v-model="categoryForm.color" type="text" placeholder="#ffb703" />
               </div>
             </div>
             <div class="creator-actions">
@@ -256,8 +262,8 @@ function goHome() {
                   class="component-amount"
                 />
                 <select v-model="ingredient.unit" class="component-unit">
-                  <option v-for="unit in unitOptions" :key="unit" :value="unit">
-                    {{ unit }}
+                  <option v-for="unit in unitOptions" :key="unit.value" :value="unit.value">
+                    {{ unit.label }}
                   </option>
                 </select>
                 <button
