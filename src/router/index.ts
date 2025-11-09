@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HelloWorld from '../components/HelloWorld.vue';
+import NewRecipeView from '../views/NewRecipeView.vue';
 
 const routes = [
-  { path: '/', component: HelloWorld, props: { msg: 'Vite + Vue' } },
+  { path: '/', component: NewRecipeView },
 ];
 
 const router = createRouter({
