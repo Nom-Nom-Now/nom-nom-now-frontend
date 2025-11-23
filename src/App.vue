@@ -1,20 +1,47 @@
-<script setup lang="ts"></script>
-
 <template>
-  <router-view />
+  <div class="app-layout">
+    <aside class="aside">
+      <NavigationFrame />
+    </aside>
+
+    <div class="main-section">
+      <header class="header">
+        <TitleFrame />
+      </header>
+
+      <main class="content-area">
+        <router-view />
+      </main>
+    </div>
+  </div>
 </template>
 
+<script setup lang="ts">
+import NavigationFrame from './components/Frame/NavigationFrame.vue';
+import TitleFrame from './components/Frame/TitleFrame.vue';
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.app-layout {
+  display: flex;
+  overflow: hidden;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+aside {
+  width: 5.5rem;
+  background-color: var(--md-sys-color-surface);
+  overflow-y: auto;
+  height: 100vh; /* Maybe hier bessere Lösung suchen als einfach die Komponente sehr groß zu machen */
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+
+  flex-grow: 1; /* Wenn in Main Section mehrere Fenster sind, das hier maybe nur auf Header packen */
+}
+
+.content-area {
+  padding: 1rem;
 }
 </style>

@@ -1,7 +1,14 @@
 :root {
   font-family: 'Roboto', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  /*
   line-height: 1.5;
   font-weight: 400;
+
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -11,8 +18,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+   */
 }
 
+/*
 a {
   font-weight: 500;
   color: #646cff;
@@ -78,6 +87,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+ */
 
 .light {
   --md-sys-color-primary: rgb(107 83 140);
@@ -99,7 +109,7 @@ button:focus-visible {
   --md-sys-color-on-error-container: rgb(147 0 10);
   --md-sys-color-background: rgb(255 247 255);
   --md-sys-color-on-background: rgb(29 26 32);
-  --md-sys-color-surface: rgb(255 247 255);
+  --md-sys-color-surface: rgb(254, 247, 255);
   --md-sys-color-on-surface: rgb(29 26 32);
   --md-sys-color-surface-variant: rgb(232 224 235);
   --md-sys-color-on-surface-variant: rgb(74 69 78);
