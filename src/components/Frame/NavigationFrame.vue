@@ -3,16 +3,16 @@
     <img class="logo" src="../../assets/Logo.png" />
     <ul>
       <li>
-        <a><NavigationItem text="Home" icon-name="home_24dp_1F1F1F" /></a>
+        <a><NavigationItem :text="t('navigation.home')" icon-name="home_24dp_1F1F1F" /></a>
       </li>
       <li>
-        <a><NavigationItem text="Plan" icon-name="calendar_meal_24dp_1F1F1F" /></a>
+        <a><NavigationItem :text="t('navigation.plan')" icon-name="calendar_meal_24dp_1F1F1F" /></a>
       </li>
       <li>
-        <a><NavigationItem text="Recipes" icon-name="chef_hat_24dp_1F1F1F" /></a>
+        <a><NavigationItem :text="t('navigation.recipes')" icon-name="chef_hat_24dp_1F1F1F" /></a>
       </li>
       <li>
-        <a><NavigationItem text="Browse" icon-name="wb_incandescent_24dp_1F1F1F" /></a>
+        <a><NavigationItem :text="t('navigation.browse')" icon-name="wb_incandescent_24dp_1F1F1F" /></a>
       </li>
     </ul>
   </nav>
@@ -20,6 +20,9 @@
 
 <script setup lang="ts">
 import NavigationItem from './NavigationItem.vue';
+
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 </script>
 
 <style scoped>
