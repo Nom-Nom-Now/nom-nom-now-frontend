@@ -1,0 +1,13 @@
+{
+  "navigation": {
+    "home": "Startseite",
+    "plan": "Plan",
+    "recipes": "Rezepte",
+    "browse": "Entdecken"
+  },
+  "feature": {
+    "mainPage": {
+      "helloWorld": "Hallo Welt"
+    }
+  }
+}

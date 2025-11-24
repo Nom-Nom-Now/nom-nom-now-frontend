@@ -1,0 +1,13 @@
+{
+  "navigation": {
+    "home": "Home",
+    "plan": "Plan",
+    "recipes": "Recipes",
+    "browse": "Browse"
+  },
+  "feature": {
+    "mainPage": {
+      "helloWorld": "Hello World"
+    }
+  }
+}
