@@ -7,6 +7,7 @@
     <div class="main-section">
       <header class="header">
         <TitleFrame />
+        <CornerRadius />
       </header>
 
       <main class="content-area">
@@ -19,6 +20,7 @@
 <script setup lang="ts">
 import NavigationFrame from './components/Frame/NavigationFrame.vue';
 import TitleFrame from './components/Frame/TitleFrame.vue';
+import CornerRadius from './components/Frame/CornerRadius.vue';
 </script>
 
 <style scoped>
@@ -42,6 +44,6 @@ aside {
 }
 
 .content-area {
-  padding: 1rem;
+  padding: 0rem 1rem 1rem 1rem;
 }
 </style>
