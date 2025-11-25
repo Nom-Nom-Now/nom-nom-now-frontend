@@ -2,17 +2,24 @@
   <div>
     <md-tabs>
       <md-primary-tab>
-        <span class="tab-title"> {{ t('feature.mainPage.helloWorld') }} </span>
-        <!-- TODO: Tab Title so anpassen, dass aktuelle Seite mitgegeben wird -->
+        <span class="tab-title"> {{ pageTitle }} </span>
       </md-primary-tab>
     </md-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+
+const route = useRoute();
 const { t } = useI18n();
-</script>
+
+const pageTitle = computed(() => {
+  const key = route.meta.titleKey as string | undefined;
+  return key ? t(key) : 'Nom Nom Now';
+});</script>
 
 <style scoped>
 div {

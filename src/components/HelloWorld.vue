@@ -11,7 +11,6 @@ const count = ref(0);
     <md-tabs>
       <md-primary-tab>{{ msg }}</md-primary-tab>
     </md-tabs>
-    <h1></h1>
 
     <div class="card">
       <md-filled-button type="button" @click="count++">count is {{ count }}</md-filled-button>

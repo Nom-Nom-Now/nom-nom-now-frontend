@@ -7,7 +7,11 @@
   },
   "feature": {
     "mainPage": {
+      "title": "Mainpage",
       "helloWorld": "Hello World"
+    },
+    "createRecipe": {
+      "title": "Create Recipe"
     }
   }
 }
