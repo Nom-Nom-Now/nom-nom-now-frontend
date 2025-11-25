@@ -3,7 +3,6 @@
     <md-tabs>
       <md-primary-tab>
         <span class="tab-title"> {{ pageTitle }} </span>
-        <!-- TODO: Tab Title so anpassen, dass aktuelle Seite mitgegeben wird -->
       </md-primary-tab>
     </md-tabs>
   </div>
@@ -11,11 +10,16 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
 const route = useRoute();
-const pageTitle = computed(() => (route.meta.title as string) ?? 'Nom Nom Now');
-</script>
+const { t } = useI18n();
+
+const pageTitle = computed(() => {
+  const key = route.meta.titleKey as string | undefined;
+  return key ? t(key) : 'Nom Nom Now';
+});</script>
 
 <style scoped>
 div {
