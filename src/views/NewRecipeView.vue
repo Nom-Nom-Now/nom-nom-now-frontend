@@ -193,7 +193,6 @@ function goHome() {
 </script>
 
 <template>
-  <div class="page">
     <div class="layout">
       <header class="page-header">
         <div class="brand">NomNomNow</div>
@@ -300,37 +299,26 @@ function goHome() {
       </main>
       <footer class="page-footer">Impressum</footer>
     </div>
-  </div>
 </template>
 
 <style scoped>
-.page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #4fb7b3 0%, #40a49d 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 16px;
-  box-sizing: border-box;
-}
 
 .layout {
   width: 100%;
-  max-width: 1100px;
-  background-color: #ffffff;
+  max-width: max-content;
   border-radius: 20px;
-  padding: 32px 40px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  background-color: var(--md-sys-color-surface);
 }
 
 .page-header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  color: #1c6c68;
+  color: var(--md-sys-color-on-surface-variant);
   font-weight: 600;
 }
 
