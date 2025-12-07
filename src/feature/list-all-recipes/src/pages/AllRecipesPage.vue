@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref } from 'vue';
 import type { RecipeList } from '../types/types.ts';
-import RecipeObject from '../Components/RecipeObject.vue';
+import RecipeObject from '../components/RecipeObject.vue';
 
 const baseUrl = 'http://localhost:8080/';
 const recipeList = ref<RecipeList>([]);
