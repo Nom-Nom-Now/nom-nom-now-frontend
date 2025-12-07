@@ -3,6 +3,8 @@ import HelloWorld from '../components/HelloWorld.vue';
 import CreateRecipeView from '../feature/create-recipe/src/pages/CreateRecipeView.vue';
 import NewRecipeView from '../views/NewRecipeView.vue';
 
+//import HelloWorld from '../components/HelloWorld.vue';
+import AllRecipesPage from '../components/feature/recipe/src/Pages/AllRecipesPage.vue';
 const routes = [
   { path: '/', component: HelloWorld, meta: { titleKey: 'feature.mainPage.title' } },
   { path: '/create', component: NewRecipeView, meta: { titleKey: 'feature.createRecipe.title' } }
