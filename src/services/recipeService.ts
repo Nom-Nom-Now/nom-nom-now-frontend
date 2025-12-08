@@ -117,7 +117,7 @@ async function postJson<TRequest, TResponse>(path: string, body: TRequest): Prom
 export async function createRecipe(input: RecipeInput): Promise<RecipeCreationResult> {
   const normalizedRecipe = normalizeRecipe(input);
   const payload = mapRecipeToPayload(normalizedRecipe);
-  const recipe = await postJson<CreateRecipePayload, CreateRecipeResponse>('/recipe', payload);
+  const recipe = await postJson<CreateRecipePayload, CreateRecipeResponse>('/recipes', payload);
   if (!recipe?.id && recipe?.id !== 0) {
     throw new Error('Recipe id missing in response');
   }
@@ -126,7 +126,7 @@ export async function createRecipe(input: RecipeInput): Promise<RecipeCreationRe
 
 export async function createCategory(input: CategoryInput): Promise<CategoryCreationResult> {
   const normalizedCategory = normalizeCategoryInput(input);
-  const category = await postJson<CategoryInput, CreateCategoryResponse>('/category', normalizedCategory);
+  const category = await postJson<CategoryInput, CreateCategoryResponse>('/categories', normalizedCategory);
   if (!category?.id && category?.id !== 0) {
     throw new Error('Category id missing in response');
   }
