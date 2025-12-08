@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import './style.css';
+import './material.ts';
 import App from './App.vue';
 import router from './router';
 import i18n from './locales';

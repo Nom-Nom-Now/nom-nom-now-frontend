@@ -2,17 +2,10 @@
   <nav class="nav-bar">
     <img class="logo" src="../../assets/Logo.png" />
     <ul>
-      <li>
-        <a><NavigationItem :text="t('navigation.home')" icon-name="home_24dp_1F1F1F" /></a>
-      </li>
-      <li>
-        <a><NavigationItem :text="t('navigation.plan')" icon-name="calendar_meal_24dp_1F1F1F" /></a>
-      </li>
-      <li>
-        <a><NavigationItem :text="t('navigation.recipes')" icon-name="chef_hat_24dp_1F1F1F" /></a>
-      </li>
-      <li>
-        <a><NavigationItem :text="t('navigation.browse')" icon-name="wb_incandescent_24dp_1F1F1F" /></a>
+      <li v-for="item in navigationItems" :key="item.textKey">
+        <RouterLink :to="item.to" class="nav-link" active-class="active-link">
+          <NavigationItem :text="t(item.textKey)" :icon-name="item.iconName" />
+        </RouterLink>
       </li>
     </ul>
   </nav>
@@ -23,6 +16,13 @@ import NavigationItem from './NavigationItem.vue';
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
+
+const navigationItems = [
+  { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/' },
+  { textKey: 'navigation.plan', iconName: 'calendar_meal_24dp_1F1F1F', to: '/create' },
+  { textKey: 'navigation.recipes', iconName: 'chef_hat_24dp_1F1F1F', to: '/listall' },
+  { textKey: 'navigation.browse', iconName: 'wb_incandescent_24dp_1F1F1F', to: '/listall' },
+];
 </script>
 
 <style scoped>
@@ -43,10 +43,14 @@ ul li {
   padding-top: 2rem;
 }
 
-li a {
+.nav-link {
   display: block;
   color: var(--md-sys-color-secondary);
   text-decoration: none;
+}
+
+.active-link {
+  color: var(--md-sys-color-primary);
 }
 
 .logo {

@@ -12,6 +12,9 @@
     },
     "createRecipe": {
       "title": "Rezept erstellen"
+    },
+    "listAllRecipes": {
+      "title": "Rezepte"
     }
   }
 }
