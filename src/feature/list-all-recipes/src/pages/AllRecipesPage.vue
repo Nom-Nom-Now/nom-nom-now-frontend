@@ -53,7 +53,6 @@ const filteredRecipes = computed(() => {
 
 <style scoped>
 .recipe-page-container {
-  background: #ffffff;
   border-radius: 1rem;
   padding: 1rem;
   display: flex;
