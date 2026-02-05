@@ -10,6 +10,13 @@
       "title": "Mainpage",
       "helloWorld": "Hello World"
     },
+    "stepNavigation": {
+      "ingredients": "Ingredients",
+      "preparation": "Preparation",
+      "categories": "Categories",
+      "image": "Image",
+      "preview": "Preview"
+    },
     "createRecipe": {
       "title": "Create Recipe"
     },

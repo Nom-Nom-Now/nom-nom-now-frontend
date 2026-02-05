@@ -11,6 +11,13 @@
       "helloWorld": "Hallo Welt"
     },
     "createRecipe": {
+      "stepNavigation": {
+        "ingredients": "Zutaten",
+        "preparation": "Zubereitung",
+        "categories": "Kategorien",
+        "image": "Foto",
+        "preview": "Vorschau"
+      },
       "title": "Rezept erstellen"
     },
     "listAllRecipes": {

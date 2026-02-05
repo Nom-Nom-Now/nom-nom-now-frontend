@@ -11,7 +11,9 @@
       </header>
 
       <main class="content-area">
-        <router-view />
+        <div class="content-box">
+          <router-view />
+        </div>
       </main>
     </div>
   </div>
@@ -27,6 +29,7 @@ import CornerRadius from './components/Frame/CornerRadius.vue';
 .app-layout {
   display: flex;
   overflow: hidden;
+  height: 100%;
 }
 
 aside {
@@ -45,5 +48,16 @@ aside {
 
 .content-area {
   padding: 0rem 1rem 1rem 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-box {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  background-color: var(--md-sys-color-surface);
 }
 </style>
