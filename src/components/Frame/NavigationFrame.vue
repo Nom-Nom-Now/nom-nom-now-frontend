@@ -49,8 +49,12 @@ ul li {
   text-decoration: none;
 }
 
-.active-link {
-  color: var(--md-sys-color-primary);
+.nav-link:not(.active-link):hover :deep(.icon-badge) {
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.active-link :deep(.icon-badge) {
+  background-color: var(--md-sys-color-secondary-container);
 }
 
 .logo {

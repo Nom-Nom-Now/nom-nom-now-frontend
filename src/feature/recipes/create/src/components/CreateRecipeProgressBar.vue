@@ -31,7 +31,6 @@
         Preview Placeholder
       </div>
     </div>
-
   </div>
 </template>
 

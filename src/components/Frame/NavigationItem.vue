@@ -1,6 +1,8 @@
 <template>
   <div class="item-container">
-    <img :src="iconSrc" />
+    <div class="icon-badge">
+      <img :src="iconSrc" class="icon" draggable="false" />
+    </div>
     {{ navItemProps.text }}
   </div>
 </template>
@@ -21,5 +23,22 @@ const iconSrc = new URL(`/src/assets/icons/navigation/${navItemProps.iconName}.s
   align-items: center;
   height: 3.1875rem;
   gap: 0.25rem;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.icon-badge {
+  display: flex;
+  width: 3.5rem;
+  height: 2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+}
+
+.icon {
+  height: 24px;
+  width: 24px;
 }
 </style>
