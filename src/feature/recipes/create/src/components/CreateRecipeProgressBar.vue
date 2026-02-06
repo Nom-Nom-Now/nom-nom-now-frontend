@@ -42,11 +42,11 @@ import { ref } from 'vue';
 const { t } = useI18n();
 
 const stepNavigationItems = [
-  { step: 'ingredients', label: 'feature.createRecipe.stepNavigation.ingredients', iconName: 'counter_1_20dp_4A4459' },
-  { step: 'preparation', label: 'feature.createRecipe.stepNavigation.preparation', iconName: 'counter_2_20dp_4A4459' },
-  { step: 'categories', label: 'feature.createRecipe.stepNavigation.categories', iconName: 'counter_3_20dp_4A4459' },
-  { step: 'image', label: 'feature.createRecipe.stepNavigation.image', iconName: 'counter_4_20dp_4A4459' },
-  { step: 'preview', label: 'feature.createRecipe.stepNavigation.preview', iconName: 'counter_5_20dp_4A4459' }
+  { step: 'ingredients', label: 'feature.recipes.createRecipe.stepNavigation.ingredients', iconName: 'counter_1_20dp_4A4459' },
+  { step: 'preparation', label: 'feature.recipes.createRecipe.stepNavigation.preparation', iconName: 'counter_2_20dp_4A4459' },
+  { step: 'categories', label: 'feature.recipes.createRecipe.stepNavigation.categories', iconName: 'counter_3_20dp_4A4459' },
+  { step: 'image', label: 'feature.recipes.createRecipe.stepNavigation.image', iconName: 'counter_4_20dp_4A4459' },
+  { step: 'preview', label: 'feature.recipes.createRecipe.stepNavigation.preview', iconName: 'counter_5_20dp_4A4459' }
 ]
 
 const activeStep = ref('ingredients');

@@ -6,20 +6,31 @@
     "browse": "Browse"
   },
   "feature": {
+    "browse": {
+      "title": "Browse"
+    },
     "mainPage": {
       "title": "Mainpage",
       "helloWorld": "Hello World"
     },
-    "stepNavigation": {
-      "ingredients": "Ingredients",
-      "preparation": "Preparation",
-      "categories": "Categories",
-      "image": "Image",
-      "preview": "Preview"
+    "plan": {
+      "title": "Plan"
     },
-    "createRecipe": {
-      "title": "Create Recipe"
+    "recipes": {
+      "title": "Recipes",
+      "createRecipe": {
+        "title": "Create Recipe",
+        "stepNavigation": {
+          "ingredients": "Ingredients",
+          "preparation": "Preparation",
+          "categories": "Categories",
+          "image": "Image",
+          "preview": "Preview"
+        }
+      }
     },
+
+
     "listAllRecipes": {
       "title": "Recipes"
     }

@@ -19,9 +19,9 @@ const { t } = useI18n();
 
 const navigationItems = [
   { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/' },
-  { textKey: 'navigation.plan', iconName: 'calendar_meal_24dp_1F1F1F', to: '/create' },
-  { textKey: 'navigation.recipes', iconName: 'chef_hat_24dp_1F1F1F', to: '/listall' },
-  { textKey: 'navigation.browse', iconName: 'wb_incandescent_24dp_1F1F1F', to: '/listall' },
+  { textKey: 'navigation.plan', iconName: 'calendar_meal_24dp_1F1F1F', to: '/plan' },
+  { textKey: 'navigation.recipes', iconName: 'chef_hat_24dp_1F1F1F', to: '/recipes' },
+  { textKey: 'navigation.browse', iconName: 'wb_incandescent_24dp_1F1F1F', to: '/browse' },
 ];
 </script>
 
