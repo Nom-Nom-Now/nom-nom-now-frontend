@@ -6,20 +6,31 @@
     "browse": "Entdecken"
   },
   "feature": {
+    "browse": {
+      "title": "Entdecken"
+    },
     "mainPage": {
       "title": "Startseite",
       "helloWorld": "Hallo Welt"
     },
-    "createRecipe": {
-      "stepNavigation": {
-        "ingredients": "Zutaten",
-        "preparation": "Zubereitung",
-        "categories": "Kategorien",
-        "image": "Foto",
-        "preview": "Vorschau"
-      },
-      "title": "Rezept erstellen"
+    "plan": {
+      "title": "Plan"
     },
+    "recipes": {
+      "title": "Rezepte",
+      "createRecipe": {
+        "title": "Rezept erstellen",
+        "stepNavigation": {
+          "ingredients": "Zutaten",
+          "preparation": "Zubereitung",
+          "categories": "Kategorien",
+          "image": "Foto",
+          "preview": "Vorschau"
+        }
+      }
+    },
+
+
     "listAllRecipes": {
       "title": "Rezepte"
     }
