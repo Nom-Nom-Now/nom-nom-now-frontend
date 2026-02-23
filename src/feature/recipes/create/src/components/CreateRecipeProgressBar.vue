@@ -12,7 +12,7 @@
 
     <div class="createBox">
       <div class="ingredientBox" v-if="activeStep.valueOf() === 'ingredients'">
-        Ingredients Placeholder
+        <IngredientsFrame />
       </div>
 
       <div class="preparationBox" v-if="activeStep.valueOf() === 'preparation'">
@@ -39,6 +39,7 @@ import StepNavigationButton from '../../../../../components/StepNavigationButton
 
 import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
+import IngredientsFrame from "./ingredients/IngredientsFrame.vue";
 const { t } = useI18n();
 
 const stepNavigationItems = [
@@ -72,6 +73,6 @@ const setActiveStep = (step: string) => {
 }
 
   .createBox {
-    margin: 1rem;
+    margin-top: 1rem;
   }
 </style>

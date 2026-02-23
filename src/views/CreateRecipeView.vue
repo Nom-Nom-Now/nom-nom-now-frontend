@@ -1,6 +1,6 @@
 <template>
   <div class="viewContainer">
-    <CreateRecipeProgressBar />
+    <CreateRecipeProgressBar  />
   </div>
 
 </template>
