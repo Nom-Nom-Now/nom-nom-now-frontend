@@ -26,6 +26,16 @@
           "categories": "Categories",
           "image": "Image",
           "preview": "Preview"
+        },
+        "ingredients": {
+          "name": "Name",
+          "nameExample": "e.g. Hawaiian Pizza",
+          "servings": "Servings",
+          "servingsText": "The recipe is for {{servingChooser}} people",
+          "chooserHeading": "Ingredients and quantities",
+          "amount": "Amount",
+          "unit": "Unit",
+          "ingredient": "Ingredient"
         }
       }
     },
