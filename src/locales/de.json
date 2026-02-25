@@ -31,7 +31,7 @@
           "name": "Name",
           "nameExample": "z.B. Pizza Hawaii",
           "servings": "Portionen",
-          "servingsText": "Das Rezept ist für {{servingChooser}} Personen",
+          "servingsText": "Das Rezept ist für {servingChooser} Personen",
           "chooserHeading": "Zutaten und Mengenangaben",
           "amount": "Menge",
           "unit": "Einheit",
