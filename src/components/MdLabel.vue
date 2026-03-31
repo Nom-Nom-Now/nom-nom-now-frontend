@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import { computed } from 'vue';
 
-const props = withDefaults(defineProps<{
-  size?: 'small' | 'medium' | 'large';
-}>(), {
-  size: 'medium'
-});
+const props = withDefaults(
+  defineProps<{
+    size?: 'small' | 'medium' | 'large';
+  }>(),
+  {
+    size: 'medium',
+  },
+);
 
 const labelSpan = computed(() => {
   return `md-label-${props.size}`;

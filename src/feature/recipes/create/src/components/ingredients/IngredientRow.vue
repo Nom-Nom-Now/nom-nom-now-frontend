@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import swapIcon from '../../../../../../assets/icons/swap_vert_24dp_4A4459.svg'
+
 const unitOptions = [
   { label: 'g', value: 'GRAM' },
   { label: 'kg', value: 'KILOGRAM' },
@@ -7,7 +9,12 @@ const unitOptions = [
   { label: 'Stück', value: 'PIECE' },
   { label: 'TL', value: 'TEASPOON' },
   { label: 'EL', value: 'TABLESPOON' },
-]
+];
+
+const emit = defineEmits<{
+  moveUp: [];
+  moveDown: [];
+}>();
 </script>
 
 <template>
@@ -15,7 +22,11 @@ const unitOptions = [
     <md-outlined-text-field label="Amount"></md-outlined-text-field>
     <div class="select-wrapper">
       <select class="select">
-        <option v-for="unit in unitOptions" :key="unit.value" :value="unit.value">
+        <option
+          v-for="unit in unitOptions"
+          :key="unit.value"
+          :value="unit.value"
+        >
           {{ unit.label }}
         </option>
       </select>
@@ -25,6 +36,14 @@ const unitOptions = [
       </svg>
     </div>
     <md-outlined-text-field label="Ingredient"></md-outlined-text-field>
+    <div class="swap-buttons">
+      <button class="swap-btn" @click="emit('moveUp')" title="Move up">
+        <img :src="swapIcon" alt="swap" class="swap-icon swap-icon--up" />
+      </button>
+      <button class="swap-btn" @click="emit('moveDown')" title="Move down">
+        <img :src="swapIcon" alt="swap" class="swap-icon swap-icon--down" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -52,21 +71,29 @@ const unitOptions = [
   border-radius: 4px;
   background: transparent;
   color: var(--md-sys-color-on-surface);
-  font: var(--md-sys-typescale-body-large-weight) var(--md-sys-typescale-body-large-size) var(--md-sys-typescale-body-large-font);
+  font: var(--md-sys-typescale-body-large-weight)
+    var(--md-sys-typescale-body-large-size)
+    var(--md-sys-typescale-body-large-font);
   cursor: pointer;
   outline: none;
   appearance: none;
 }
 
-.select:hover { border-color: var(--md-sys-color-on-surface); }
+.select:hover {
+  border-color: var(--md-sys-color-on-surface);
+}
 
 .select:focus {
   border: 2px solid var(--md-sys-color-primary);
   padding-left: 15px;
 }
 
-.select:focus + .select-label { color: var(--md-sys-color-primary); }
-.select:focus ~ .select-arrow { fill: var(--md-sys-color-primary); }
+.select:focus + .select-label {
+  color: var(--md-sys-color-primary);
+}
+.select:focus ~ .select-arrow {
+  fill: var(--md-sys-color-primary);
+}
 
 .select-label {
   position: absolute;
@@ -87,5 +114,44 @@ const unitOptions = [
   height: 20px;
   fill: var(--md-sys-color-on-surface-variant);
   pointer-events: none;
+}
+
+.swap-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.swap-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  transition: background 0.15s;
+}
+
+.swap-btn:hover {
+  background: var(--md-sys-color-surface-variant);
+}
+
+.swap-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.swap-icon--up {
+  transform: rotate(180deg) scaleY(-1);
+  /* zeigt nur den Pfeil nach oben */
+  clip-path: inset(0 0 50% 0);
+}
+
+.swap-icon--down {
+  clip-path: inset(50% 0 0 0);
 }
 </style>

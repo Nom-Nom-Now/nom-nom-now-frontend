@@ -1,12 +1,10 @@
 <template>
   <div class="viewContainer">
-    <CreateRecipeProgressBar  />
+    <CreateRecipeProgressBar />
   </div>
-
 </template>
 
 <script setup lang="ts">
-
 import CreateRecipeProgressBar from '../feature/recipes/create/src/components/CreateRecipeProgressBar.vue';
 </script>
 

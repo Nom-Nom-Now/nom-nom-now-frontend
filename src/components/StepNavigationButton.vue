@@ -1,10 +1,8 @@
 <template>
   <div class="buttonContainer" :class="{ active: progressBarProps.active }">
     <img :src="iconSrc" class="indexIcon" />
-    {{progressBarProps.label}}
+    {{ progressBarProps.label }}
   </div>
-
-
 </template>
 
 <script setup lang="ts">
@@ -14,7 +12,10 @@ const progressBarProps = defineProps<{
   active: boolean;
 }>();
 
-const iconSrc = new URL(`/src/assets/icons/createRecipeProgress/${progressBarProps.iconName}.svg`, import.meta.url).href;
+const iconSrc = new URL(
+  `/src/assets/icons/createRecipeProgress/${progressBarProps.iconName}.svg`,
+  import.meta.url,
+).href;
 </script>
 
 <style scoped>

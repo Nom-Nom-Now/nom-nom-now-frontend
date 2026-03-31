@@ -1,11 +1,12 @@
 :root {
   font-family: 'Roboto', system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  html, body, #app {
+  html,
+  body,
+  #app {
     height: 100%;
     margin: 0;
     padding: 0;
-
   }
 
   body {

@@ -1,12 +1,13 @@
 <template>
   <div class="contentBox">
-    <div class="progressBox" >
+    <div class="progressBox">
       <div v-for="item in stepNavigationItems" :key="item.label">
         <StepNavigationButton
           :label="t(item.label)"
           :icon-name="item.iconName"
           :active="activeStep === item.step"
-          @click="setActiveStep(item.step)"/>
+          @click="setActiveStep(item.step)"
+        />
       </div>
     </div>
 
@@ -39,16 +40,36 @@ import StepNavigationButton from '../../../../../components/StepNavigationButton
 
 import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
-import IngredientsFrame from "./ingredients/IngredientsFrame.vue";
+import IngredientsFrame from './ingredients/IngredientsFrame.vue';
 const { t } = useI18n();
 
 const stepNavigationItems = [
-  { step: 'ingredients', label: 'feature.recipes.createRecipe.stepNavigation.ingredients', iconName: 'counter_1_20dp_4A4459' },
-  { step: 'preparation', label: 'feature.recipes.createRecipe.stepNavigation.preparation', iconName: 'counter_2_20dp_4A4459' },
-  { step: 'categories', label: 'feature.recipes.createRecipe.stepNavigation.categories', iconName: 'counter_3_20dp_4A4459' },
-  { step: 'image', label: 'feature.recipes.createRecipe.stepNavigation.image', iconName: 'counter_4_20dp_4A4459' },
-  { step: 'preview', label: 'feature.recipes.createRecipe.stepNavigation.preview', iconName: 'counter_5_20dp_4A4459' }
-]
+  {
+    step: 'ingredients',
+    label: 'feature.recipes.createRecipe.stepNavigation.ingredients',
+    iconName: 'counter_1_20dp_4A4459',
+  },
+  {
+    step: 'preparation',
+    label: 'feature.recipes.createRecipe.stepNavigation.preparation',
+    iconName: 'counter_2_20dp_4A4459',
+  },
+  {
+    step: 'categories',
+    label: 'feature.recipes.createRecipe.stepNavigation.categories',
+    iconName: 'counter_3_20dp_4A4459',
+  },
+  {
+    step: 'image',
+    label: 'feature.recipes.createRecipe.stepNavigation.image',
+    iconName: 'counter_4_20dp_4A4459',
+  },
+  {
+    step: 'preview',
+    label: 'feature.recipes.createRecipe.stepNavigation.preview',
+    iconName: 'counter_5_20dp_4A4459',
+  },
+];
 
 const activeStep = ref('ingredients');
 const setActiveStep = (step: string) => {
@@ -72,7 +93,7 @@ const setActiveStep = (step: string) => {
   background-color: var(--md-sys-color-surface-container);
 }
 
-  .createBox {
-    margin-top: 1rem;
-  }
+.createBox {
+  margin-top: 1rem;
+}
 </style>
