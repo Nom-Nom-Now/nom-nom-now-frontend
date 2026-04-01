@@ -3,7 +3,7 @@ import {computed, onMounted, ref } from 'vue';
 import type { RecipeList } from '../types/types.ts';
 import RecipeObject from '../components/RecipeObject.vue';
 
-const baseUrl = 'http://localhost:8080/';
+const baseUrl = ((import.meta.env.VITE_API_BASE_URL as string) || '') + '/';
 const recipeList = ref<RecipeList>([]);
 const searchQuery = ref('');
 

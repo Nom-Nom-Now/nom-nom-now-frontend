@@ -1,0 +1,11 @@
+services:
+  frontend:
+    image: ghcr.io/nom-nom-now/nom-nom-now-frontend:latest
+    container_name: nomnomnow-frontend
+    restart: unless-stopped
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
