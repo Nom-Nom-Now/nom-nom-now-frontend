@@ -3,9 +3,9 @@
     <div class="login-card">
       <h1>{{ t('feature.login.headline') }}</h1>
       <p>{{ t('feature.login.description') }}</p>
-      <md-filled-button @click="redirectToGoogle">
+      <button class="google-login-button" type="button" @click="redirectToGoogle">
         {{ t('feature.login.button') }}
-      </md-filled-button>
+      </button>
       <div class="legal-links">
         <a :href="privacyUrl" class="legal-link">{{ t('feature.login.privacy') }}</a>
         <a :href="imprintUrl" class="legal-link">{{ t('feature.login.imprint') }}</a>
@@ -31,8 +31,7 @@ const redirectToGoogle = () => {
 
 <style scoped>
 .login-page {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,5 +83,21 @@ p {
 
 .legal-link:hover {
   text-decoration: underline;
+}
+
+.google-login-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.625rem 1.5rem;
+  cursor: pointer;
+  color: var(--md-sys-color-on-primary);
+  background-color: var(--md-sys-color-primary);
+  font-size: var(--md-sys-typescale-label-large-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+}
+
+.google-login-button:hover {
+  filter: brightness(0.96);
 }
 </style>

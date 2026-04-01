@@ -61,7 +61,7 @@ aside {
 }
 
 .content-area {
-  padding: 0rem 1rem 1rem 1rem;
+  padding: 0 1rem 1rem 1rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
