@@ -13,7 +13,10 @@ const navItemProps = defineProps<{
   iconName: string;
 }>();
 
-const iconSrc = new URL(`/src/assets/icons/navigation/${navItemProps.iconName}.svg`, import.meta.url).href;
+const iconSrc = new URL(
+  `/src/assets/icons/navigation/${navItemProps.iconName}.svg`,
+  import.meta.url,
+).href;
 </script>
 
 <style scoped>

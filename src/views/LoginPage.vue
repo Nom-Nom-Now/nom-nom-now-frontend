@@ -3,12 +3,20 @@
     <div class="login-card">
       <h1>{{ t('feature.login.headline') }}</h1>
       <p>{{ t('feature.login.description') }}</p>
-      <button class="google-login-button" type="button" @click="redirectToGoogle">
+      <button
+        class="google-login-button"
+        type="button"
+        @click="redirectToGoogle"
+      >
         {{ t('feature.login.button') }}
       </button>
       <div class="legal-links">
-        <a :href="privacyUrl" class="legal-link">{{ t('feature.login.privacy') }}</a>
-        <a :href="imprintUrl" class="legal-link">{{ t('feature.login.imprint') }}</a>
+        <a :href="privacyUrl" class="legal-link">{{
+          t('feature.login.privacy')
+        }}</a>
+        <a :href="imprintUrl" class="legal-link">{{
+          t('feature.login.imprint')
+        }}</a>
       </div>
     </div>
   </section>

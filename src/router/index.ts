@@ -14,17 +14,17 @@ const router = createRouter({
     {
       path: '/',
       component: LoginPage,
-      meta: { titleKey: 'feature.login.title', hideShell: true }
+      meta: { titleKey: 'feature.login.title', hideShell: true },
     },
     {
       path: '/home',
       component: HelloWorld,
-      meta: { titleKey: 'feature.mainPage.title' }
+      meta: { titleKey: 'feature.mainPage.title' },
     },
     {
       path: '/plan',
       component: PlanView,
-      meta: { titleKey: 'feature.plan.title' }
+      meta: { titleKey: 'feature.plan.title' },
     },
     {
       path: '/recipes',
@@ -34,12 +34,12 @@ const router = createRouter({
         {
           path: 'create',
           component: CreateRecipeView,
-          meta: { titleKey: 'feature.recipes.createRecipe.title' }
+          meta: { titleKey: 'feature.recipes.createRecipe.title' },
         },
         {
           path: 'oldcreate',
           component: NewRecipeView,
-          meta: { titleKey: 'feature.recipes.createRecipe.title' }
+          meta: { titleKey: 'feature.recipes.createRecipe.title' },
         },
       ],
     },
@@ -51,11 +51,11 @@ const router = createRouter({
         {
           path: 'listall',
           component: AllRecipesPage,
-          meta: { titleKey: 'feature.listAllRecipes.title' }
+          meta: { titleKey: 'feature.listAllRecipes.title' },
         },
       ],
-    }
-  ]
+    },
+  ],
 });
 
 export default router;

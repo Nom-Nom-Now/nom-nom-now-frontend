@@ -60,11 +60,14 @@ function normalizeRecipe(input: RecipeInput): RecipeInput {
     name: input.name.trim(),
     instructions: input.instructions.trim(),
     ingredients: input.ingredients
-      .map(ingredient => ({
+      .map((ingredient) => ({
         ...ingredient,
         name: ingredient.name.trim(),
       }))
-      .filter(ingredient => ingredient.name.length > 0 && Number.isFinite(ingredient.amount)),
+      .filter(
+        (ingredient) =>
+          ingredient.name.length > 0 && Number.isFinite(ingredient.amount),
+      ),
   };
 }
 
@@ -90,7 +93,7 @@ function mapRecipeToPayload(recipe: RecipeInput): CreateRecipePayload {
     instructions: recipe.instructions,
     cookingTime: recipe.expectedMinutes,
     categoryIds: recipe.categoryId ? [coerceCategoryId(recipe.categoryId)] : [],
-    components: recipe.ingredients.map(ingredient => ({
+    components: recipe.ingredients.map((ingredient) => ({
       name: ingredient.name,
       quantity: ingredient.amount,
       unit: ingredient.unit,
@@ -98,7 +101,10 @@ function mapRecipeToPayload(recipe: RecipeInput): CreateRecipePayload {
   };
 }
 
-async function postJson<TRequest, TResponse>(path: string, body: TRequest): Promise<TResponse> {
+async function postJson<TRequest, TResponse>(
+  path: string,
+  body: TRequest,
+): Promise<TResponse> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
     headers: {
@@ -111,22 +117,34 @@ async function postJson<TRequest, TResponse>(path: string, body: TRequest): Prom
   if (!response.ok) {
     throw new Error(`Request to ${path} failed with status ${response.status}`);
   }
-  return responseText ? (JSON.parse(responseText) as TResponse) : ({} as TResponse);
+  return responseText
+    ? (JSON.parse(responseText) as TResponse)
+    : ({} as TResponse);
 }
 
-export async function createRecipe(input: RecipeInput): Promise<RecipeCreationResult> {
+export async function createRecipe(
+  input: RecipeInput,
+): Promise<RecipeCreationResult> {
   const normalizedRecipe = normalizeRecipe(input);
   const payload = mapRecipeToPayload(normalizedRecipe);
-  const recipe = await postJson<CreateRecipePayload, CreateRecipeResponse>('/recipes', payload);
+  const recipe = await postJson<CreateRecipePayload, CreateRecipeResponse>(
+    '/recipes',
+    payload,
+  );
   if (!recipe?.id && recipe?.id !== 0) {
     throw new Error('Recipe id missing in response');
   }
   return { id: String(recipe.id) };
 }
 
-export async function createCategory(input: CategoryInput): Promise<CategoryCreationResult> {
+export async function createCategory(
+  input: CategoryInput,
+): Promise<CategoryCreationResult> {
   const normalizedCategory = normalizeCategoryInput(input);
-  const category = await postJson<CategoryInput, CreateCategoryResponse>('/categories', normalizedCategory);
+  const category = await postJson<CategoryInput, CreateCategoryResponse>(
+    '/categories',
+    normalizedCategory,
+  );
   if (!category?.id && category?.id !== 0) {
     throw new Error('Category id missing in response');
   }

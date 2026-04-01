@@ -19,7 +19,8 @@ const { t } = useI18n();
 const pageTitle = computed(() => {
   const key = route.meta.titleKey as string | undefined;
   return key ? t(key) : 'Nom Nom Now';
-});</script>
+});
+</script>
 
 <style scoped>
 div {

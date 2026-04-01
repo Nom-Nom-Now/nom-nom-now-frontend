@@ -29,7 +29,7 @@ const props = defineProps<Recipe>();
   border-color: #888888;
   border-style: solid;
 }
-.recipe-object-picture{
+.recipe-object-picture {
   background: #894545;
   border-radius: 1rem;
   width: 100%;

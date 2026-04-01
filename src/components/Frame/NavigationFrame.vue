@@ -3,7 +3,11 @@
     <img class="logo" src="../../assets/Logo.png" alt="Nom Nom Now" />
     <ul>
       <li v-for="item in navigationItems" :key="item.textKey">
-        <RouterLink :to="item.to" class="nav-link" active-class="nav-link-active">
+        <RouterLink
+          :to="item.to"
+          class="nav-link"
+          active-class="nav-link-active"
+        >
           <NavigationItem :text="t(item.textKey)" :icon-name="item.iconName" />
         </RouterLink>
       </li>
@@ -19,9 +23,21 @@ const { t } = useI18n();
 
 const navigationItems = [
   { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/home' },
-  { textKey: 'navigation.plan', iconName: 'calendar_meal_24dp_1F1F1F', to: '/plan' },
-  { textKey: 'navigation.recipes', iconName: 'chef_hat_24dp_1F1F1F', to: '/recipes' },
-  { textKey: 'navigation.browse', iconName: 'wb_incandescent_24dp_1F1F1F', to: '/browse' },
+  {
+    textKey: 'navigation.plan',
+    iconName: 'calendar_meal_24dp_1F1F1F',
+    to: '/plan',
+  },
+  {
+    textKey: 'navigation.recipes',
+    iconName: 'chef_hat_24dp_1F1F1F',
+    to: '/recipes',
+  },
+  {
+    textKey: 'navigation.browse',
+    iconName: 'wb_incandescent_24dp_1F1F1F',
+    to: '/browse',
+  },
 ];
 </script>
 
