@@ -13,6 +13,14 @@
       "title": "Mainpage",
       "helloWorld": "Hello World"
     },
+    "login": {
+      "title": "Login",
+      "headline": "Welcome to Nom Nom Now",
+      "description": "Sign in with Google to continue.",
+      "button": "Sign in with Google",
+      "privacy": "Privacy",
+      "imprint": "Imprint"
+    },
     "plan": {
       "title": "Plan"
     },
