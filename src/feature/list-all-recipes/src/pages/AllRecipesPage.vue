@@ -35,9 +35,10 @@ const filteredRecipes = computed(() => {
         type="search"
         v-model="searchQuery"
       >
-        <template v-slot:trailing-icon>
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+        <span slot="trailing-icon">
           <md-icon>search</md-icon>
-        </template>
+        </span>
       </md-outlined-text-field>
     </div>
     <div class="recipe-page-description">

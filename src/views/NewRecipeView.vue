@@ -194,7 +194,7 @@ async function handleCategoryCreation() {
 }
 
 function goHome() {
-  router.push('/');
+  router.push('/home');
 }
 </script>
 
