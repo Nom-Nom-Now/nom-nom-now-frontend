@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import type { RecipeList } from '../types/types.ts';
 import RecipeObject from '../components/RecipeObject.vue';
 
@@ -21,15 +21,24 @@ onMounted(() => getAllRecipes());
 
 const filteredRecipes = computed(() => {
   if (!recipeList.value) return recipeList.value;
-  return recipeList.value.filter(recipe => recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  return recipeList.value.filter((recipe) =>
+    recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  );
 });
 </script>
 
 <template>
   <div class="recipe-page-container">
     <div class="recipe-searchbar">
-      <md-outlined-text-field placeholder="Search for recipes" type="search" v-model="searchQuery">
-        <md-icon slot="trailing-icon">search</md-icon>
+      <md-outlined-text-field
+        placeholder="Search for recipes"
+        type="search"
+        v-model="searchQuery"
+      >
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+        <span slot="trailing-icon">
+          <md-icon>search</md-icon>
+        </span>
       </md-outlined-text-field>
     </div>
     <div class="recipe-page-description">

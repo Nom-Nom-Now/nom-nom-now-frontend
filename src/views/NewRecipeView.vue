@@ -78,12 +78,15 @@ function removeIngredientRow(index: number) {
 
 function sanitizeIngredients(): IngredientInput[] {
   return recipeForm.ingredients
-    .map(ingredient => ({
+    .map((ingredient) => ({
       name: ingredient.name.trim(),
       amount: Number.parseFloat(String(ingredient.amount)),
       unit: ingredient.unit,
     }))
-    .filter(ingredient => ingredient.name.length > 0 && Number.isFinite(ingredient.amount));
+    .filter(
+      (ingredient) =>
+        ingredient.name.length > 0 && Number.isFinite(ingredient.amount),
+    );
 }
 
 function validateRecipeInput() {
@@ -97,7 +100,10 @@ function validateRecipeInput() {
     recipeFeedback.message = 'Bitte eine Kategorie auswählen oder erstellen.';
     return false;
   }
-  if (recipeForm.expectedMinutes === '' || Number.isNaN(Number.parseInt(recipeForm.expectedMinutes, 10))) {
+  if (
+    recipeForm.expectedMinutes === '' ||
+    Number.isNaN(Number.parseInt(recipeForm.expectedMinutes, 10))
+  ) {
     recipeFeedback.type = 'error';
     recipeFeedback.message = 'Bitte eine gültige Zubereitungszeit eintragen.';
     return false;
@@ -139,7 +145,7 @@ async function submitRecipe() {
       { name: '', amount: '', unit: defaultUnit },
       { name: '', amount: '', unit: defaultUnit },
     ];
-  } catch (error) {
+  } catch {
     recipeFeedback.type = 'error';
     recipeFeedback.message = 'Rezept konnte nicht erstellt werden.';
   }
@@ -181,128 +187,180 @@ async function handleCategoryCreation() {
     categoryFeedback.type = 'success';
     categoryFeedback.message = 'Kategorie wurde gespeichert.';
     closeCategoryCreator();
-  } catch (error) {
+  } catch {
     categoryFeedback.type = 'error';
     categoryFeedback.message = 'Kategorie konnte nicht gespeichert werden.';
   }
 }
 
 function goHome() {
-  router.push('/');
+  router.push('/home');
 }
 </script>
 
 <template>
-    <div class="layout">
-      <header class="page-header">
-        <div class="brand">NomNomNow</div>
-        <div class="title">New Recipe</div>
-        <button class="home-button" type="button" @click="goHome">Home</button>
-      </header>
-      <main class="content">
-        <section class="left">
-          <div class="field">
-            <label for="recipe-name">Name</label>
-            <input id="recipe-name" v-model="recipeForm.name" type="text" placeholder="Pizza Hawaii" />
+  <div class="layout">
+    <header class="page-header">
+      <div class="brand">NomNomNow</div>
+      <div class="title">New Recipe</div>
+      <button class="home-button" type="button" @click="goHome">Home</button>
+    </header>
+    <main class="content">
+      <section class="left">
+        <div class="field">
+          <label for="recipe-name">Name</label>
+          <input
+            id="recipe-name"
+            v-model="recipeForm.name"
+            type="text"
+            placeholder="Pizza Hawaii"
+          />
+        </div>
+        <div class="field">
+          <label for="recipe-category">Category</label>
+          <div class="category-inputs">
+            <select id="recipe-category" v-model="recipeForm.categoryId">
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.id"
+              >
+                {{ category.label }}
+              </option>
+            </select>
+            <button
+              class="secondary"
+              type="button"
+              @click="openCategoryCreator"
+            >
+              + Kategorie
+            </button>
           </div>
-          <div class="field">
-            <label for="recipe-category">Category</label>
-            <div class="category-inputs">
-              <select id="recipe-category" v-model="recipeForm.categoryId">
-                <option v-for="category in categories" :key="category.id" :value="category.id">
-                  {{ category.label }}
+        </div>
+        <div v-if="showCategoryCreator" class="category-creator">
+          <div class="creator-fields">
+            <div class="field">
+              <label for="category-name">Name</label>
+              <input
+                id="category-name"
+                v-model="categoryForm.name"
+                type="text"
+                placeholder="Dessert"
+              />
+            </div>
+            <div class="field">
+              <label for="category-color">Farbe</label>
+              <input
+                id="category-color"
+                v-model="categoryForm.color"
+                type="text"
+                placeholder="#ffb703"
+              />
+            </div>
+          </div>
+          <div class="creator-actions">
+            <button
+              class="secondary"
+              type="button"
+              @click="closeCategoryCreator"
+            >
+              Abbrechen
+            </button>
+            <button type="button" @click="handleCategoryCreation">
+              Speichern
+            </button>
+          </div>
+        </div>
+        <div class="field expected-time">
+          <label for="recipe-time">Expected Time</label>
+          <div class="time-input">
+            <input
+              id="recipe-time"
+              v-model="recipeForm.expectedMinutes"
+              type="number"
+              min="0"
+              placeholder="60"
+            />
+            <span>min</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Components</label>
+          <div v-if="hasIngredients" class="components">
+            <div
+              v-for="(ingredient, index) in recipeForm.ingredients"
+              :key="`ingredient-${index}`"
+              class="component-row"
+            >
+              <input
+                v-model="ingredient.name"
+                type="text"
+                placeholder="Mehl"
+                class="component-name"
+              />
+              <input
+                v-model="ingredient.amount"
+                type="number"
+                min="0"
+                placeholder="500"
+                class="component-amount"
+              />
+              <select v-model="ingredient.unit" class="component-unit">
+                <option
+                  v-for="unit in unitOptions"
+                  :key="unit.value"
+                  :value="unit.value"
+                >
+                  {{ unit.label }}
                 </option>
               </select>
-              <button class="secondary" type="button" @click="openCategoryCreator">+ Kategorie</button>
-            </div>
-          </div>
-          <div v-if="showCategoryCreator" class="category-creator">
-            <div class="creator-fields">
-              <div class="field">
-                <label for="category-name">Name</label>
-                <input id="category-name" v-model="categoryForm.name" type="text" placeholder="Dessert" />
-              </div>
-              <div class="field">
-                <label for="category-color">Farbe</label>
-                <input id="category-color" v-model="categoryForm.color" type="text" placeholder="#ffb703" />
-              </div>
-            </div>
-            <div class="creator-actions">
-              <button class="secondary" type="button" @click="closeCategoryCreator">Abbrechen</button>
-              <button type="button" @click="handleCategoryCreation">Speichern</button>
-            </div>
-          </div>
-          <div class="field expected-time">
-            <label for="recipe-time">Expected Time</label>
-            <div class="time-input">
-              <input id="recipe-time" v-model="recipeForm.expectedMinutes" type="number" min="0" placeholder="60" />
-              <span>min</span>
-            </div>
-          </div>
-          <div class="field">
-            <label>Components</label>
-            <div v-if="hasIngredients" class="components">
-              <div
-                v-for="(ingredient, index) in recipeForm.ingredients"
-                :key="`ingredient-${index}`"
-                class="component-row"
+              <button
+                v-if="recipeForm.ingredients.length > 1"
+                class="icon-button"
+                type="button"
+                aria-label="Komponente entfernen"
+                @click="removeIngredientRow(index)"
               >
-                <input
-                  v-model="ingredient.name"
-                  type="text"
-                  placeholder="Mehl"
-                  class="component-name"
-                />
-                <input
-                  v-model="ingredient.amount"
-                  type="number"
-                  min="0"
-                  placeholder="500"
-                  class="component-amount"
-                />
-                <select v-model="ingredient.unit" class="component-unit">
-                  <option v-for="unit in unitOptions" :key="unit.value" :value="unit.value">
-                    {{ unit.label }}
-                  </option>
-                </select>
-                <button
-                  v-if="recipeForm.ingredients.length > 1"
-                  class="icon-button"
-                  type="button"
-                  aria-label="Komponente entfernen"
-                  @click="removeIngredientRow(index)"
-                >
-                  ×
-                </button>
-              </div>
+                ×
+              </button>
             </div>
-            <button class="secondary" type="button" @click="addIngredientRow">+ More Components</button>
           </div>
-          <div v-if="recipeFeedback.message" :class="['feedback', recipeFeedback.type]">
-            {{ recipeFeedback.message }}
-          </div>
-        </section>
-        <section class="right">
-          <div class="field">
-            <label for="recipe-instructions">Instructions</label>
-            <textarea
-              id="recipe-instructions"
-              v-model="recipeForm.instructions"
-              placeholder="Teig machen, Ofen vorheizen (220°)..."
-            ></textarea>
-          </div>
-          <button class="create-button" type="button" @click="submitRecipe">Create</button>
-          <div v-if="categoryFeedback.message" :class="['feedback', categoryFeedback.type]">
-            {{ categoryFeedback.message }}
-          </div>
-        </section>
-      </main>
-      <footer class="page-footer">Impressum</footer>
-    </div>
+          <button class="secondary" type="button" @click="addIngredientRow">
+            + More Components
+          </button>
+        </div>
+        <div
+          v-if="recipeFeedback.message"
+          :class="['feedback', recipeFeedback.type]"
+        >
+          {{ recipeFeedback.message }}
+        </div>
+      </section>
+      <section class="right">
+        <div class="field">
+          <label for="recipe-instructions">Instructions</label>
+          <textarea
+            id="recipe-instructions"
+            v-model="recipeForm.instructions"
+            placeholder="Teig machen, Ofen vorheizen (220°)..."
+          ></textarea>
+        </div>
+        <button class="create-button" type="button" @click="submitRecipe">
+          Create
+        </button>
+        <div
+          v-if="categoryFeedback.message"
+          :class="['feedback', categoryFeedback.type]"
+        >
+          {{ categoryFeedback.message }}
+        </div>
+      </section>
+    </main>
+    <footer class="page-footer">Impressum</footer>
+  </div>
 </template>
 
 <style scoped>
-
 .layout {
   width: 100%;
   max-width: max-content;
@@ -376,7 +434,9 @@ function goHome() {
   font-family: inherit;
   color: #1f4745;
   background-color: #f6fbfb;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .field input:focus,
@@ -461,7 +521,9 @@ function goHome() {
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .icon-button:hover {
@@ -476,7 +538,10 @@ function goHome() {
   color: #1c6c68;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .secondary:hover {

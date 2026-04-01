@@ -1,5 +1,5 @@
 <template>
-  <div class="app-layout">
+  <div v-if="showShell" class="app-layout">
     <aside class="aside">
       <NavigationFrame />
     </aside>
@@ -17,12 +17,21 @@
       </main>
     </div>
   </div>
+
+  <main v-else class="auth-layout">
+    <router-view />
+  </main>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import NavigationFrame from './components/Frame/NavigationFrame.vue';
 import TitleFrame from './components/Frame/TitleFrame.vue';
 import CornerRadius from './components/Frame/CornerRadius.vue';
+
+const route = useRoute();
+const showShell = computed(() => !route.meta.hideShell);
 </script>
 
 <style scoped>
@@ -32,11 +41,16 @@ import CornerRadius from './components/Frame/CornerRadius.vue';
   height: 100%;
 }
 
+.auth-layout {
+  width: 100%;
+  height: 100%;
+}
+
 aside {
   width: 5.5rem;
   background-color: var(--md-sys-color-surface);
   overflow-y: auto;
-  height: 100vh; /* Maybe hier bessere Lösung suchen als einfach die Komponente sehr groß zu machen */
+  height: 100vh; /* Maybe hier bessere Loesung suchen als einfach die Komponente sehr gross zu machen */
 }
 
 .main-section {
@@ -47,7 +61,7 @@ aside {
 }
 
 .content-area {
-  padding: 0rem 1rem 1rem 1rem;
+  padding: 0 1rem 1rem 1rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;

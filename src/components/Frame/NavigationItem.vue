@@ -1,7 +1,7 @@
 <template>
   <div class="item-container">
     <div class="icon-badge">
-      <img :src="iconSrc" class="icon" draggable="false" />
+      <img :src="iconSrc" class="icon" draggable="false" alt="" />
     </div>
     {{ navItemProps.text }}
   </div>
@@ -13,7 +13,10 @@ const navItemProps = defineProps<{
   iconName: string;
 }>();
 
-const iconSrc = new URL(`/src/assets/icons/navigation/${navItemProps.iconName}.svg`, import.meta.url).href;
+const iconSrc = new URL(
+  `/src/assets/icons/navigation/${navItemProps.iconName}.svg`,
+  import.meta.url,
+).href;
 </script>
 
 <style scoped>
@@ -35,6 +38,7 @@ const iconSrc = new URL(`/src/assets/icons/navigation/${navItemProps.iconName}.s
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
+  background-color: var(--nav-icon-badge-bg, transparent);
 }
 
 .icon {
