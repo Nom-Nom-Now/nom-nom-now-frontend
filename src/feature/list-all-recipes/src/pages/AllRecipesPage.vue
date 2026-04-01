@@ -21,15 +21,23 @@ onMounted(() => getAllRecipes());
 
 const filteredRecipes = computed(() => {
   if (!recipeList.value) return recipeList.value;
-  return recipeList.value.filter(recipe => recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  return recipeList.value.filter((recipe) =>
+    recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  );
 });
 </script>
 
 <template>
   <div class="recipe-page-container">
     <div class="recipe-searchbar">
-      <md-outlined-text-field placeholder="Search for recipes" type="search" v-model="searchQuery">
-        <md-icon slot="trailing-icon">search</md-icon>
+      <md-outlined-text-field
+        placeholder="Search for recipes"
+        type="search"
+        v-model="searchQuery"
+      >
+        <template v-slot:trailing-icon>
+<md-icon >search</md-icon>
+</template>
       </md-outlined-text-field>
     </div>
     <div class="recipe-page-description">

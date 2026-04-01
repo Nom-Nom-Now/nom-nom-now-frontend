@@ -35,7 +35,8 @@
           "chooserHeading": "Zutaten und Mengenangaben",
           "amount": "Menge",
           "unit": "Einheit",
-          "ingredient": "Zutat"
+          "ingredient": "Zutat",
+          "addIngredient": "Zutat hinzufügen"
         }
       }
     },

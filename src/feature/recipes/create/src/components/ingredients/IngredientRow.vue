@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import swapIcon from '../../../../../../assets/icons/swap_vert_24dp_4A4459.svg'
+import arrowUpIcon from '../../../../../../assets/icons/arrow_upward_24dp_1F1F1F1.svg';
+import arrowDownIcon from '../../../../../../assets/icons/arrow_downward_24dp_1F1F1F1.svg';
 
 const unitOptions = [
   { label: 'g', value: 'GRAM' },
@@ -38,10 +39,10 @@ const emit = defineEmits<{
     <md-outlined-text-field label="Ingredient"></md-outlined-text-field>
     <div class="swap-buttons">
       <button class="swap-btn" @click="emit('moveUp')" title="Move up">
-        <img :src="swapIcon" alt="swap" class="swap-icon swap-icon--up" />
+        <img :src="arrowUpIcon" alt="move up" class="swap-icon" />
       </button>
       <button class="swap-btn" @click="emit('moveDown')" title="Move down">
-        <img :src="swapIcon" alt="swap" class="swap-icon swap-icon--down" />
+        <img :src="arrowDownIcon" alt="move down" class="swap-icon" />
       </button>
     </div>
   </div>
@@ -143,15 +144,5 @@ const emit = defineEmits<{
 .swap-icon {
   width: 20px;
   height: 20px;
-}
-
-.swap-icon--up {
-  transform: rotate(180deg) scaleY(-1);
-  /* zeigt nur den Pfeil nach oben */
-  clip-path: inset(0 0 50% 0);
-}
-
-.swap-icon--down {
-  clip-path: inset(50% 0 0 0);
 }
 </style>

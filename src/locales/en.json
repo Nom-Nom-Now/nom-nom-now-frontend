@@ -35,7 +35,8 @@
           "chooserHeading": "Ingredients and quantities",
           "amount": "Amount",
           "unit": "Unit",
-          "ingredient": "Ingredient"
+          "ingredient": "Ingredient",
+          "addIngredient": "Add ingredient"
         }
       }
     },
