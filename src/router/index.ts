@@ -9,7 +9,7 @@ import NewRecipeView from '../views/NewRecipeView.vue';
 import LoginPage from '../views/LoginPage.vue';
 
 const router = createRouter({
-  history: createWebHistory('/nom-nom-now/'),
+  history: createWebHistory('/'),
   routes: [
     {
       path: '/',
