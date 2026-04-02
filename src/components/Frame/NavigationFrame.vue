@@ -63,7 +63,6 @@ ul li {
   display: block;
   color: var(--md-sys-color-secondary);
   text-decoration: none;
-  --nav-icon-badge-bg: transparent;
 }
 
 .nav-link:not(.active-link):hover :deep(.icon-badge) {

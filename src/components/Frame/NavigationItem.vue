@@ -38,7 +38,6 @@ const iconSrc = new URL(
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  background-color: var(--nav-icon-badge-bg, transparent);
 }
 
 .icon {
