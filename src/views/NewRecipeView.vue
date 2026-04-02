@@ -145,7 +145,7 @@ async function submitRecipe() {
       { name: '', amount: '', unit: defaultUnit },
       { name: '', amount: '', unit: defaultUnit },
     ];
-  } catch (error) {
+  } catch {
     recipeFeedback.type = 'error';
     recipeFeedback.message = 'Rezept konnte nicht erstellt werden.';
   }
@@ -187,14 +187,14 @@ async function handleCategoryCreation() {
     categoryFeedback.type = 'success';
     categoryFeedback.message = 'Kategorie wurde gespeichert.';
     closeCategoryCreator();
-  } catch (error) {
+  } catch {
     categoryFeedback.type = 'error';
     categoryFeedback.message = 'Kategorie konnte nicht gespeichert werden.';
   }
 }
 
 function goHome() {
-  router.push('/');
+  router.push('/home');
 }
 </script>
 

@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import type { RecipeList } from '../types/types.ts';
 import RecipeObject from '../components/RecipeObject.vue';
 
-const baseUrl = 'http://localhost:8080/';
+const baseUrl = ((import.meta.env.VITE_API_BASE_URL as string) || '') + '/';
 const recipeList = ref<RecipeList>([]);
 const searchQuery = ref('');
 
@@ -35,9 +35,10 @@ const filteredRecipes = computed(() => {
         type="search"
         v-model="searchQuery"
       >
-        <template v-slot:trailing-icon>
-<md-icon >search</md-icon>
-</template>
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+        <span slot="trailing-icon">
+          <md-icon>search</md-icon>
+        </span>
       </md-outlined-text-field>
     </div>
     <div class="recipe-page-description">

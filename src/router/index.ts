@@ -6,12 +6,18 @@ import RecipesView from '../views/RecipesView.vue';
 import BrowseView from '../views/BrowseView.vue';
 import AllRecipesPage from '../feature/list-all-recipes/src/pages/AllRecipesPage.vue';
 import NewRecipeView from '../views/NewRecipeView.vue';
+import LoginPage from '../views/LoginPage.vue';
 
 const router = createRouter({
-  history: createWebHistory('/nom-nom-now/'),
+  history: createWebHistory('/'),
   routes: [
     {
       path: '/',
+      component: LoginPage,
+      meta: { titleKey: 'feature.login.title', hideShell: true },
+    },
+    {
+      path: '/home',
       component: HelloWorld,
       meta: { titleKey: 'feature.mainPage.title' },
     },

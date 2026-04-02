@@ -1,9 +1,13 @@
 <template>
   <nav class="nav-bar">
-    <img class="logo" src="../../assets/Logo.png" />
+    <img class="logo" src="../../assets/Logo.png" alt="Nom Nom Now" />
     <ul>
       <li v-for="item in navigationItems" :key="item.textKey">
-        <RouterLink :to="item.to" class="nav-link" active-class="active-link">
+        <RouterLink
+          :to="item.to"
+          class="nav-link"
+          active-class="nav-link-active"
+        >
           <NavigationItem :text="t(item.textKey)" :icon-name="item.iconName" />
         </RouterLink>
       </li>
@@ -18,7 +22,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const navigationItems = [
-  { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/' },
+  { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/home' },
   {
     textKey: 'navigation.plan',
     iconName: 'calendar_meal_24dp_1F1F1F',
@@ -59,6 +63,7 @@ ul li {
   display: block;
   color: var(--md-sys-color-secondary);
   text-decoration: none;
+  --nav-icon-badge-bg: transparent;
 }
 
 .nav-link:not(.active-link):hover :deep(.icon-badge) {

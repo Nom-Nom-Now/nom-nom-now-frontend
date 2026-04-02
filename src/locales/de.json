@@ -13,6 +13,14 @@
       "title": "Startseite",
       "helloWorld": "Hallo Welt"
     },
+    "login": {
+      "title": "Anmelden",
+      "headline": "Willkommen bei Nom Nom Now",
+      "description": "Melde dich mit Google an, um fortzufahren.",
+      "button": "Mit Google anmelden",
+      "privacy": "Datenschutz",
+      "imprint": "Impressum"
+    },
     "plan": {
       "title": "Plan"
     },

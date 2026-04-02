@@ -1,7 +1,7 @@
 <template>
   <div class="item-container">
     <div class="icon-badge">
-      <img :src="iconSrc" class="icon" draggable="false" />
+      <img :src="iconSrc" class="icon" draggable="false" alt="" />
     </div>
     {{ navItemProps.text }}
   </div>
@@ -38,6 +38,7 @@ const iconSrc = new URL(
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
+  background-color: var(--nav-icon-badge-bg, transparent);
 }
 
 .icon {
