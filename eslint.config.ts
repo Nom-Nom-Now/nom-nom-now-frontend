@@ -34,6 +34,8 @@ export default defineConfig([
             "router-view",
             "RouterLink",
             "RouterView",
+            "i18n-t",
+            "I18nT",
           ],
         },
       ],

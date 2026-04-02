@@ -48,7 +48,9 @@ function moveDown(index: number) {
       @move-down="moveDown(index)"
     />
     <md-outlined-button class="add-ingredient-btn" @click="addIngredient">
-      <md-icon slot="icon">add</md-icon>
+      <template v-slot:icon>
+        <md-icon>add</md-icon>
+      </template>
       {{ t('feature.recipes.createRecipe.ingredients.addIngredient') }}
     </md-outlined-button>
   </div>
