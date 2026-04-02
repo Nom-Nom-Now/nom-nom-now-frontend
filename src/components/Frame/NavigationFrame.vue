@@ -65,11 +65,11 @@ ul li {
   text-decoration: none;
 }
 
-.nav-link:not(.active-link):hover :deep(.icon-badge) {
+.nav-link:not(.nav-link-active):hover :deep(.icon-badge) {
   background-color: var(--md-sys-color-surface-variant);
 }
 
-.active-link :deep(.icon-badge) {
+.nav-link-active :deep(.icon-badge) {
   background-color: var(--md-sys-color-secondary-container);
 }
 
