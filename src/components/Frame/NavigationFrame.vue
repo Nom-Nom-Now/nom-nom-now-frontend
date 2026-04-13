@@ -63,16 +63,14 @@ ul li {
   display: block;
   color: var(--md-sys-color-secondary);
   text-decoration: none;
-  --nav-icon-badge-bg: transparent;
 }
 
-.nav-link:hover {
-  --nav-icon-badge-bg: var(--md-sys-color-surface-variant);
+.nav-link:not(.nav-link-active):hover :deep(.icon-badge) {
+  background-color: var(--md-sys-color-surface-variant);
 }
 
-.nav-link.nav-link-active,
-.nav-link.nav-link-active:hover {
-  --nav-icon-badge-bg: var(--md-sys-color-secondary-container);
+.nav-link-active :deep(.icon-badge) {
+  background-color: var(--md-sys-color-secondary-container);
 }
 
 .logo {

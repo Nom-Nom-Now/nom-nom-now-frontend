@@ -34,7 +34,16 @@ export default defineConfig([
             "router-view",
             "RouterLink",
             "RouterView",
+            "i18n-t",
+            "I18nT",
           ],
+        },
+      ],
+      "vue/no-deprecated-slot-attribute": [
+        "error",
+        {
+          ignore: [],
+          ignoreParents: ["md-outlined-button", "md-filled-button", "md-text-button", "md-filled-tonal-button", "md-icon-button", "md-filled-icon-button", "md-outlined-icon-button", "md-fab", "md-branded-fab", "md-tabs", "md-dialog", "md-menu", "md-select", "md-filled-select", "md-outlined-select", "md-chip", "md-assist-chip", "md-filter-chip", "md-input-chip", "md-suggestion-chip", "md-list-item", "md-menu-item", "md-outlined-text-field", "md-filled-text-field"],
         },
       ],
     },

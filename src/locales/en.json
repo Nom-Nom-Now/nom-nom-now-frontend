@@ -34,6 +34,26 @@
           "categories": "Categories",
           "image": "Image",
           "preview": "Preview"
+        },
+        "ingredients": {
+          "name": "Name",
+          "nameExample": "e.g. Hawaiian Pizza",
+          "servings": "Servings",
+          "servingsText": "The recipe is for {servingChooser} people",
+          "chooserHeading": "Ingredients and quantities",
+          "amount": "Amount",
+          "unit": "Unit",
+          "ingredient": "Ingredient",
+          "addIngredient": "Add ingredient",
+          "unitValues": {
+            "GRAM": "g",
+            "KILOGRAM": "kg",
+            "MILLILITER": "ml",
+            "LITER": "l",
+            "PIECE": "piece",
+            "TEASPOON": "tsp",
+            "TABLESPOON": "tbsp"
+          }
         }
       }
     },

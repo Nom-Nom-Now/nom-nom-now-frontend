@@ -34,6 +34,26 @@
           "categories": "Kategorien",
           "image": "Foto",
           "preview": "Vorschau"
+        },
+        "ingredients": {
+          "name": "Name",
+          "nameExample": "z.B. Pizza Hawaii",
+          "servings": "Portionen",
+          "servingsText": "Das Rezept ist für {servingChooser} Personen",
+          "chooserHeading": "Zutaten und Mengenangaben",
+          "amount": "Menge",
+          "unit": "Einheit",
+          "ingredient": "Zutat",
+          "addIngredient": "Zutat hinzufügen",
+          "unitValues": {
+            "GRAM": "g",
+            "KILOGRAM": "kg",
+            "MILLILITER": "ml",
+            "LITER": "l",
+            "PIECE": "Stück",
+            "TEASPOON": "TL",
+            "TABLESPOON": "EL"
+          }
         }
       }
     },
