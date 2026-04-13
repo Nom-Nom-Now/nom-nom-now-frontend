@@ -11,7 +11,6 @@ function onServingsInput(event: Event) {
   const value = Number((event.target as HTMLInputElement).value);
   if (value < 1) servings.value = 1;
   else servings.value = value;
-  console.log(value);
 }
 </script>
 

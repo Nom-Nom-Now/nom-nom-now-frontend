@@ -44,7 +44,16 @@
           "amount": "Amount",
           "unit": "Unit",
           "ingredient": "Ingredient",
-          "addIngredient": "Add ingredient"
+          "addIngredient": "Add ingredient",
+          "unitValues": {
+            "GRAM": "g",
+            "KILOGRAM": "kg",
+            "MILLILITER": "ml",
+            "LITER": "l",
+            "PIECE": "piece",
+            "TEASPOON": "tsp",
+            "TABLESPOON": "tbsp"
+          }
         }
       }
     },

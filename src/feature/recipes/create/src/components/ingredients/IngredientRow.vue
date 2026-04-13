@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import arrowUpIcon from '../../../../../../assets/icons/arrow_upward_24dp_1F1F1F1.svg';
 import arrowDownIcon from '../../../../../../assets/icons/arrow_downward_24dp_1F1F1F1.svg';
+import { useI18n } from 'vue-i18n';
+import { UNIT_VALUES } from '../../shared/types/units';
+import { computed } from 'vue';
 
-const unitOptions = [
-  { label: 'g', value: 'GRAM' },
-  { label: 'kg', value: 'KILOGRAM' },
-  { label: 'ml', value: 'MILLILITER' },
-  { label: 'l', value: 'LITER' },
-  { label: 'Stück', value: 'PIECE' },
-  { label: 'TL', value: 'TEASPOON' },
-  { label: 'EL', value: 'TABLESPOON' },
-];
+const { t } = useI18n();
+
+const unitOptions = computed(() =>
+  UNIT_VALUES.map((value) => ({
+    label: t(`feature.recipes.createRecipe.ingredients.unitValues.${value}`),
+    value,
+  })),
+);
 
 const emit = defineEmits<{
   moveUp: [];
@@ -20,7 +22,9 @@ const emit = defineEmits<{
 
 <template>
   <div class="ingredient-row">
-    <md-outlined-text-field label="Amount"></md-outlined-text-field>
+    <md-outlined-text-field
+      :label="t('feature.recipes.createRecipe.ingredients.amount')"
+    ></md-outlined-text-field>
     <div class="select-wrapper">
       <select class="select">
         <option
@@ -31,12 +35,16 @@ const emit = defineEmits<{
           {{ unit.label }}
         </option>
       </select>
-      <span class="select-label">Unit</span>
+      <span class="select-label">
+        {{ t('feature.recipes.createRecipe.ingredients.unit') }}
+      </span>
       <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 10l5 5 5-5z" />
       </svg>
     </div>
-    <md-outlined-text-field label="Ingredient"></md-outlined-text-field>
+    <md-outlined-text-field
+      :label="t('feature.recipes.createRecipe.ingredients.ingredient')"
+    ></md-outlined-text-field>
     <div class="swap-buttons">
       <button class="swap-btn" @click="emit('moveUp')" title="Move up">
         <img :src="arrowUpIcon" alt="move up" class="swap-icon" />

@@ -44,7 +44,16 @@
           "amount": "Menge",
           "unit": "Einheit",
           "ingredient": "Zutat",
-          "addIngredient": "Zutat hinzufügen"
+          "addIngredient": "Zutat hinzufügen",
+          "unitValues": {
+            "GRAM": "g",
+            "KILOGRAM": "kg",
+            "MILLILITER": "ml",
+            "LITER": "l",
+            "PIECE": "Stück",
+            "TEASPOON": "TL",
+            "TABLESPOON": "EL"
+          }
         }
       }
     },

@@ -49,7 +49,9 @@ function moveDown(index: number) {
     />
     <md-outlined-button class="add-ingredient-btn" @click="addIngredient">
       <md-icon slot="icon">add</md-icon>
-      {{ t('feature.recipes.createRecipe.ingredients.addIngredient') }}
+      <md-label size="medium">
+        {{ t('feature.recipes.createRecipe.ingredients.addIngredient') }}
+      </md-label>
     </md-outlined-button>
   </div>
 </template>
