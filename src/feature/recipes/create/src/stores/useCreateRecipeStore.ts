@@ -33,8 +33,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
       servings.value >= 1 &&
       ingredients.value.length > 0 &&
       ingredients.value.every(
-        (i) =>
-          i.name.trim().length > 0 && i.amount !== null && i.amount > 0,
+        (i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0,
       )
     );
   });

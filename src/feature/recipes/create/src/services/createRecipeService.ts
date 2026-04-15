@@ -11,7 +11,9 @@ const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 // Mapping: Frontend domain model → Backend DTO
 // ---------------------------------------------------------------------------
 
-function mapIngredientToComponent(ingredient: Ingredient): CreateRecipeComponentDto {
+function mapIngredientToComponent(
+  ingredient: Ingredient,
+): CreateRecipeComponentDto {
   return {
     name: ingredient.name.trim(),
     quantity: ingredient.amount ?? 0,
@@ -19,14 +21,18 @@ function mapIngredientToComponent(ingredient: Ingredient): CreateRecipeComponent
   };
 }
 
-function mapStateToRequestDto(state: CreateRecipeState): CreateRecipeRequestDto {
+function mapStateToRequestDto(
+  state: CreateRecipeState,
+): CreateRecipeRequestDto {
   return {
     name: state.recipeName.trim(),
     instructions: state.instructions?.trim() ?? '',
     cookingTime: state.cookingTime ?? 0,
     categoryIds: state.categoryIds ?? [],
     components: state.ingredients
-      .filter((i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0)
+      .filter(
+        (i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0,
+      )
       .map(mapIngredientToComponent),
   };
 }
@@ -45,9 +51,7 @@ async function postJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
   const text = await response.text();
 
   if (!response.ok) {
-    throw new Error(
-      `POST ${path} failed (${response.status}): ${text}`,
-    );
+    throw new Error(`POST ${path} failed (${response.status}): ${text}`);
   }
 
   return text ? (JSON.parse(text) as TRes) : ({} as TRes);
@@ -61,5 +65,8 @@ export async function createRecipe(
   state: CreateRecipeState,
 ): Promise<CreateRecipeResponseDto> {
   const dto = mapStateToRequestDto(state);
-  return postJson<CreateRecipeRequestDto, CreateRecipeResponseDto>('/recipes', dto);
+  return postJson<CreateRecipeRequestDto, CreateRecipeResponseDto>(
+    '/recipes',
+    dto,
+  );
 }

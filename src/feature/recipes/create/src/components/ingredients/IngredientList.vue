@@ -27,7 +27,10 @@ const { ingredients } = storeToRefs(store);
       @move-down="store.moveIngredientDown(index)"
       @remove="store.removeIngredient(ingredient.id)"
     />
-    <md-outlined-button class="add-ingredient-btn" @click="store.addIngredient()">
+    <md-outlined-button
+      class="add-ingredient-btn"
+      @click="store.addIngredient()"
+    >
       <md-icon slot="icon">add</md-icon>
       <md-label size="medium">
         {{ t('feature.recipes.createRecipe.ingredients.addIngredient') }}
