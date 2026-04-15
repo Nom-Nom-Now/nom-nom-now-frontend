@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
 import IngredientList from './IngredientList.vue';
+import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
+import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
-const servings = ref(1);
+const store = useCreateRecipeStore();
+const { servings, recipeName } = storeToRefs(store);
 
 function onServingsInput(event: Event) {
   const value = Number((event.target as HTMLInputElement).value);
-  if (value < 1) servings.value = 1;
-  else servings.value = value;
+  store.setServings(value);
+}
+
+function onNameInput(event: Event) {
+  store.setRecipeName((event.target as HTMLInputElement).value);
 }
 </script>
 
@@ -26,6 +31,8 @@ function onServingsInput(event: Event) {
         class="text-field"
         :label="t('feature.recipes.createRecipe.ingredients.nameExample')"
         type="text"
+        :value="recipeName"
+        @input="onNameInput"
       ></md-filled-text-field>
     </div>
 
