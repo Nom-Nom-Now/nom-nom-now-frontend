@@ -1,4 +1,31 @@
-# Vue 3 + TypeScript + Vite
+# Nom Nom Now – Frontend
+
+> Rezept- und Essensplanungs-App, gebaut mit Vue 3, TypeScript und Vite.
+
+📖 **[Vollständige Dokumentation →](./docs/index.md)**
+
+| Dokument | Beschreibung |
+|---|---|
+| [Getting Started](./docs/getting-started.md) | Installation & Setup |
+| [Architektur](./docs/architecture.md) | Projektstruktur & Patterns |
+| [Features](./docs/features.md) | Feature-Module im Detail |
+| [Komponenten](./docs/components.md) | Shared Components & Material Design |
+| [State Management](./docs/state-management.md) | Pinia-Stores |
+| [API-Integration](./docs/api-integration.md) | Services, DTOs, HTTP |
+| [i18n](./docs/i18n.md) | Internationalisierung |
+| [Deployment](./docs/deployment.md) | Docker & Nginx |
+| [Contributing](./docs/contributing.md) | Richtlinien für Beiträge |
+
+---
+
+## Schnellstart
+
+```bash
+npm ci
+npm run dev
+```
+
+---
 
 ## Conventions
 

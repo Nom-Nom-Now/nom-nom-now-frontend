@@ -54,6 +54,12 @@
             "TEASPOON": "TL",
             "TABLESPOON": "EL"
           }
+        },
+        "preview": {
+          "heading": "Vorschau",
+          "submit": "Rezept erstellen",
+          "submitting": "Wird gesendet…",
+          "success": "Rezept wurde erfolgreich erstellt!"
         }
       }
     },

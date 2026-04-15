@@ -2,34 +2,12 @@
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import IngredientRow from './IngredientRow.vue';
-import { ref } from 'vue';
+import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
+import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
-
-const ingredients = ref([{ id: 1 }, { id: 2 }, { id: 3 }]);
-let nextId = 4;
-
-function addIngredient() {
-  ingredients.value.push({ id: nextId++ });
-}
-
-function moveUp(index: number) {
-  if (index === 0) return;
-  const arr = ingredients.value;
-  const current = arr[index]!;
-  const previous = arr[index - 1]!;
-  arr[index - 1] = current;
-  arr[index] = previous;
-}
-
-function moveDown(index: number) {
-  if (index === ingredients.value.length - 1) return;
-  const arr = ingredients.value;
-  const current = arr[index]!;
-  const next = arr[index + 1]!;
-  arr[index] = next;
-  arr[index + 1] = current;
-}
+const store = useCreateRecipeStore();
+const { ingredients } = storeToRefs(store);
 </script>
 
 <template>
@@ -43,11 +21,16 @@ function moveDown(index: number) {
     <IngredientRow
       v-for="(ingredient, index) in ingredients"
       :key="ingredient.id"
+      :ingredient="ingredient"
       class="ingredient-list"
-      @move-up="moveUp(index)"
-      @move-down="moveDown(index)"
+      @move-up="store.moveIngredientUp(index)"
+      @move-down="store.moveIngredientDown(index)"
+      @remove="store.removeIngredient(ingredient.id)"
     />
-    <md-outlined-button class="add-ingredient-btn" @click="addIngredient">
+    <md-outlined-button
+      class="add-ingredient-btn"
+      @click="store.addIngredient()"
+    >
       <md-icon slot="icon">add</md-icon>
       <md-label size="medium">
         {{ t('feature.recipes.createRecipe.ingredients.addIngredient') }}

@@ -54,6 +54,12 @@
             "TEASPOON": "tsp",
             "TABLESPOON": "tbsp"
           }
+        },
+        "preview": {
+          "heading": "Preview",
+          "submit": "Create Recipe",
+          "submitting": "Submitting…",
+          "success": "Recipe created successfully!"
         }
       }
     },

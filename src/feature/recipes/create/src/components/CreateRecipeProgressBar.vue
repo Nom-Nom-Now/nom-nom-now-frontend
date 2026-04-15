@@ -29,7 +29,7 @@
       </div>
 
       <div class="previewBox" v-if="activeStep.valueOf() === 'preview'">
-        Preview Placeholder
+        <PreviewFrame />
       </div>
     </div>
   </div>
@@ -41,6 +41,7 @@ import StepNavigationButton from '../../../../../components/StepNavigationButton
 import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
 import IngredientsFrame from './ingredients/IngredientsFrame.vue';
+import PreviewFrame from './preview/PreviewFrame.vue';
 const { t } = useI18n();
 
 const stepNavigationItems = [
