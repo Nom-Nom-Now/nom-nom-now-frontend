@@ -130,7 +130,7 @@ function openCamera() {
 .preview-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 1rem;
 }
 
@@ -143,8 +143,11 @@ function openCamera() {
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 
+
+
 .remove-btn {
   margin-top: 0.5rem;
+  margin-right: 2rem;
 }
 
 .placeholder {
