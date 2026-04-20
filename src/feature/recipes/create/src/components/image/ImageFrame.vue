@@ -81,7 +81,7 @@ function openCamera() {
 
     <!-- Placeholder when no image -->
     <div v-else class="placeholder">
-      <md-icon class="placeholder-icon">add_a_photo</md-icon>
+      <md-icon class="placeholder-icon">image</md-icon>
       <MdLabel size="medium">
         {{ t('feature.recipes.createRecipe.image.noImage') }}
       </MdLabel>
@@ -158,6 +158,7 @@ function openCamera() {
   border: 2px dashed var(--md-sys-color-outline-variant);
   border-radius: 0.75rem;
   margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .placeholder-icon {
