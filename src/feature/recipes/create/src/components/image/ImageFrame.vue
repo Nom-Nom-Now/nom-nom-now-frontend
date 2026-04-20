@@ -3,41 +3,53 @@ import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch, onBeforeUnmount } from 'vue';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
+const { recipeImage } = storeToRefs(store);
 const fileInput = ref<HTMLInputElement | null>(null);
 const cameraInput = ref<HTMLInputElement | null>(null);
 const imagePreviewUrl = ref<string | null>(null);
 
-function handleFileSelect(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-  setImage(file);
-}
-
-function handleCapture(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-  setImage(file);
-}
-
-function setImage(file: File) {
-  store.setRecipeImage(file);
-  if (imagePreviewUrl.value) {
-    URL.revokeObjectURL(imagePreviewUrl.value);
-  }
-  imagePreviewUrl.value = URL.createObjectURL(file);
-}
-
-function removeImage() {
-  store.setRecipeImage(null);
+function buildPreviewUrl(file: File | null) {
   if (imagePreviewUrl.value) {
     URL.revokeObjectURL(imagePreviewUrl.value);
     imagePreviewUrl.value = null;
   }
-  // Reset inputs
+  if (file) {
+    imagePreviewUrl.value = URL.createObjectURL(file);
+  }
+}
+
+// Sync preview with persisted store state (handles remount when switching steps)
+buildPreviewUrl(recipeImage.value);
+watch(recipeImage, (file) => buildPreviewUrl(file));
+
+onBeforeUnmount(() => {
+  if (imagePreviewUrl.value) {
+    URL.revokeObjectURL(imagePreviewUrl.value);
+  }
+});
+
+function handleFileSelect(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  store.setRecipeImage(file);
+  input.value = '';
+}
+
+function handleCapture(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  store.setRecipeImage(file);
+  input.value = '';
+}
+
+function removeImage() {
+  store.setRecipeImage(null);
   if (fileInput.value) fileInput.value.value = '';
   if (cameraInput.value) cameraInput.value.value = '';
 }
@@ -61,7 +73,7 @@ function openCamera() {
 
     <!-- Image Preview -->
     <div v-if="imagePreviewUrl" class="preview-container">
-      <img :src="imagePreviewUrl" class="preview-image" />
+      <img :src="imagePreviewUrl" :alt="t('feature.recipes.createRecipe.image.previewAlt')" class="preview-image" />
       <md-outlined-button @click="removeImage" class="remove-btn">
         <md-icon slot="icon">delete</md-icon>
         {{ t('feature.recipes.createRecipe.image.removeImage') }}

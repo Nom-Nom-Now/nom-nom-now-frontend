@@ -60,7 +60,8 @@
           "takePhoto": "Take Photo",
           "fromGallery": "Choose from Gallery",
           "removeImage": "Remove",
-          "noImage": "No image selected yet"
+          "noImage": "No image selected yet",
+          "previewAlt": "Recipe image preview"
         },
         "preview": {
           "heading": "Preview",
