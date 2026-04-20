@@ -32,20 +32,19 @@ onBeforeUnmount(() => {
   }
 });
 
-function handleFileSelect(event: Event) {
-  const input = event.target as HTMLInputElement;
+function setRecipeImageFromInput(input: HTMLInputElement) {
   const file = input.files?.[0];
   if (!file) return;
   store.setRecipeImage(file);
   input.value = '';
 }
 
+function handleFileSelect(event: Event) {
+  setRecipeImageFromInput(event.target as HTMLInputElement);
+}
+
 function handleCapture(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  if (!file) return;
-  store.setRecipeImage(file);
-  input.value = '';
+  setRecipeImageFromInput(event.target as HTMLInputElement);
 }
 
 function removeImage() {
