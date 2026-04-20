@@ -130,8 +130,9 @@ function openCamera() {
 .preview-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 1rem;
+  margin-left: 2rem;
 }
 
 .preview-image {
@@ -147,7 +148,6 @@ function openCamera() {
 
 .remove-btn {
   margin-top: 0.5rem;
-  margin-right: 2rem;
 }
 
 .placeholder {
