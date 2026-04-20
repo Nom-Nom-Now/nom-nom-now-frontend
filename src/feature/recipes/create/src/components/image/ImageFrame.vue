@@ -2,7 +2,6 @@
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { storeToRefs } from 'pinia';
 import { ref, watch, onBeforeUnmount } from 'vue';
 
 const { t } = useI18n();
