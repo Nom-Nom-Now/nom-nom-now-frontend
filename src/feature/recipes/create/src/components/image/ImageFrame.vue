@@ -7,8 +7,6 @@ import { ref } from 'vue';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
-const { recipeImage } = storeToRefs(store);
-
 const fileInput = ref<HTMLInputElement | null>(null);
 const cameraInput = ref<HTMLInputElement | null>(null);
 const imagePreviewUrl = ref<string | null>(null);
