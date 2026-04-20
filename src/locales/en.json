@@ -55,6 +55,13 @@
             "TABLESPOON": "tbsp"
           }
         },
+        "image": {
+          "heading": "Image",
+          "takePhoto": "Take Photo",
+          "fromGallery": "Choose from Gallery",
+          "removeImage": "Remove",
+          "noImage": "No image selected yet"
+        },
         "preview": {
           "heading": "Preview",
           "submit": "Create Recipe",

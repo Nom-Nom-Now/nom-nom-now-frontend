@@ -55,6 +55,13 @@
             "TABLESPOON": "EL"
           }
         },
+        "image": {
+          "heading": "Foto",
+          "takePhoto": "Foto aufnehmen",
+          "fromGallery": "Aus Galerie wählen",
+          "removeImage": "Entfernen",
+          "noImage": "Noch kein Foto ausgewählt"
+        },
         "preview": {
           "heading": "Vorschau",
           "submit": "Rezept erstellen",
