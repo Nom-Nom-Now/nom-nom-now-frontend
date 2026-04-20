@@ -188,7 +188,7 @@ function onDrop(event: DragEvent) {
   justify-content: center;
   gap: 0.75rem;
   width: 10rem;
-  height: 10rem;
+  height: 11.5rem;
   border: 2px dashed var(--md-sys-color-outline-variant);
   border-radius: 0.75rem;
   margin-left: 2rem;
