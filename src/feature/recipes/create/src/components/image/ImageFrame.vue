@@ -60,6 +60,28 @@ function openGallery() {
 function openCamera() {
   cameraInput.value?.click();
 }
+
+// Drag & Drop
+const isDragging = ref(false);
+
+function onDragOver(event: DragEvent) {
+  event.preventDefault();
+  isDragging.value = true;
+}
+
+function onDragLeave(event: DragEvent) {
+  event.preventDefault();
+  isDragging.value = false;
+}
+
+function onDrop(event: DragEvent) {
+  event.preventDefault();
+  isDragging.value = false;
+  const file = event.dataTransfer?.files?.[0];
+  if (file && file.type.startsWith('image/')) {
+    store.setRecipeImage(file);
+  }
+}
 </script>
 
 <template>
@@ -79,11 +101,21 @@ function openCamera() {
       </md-outlined-button>
     </div>
 
-    <!-- Placeholder when no image -->
-    <div v-else class="placeholder">
+    <!-- Placeholder when no image (drop zone) -->
+    <div
+      v-else
+      class="placeholder"
+      :class="{ 'placeholder--dragging': isDragging }"
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
+      @drop="onDrop"
+    >
       <md-icon class="placeholder-icon">image</md-icon>
       <MdLabel size="medium">
         {{ t('feature.recipes.createRecipe.image.noImage') }}
+      </MdLabel>
+      <MdLabel size="small" class="drop-hint">
+        {{ t('feature.recipes.createRecipe.image.dropHint') }}
       </MdLabel>
     </div>
 
@@ -152,17 +184,29 @@ function openCamera() {
 .placeholder {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding: 3rem 1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 10rem;
+  height: 10rem;
   border: 2px dashed var(--md-sys-color-outline-variant);
   border-radius: 0.75rem;
   margin-left: 2rem;
-  margin-right: 2rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.placeholder--dragging {
+  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary-container);
 }
 
 .placeholder-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.drop-hint {
   color: var(--md-sys-color-on-surface-variant);
 }
 

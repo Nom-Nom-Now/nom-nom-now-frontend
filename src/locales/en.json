@@ -61,6 +61,7 @@
           "fromGallery": "Choose from Gallery",
           "removeImage": "Remove",
           "noImage": "No image selected yet",
+          "dropHint": "or drag and drop an image here",
           "previewAlt": "Recipe image preview"
         },
         "preview": {

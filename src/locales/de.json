@@ -61,6 +61,7 @@
           "fromGallery": "Aus Galerie wählen",
           "removeImage": "Entfernen",
           "noImage": "Noch kein Foto ausgewählt",
+          "dropHint": "oder Bild hierher ziehen",
           "previewAlt": "Vorschau des Rezeptfotos"
         },
         "preview": {
