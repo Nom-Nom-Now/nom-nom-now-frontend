@@ -153,11 +153,12 @@ function openCamera() {
 .placeholder {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   padding: 3rem 1rem;
   border: 2px dashed var(--md-sys-color-outline-variant);
   border-radius: 0.75rem;
+  margin-left: 2rem;
 }
 
 .placeholder-icon {
