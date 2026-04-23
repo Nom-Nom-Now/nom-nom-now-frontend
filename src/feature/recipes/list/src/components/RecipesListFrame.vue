@@ -40,6 +40,8 @@ onMounted(() => {
 .recipes-list-container {
   width: 100%;
   padding: 1rem;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .top-bar {

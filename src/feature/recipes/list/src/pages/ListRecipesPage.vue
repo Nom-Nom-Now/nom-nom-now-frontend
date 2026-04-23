@@ -12,5 +12,6 @@ import RecipesListFrame from '../components/RecipesListFrame.vue';
 .list-recipes-page {
   width: 100%;
   align-self: flex-start;
+  overflow: hidden;
 }
 </style>
