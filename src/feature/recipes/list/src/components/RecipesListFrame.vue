@@ -1,6 +1,9 @@
 <template>
   <div class="recipes-list-container">
-    <RecipeSearchBar />
+    <div class="top-bar">
+      <RecipeSearchBar />
+      <md-filled-button type="button" @click="navigateToCreate">{{ t('feature.recipes.list.createButton') }}</md-filled-button>
+    </div>
     <div v-if="store.isLoading" class="loading">Laden...</div>
     <div v-else class="recipes-grid">
       <RecipeBox
@@ -14,11 +17,19 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';
 import RecipeBox from './RecipeBox.vue';
 import { useRecipeListStore } from '../stores/useRecipeListStore';
 
+const router = useRouter();
+const { t } = useI18n();
 const store = useRecipeListStore();
+
+function navigateToCreate() {
+  router.push('/recipes/create');
+}
 
 onMounted(() => {
   store.fetchRecipes();
@@ -29,6 +40,19 @@ onMounted(() => {
 .recipes-list-container {
   width: 100%;
   padding: 1rem;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-right: 2rem;
+}
+
+.top-bar md-filled-button {
+  height: 3rem;
+  --md-filled-button-container-shape: 16px;
 }
 
 .recipes-grid {

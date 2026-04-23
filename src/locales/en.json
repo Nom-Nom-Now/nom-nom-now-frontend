@@ -61,6 +61,9 @@
           "submitting": "Submitting…",
           "success": "Recipe created successfully!"
         }
+      },
+      "list": {
+        "createButton": "New Recipe"
       }
     },
 
