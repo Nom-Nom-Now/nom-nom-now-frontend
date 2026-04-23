@@ -38,7 +38,7 @@ const showShell = computed(() => !route.meta.hideShell);
 .app-layout {
   display: flex;
   overflow: hidden;
-  height: 100%;
+  height: 100vh;
 }
 
 .auth-layout {
@@ -49,7 +49,6 @@ const showShell = computed(() => !route.meta.hideShell);
 aside {
   width: 5.5rem;
   flex-shrink: 0;
-  min-height: 100vh;
   background-color: var(--md-sys-color-surface);
   overflow-y: auto;
 }
@@ -59,6 +58,7 @@ aside {
   flex-direction: column;
   min-width: 0;
   flex-grow: 1;
+  overflow: hidden;
 }
 
 .content-area {
