@@ -38,7 +38,7 @@ const showShell = computed(() => !route.meta.hideShell);
 .app-layout {
   display: flex;
   overflow: hidden;
-  height: 100%;
+  height: 100vh;
 }
 
 .auth-layout {
@@ -48,16 +48,17 @@ const showShell = computed(() => !route.meta.hideShell);
 
 aside {
   width: 5.5rem;
+  flex-shrink: 0;
   background-color: var(--md-sys-color-surface);
   overflow-y: auto;
-  height: 100vh; /* Maybe hier bessere Loesung suchen als einfach die Komponente sehr gross zu machen */
 }
 
 .main-section {
   display: flex;
   flex-direction: column;
-
-  flex-grow: 1; /* Wenn in Main Section mehrere Fenster sind, das hier maybe nur auf Header packen */
+  min-width: 0;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .content-area {
@@ -65,6 +66,7 @@ aside {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .content-box {
@@ -73,5 +75,6 @@ aside {
   height: 100%;
   border-radius: 1rem;
   background-color: var(--md-sys-color-surface);
+  overflow: auto;
 }
 </style>
