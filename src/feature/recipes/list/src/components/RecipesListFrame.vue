@@ -2,9 +2,14 @@
   <div class="recipes-list-container">
     <div class="top-bar">
       <RecipeSearchBar />
-      <md-filled-button type="button" @click="navigateToCreate">{{ t('feature.recipes.list.createButton') }}</md-filled-button>
+      <md-filled-button type="button" @click="navigateToCreate">{{
+        t('feature.recipes.list.createButton')
+      }}</md-filled-button>
     </div>
-    <RecipesGridContent :recipes="store.recipes" :is-loading="store.isLoading" />
+    <RecipesGridContent
+      :recipes="store.recipes"
+      :is-loading="store.isLoading"
+    />
   </div>
 </template>
 

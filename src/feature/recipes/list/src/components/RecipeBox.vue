@@ -1,6 +1,6 @@
 <template>
   <div class="recipe-box">
-    <MdLabel size="large"  class="recipe-title"> {{ recipe.title }} </MdLabel>
+    <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
 
     <div class="recipe-image-container">
       <img :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
@@ -9,7 +9,7 @@
     <div class="recipe-meta">
       <div class="recipe-time">
         <md-icon>schedule</md-icon>
-        <MdText size="medium"> {{ recipe.duration  }} </MdText>
+        <MdText size="medium"> {{ recipe.duration }} </MdText>
       </div>
       <span class="recipe-cost">{{ recipe.cost }}</span>
     </div>
@@ -37,7 +37,6 @@ defineProps<{
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 
 .recipe-title {

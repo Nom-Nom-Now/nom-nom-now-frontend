@@ -2,11 +2,7 @@
   <div class="recipes-grid-scroll">
     <div v-if="isLoading" class="loading">Laden...</div>
     <div v-else class="recipes-grid">
-      <RecipeBox
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        :recipe="recipe"
-      />
+      <RecipeBox v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
     </div>
   </div>
 </template>
