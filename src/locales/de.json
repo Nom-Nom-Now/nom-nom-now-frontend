@@ -55,6 +55,14 @@
             "TABLESPOON": "EL"
           }
         },
+        "preparation": {
+          "title": "Zubereitung",
+          "description": "Beschreibe die Schritte zur Zubereitung deines Rezepts",
+          "placeholder": "Gib hier die Zubereitungsschritte ein...",
+          "workingTime": "Zubereitungszeit",
+          "hours": "Stunden",
+          "minutes": "Minuten"
+        },
         "preview": {
           "heading": "Vorschau",
           "submit": "Rezept erstellen",
