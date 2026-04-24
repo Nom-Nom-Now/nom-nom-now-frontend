@@ -21,7 +21,7 @@
       </div>
 
       <div class="categoriesBox" v-if="activeStep.valueOf() === 'categories'">
-        Categories Placeholder
+        <CategoryFrame />
       </div>
 
       <div class="imageBox" v-if="activeStep.valueOf() === 'image'">
@@ -42,6 +42,7 @@ import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
 import IngredientsFrame from './ingredients/IngredientsFrame.vue';
 import PreviewFrame from './preview/PreviewFrame.vue';
+import CategoryFrame from './categories/CategoryFrame.vue';
 const { t } = useI18n();
 
 const stepNavigationItems = [
