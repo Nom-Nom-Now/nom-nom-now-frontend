@@ -94,7 +94,11 @@ function onDrop(event: DragEvent) {
 
     <!-- Image Preview -->
     <div v-if="imagePreviewUrl" class="preview-container">
-      <img :src="imagePreviewUrl" :alt="t('feature.recipes.createRecipe.image.previewAlt')" class="preview-image" />
+      <img
+        :src="imagePreviewUrl"
+        :alt="t('feature.recipes.createRecipe.image.previewAlt')"
+        class="preview-image"
+      />
       <md-outlined-button @click="removeImage" class="remove-btn">
         <md-icon slot="icon">delete</md-icon>
         {{ t('feature.recipes.createRecipe.image.removeImage') }}
@@ -111,7 +115,7 @@ function onDrop(event: DragEvent) {
       @drop="onDrop"
     >
       <md-icon class="placeholder-icon">image</md-icon>
-      <MdLabel size="medium">
+      <MdLabel size="medium" class="placeholder-text">
         {{ t('feature.recipes.createRecipe.image.noImage') }}
       </MdLabel>
       <MdLabel size="small" class="drop-hint">
@@ -175,8 +179,6 @@ function onDrop(event: DragEvent) {
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 
-
-
 .remove-btn {
   margin-top: 0.5rem;
 }
@@ -187,13 +189,18 @@ function onDrop(event: DragEvent) {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  width: 10rem;
-  height: 11.5rem;
+  width: 14rem;
+  height: 14rem;
   border: 2px dashed var(--md-sys-color-outline-variant);
   border-radius: 0.75rem;
   margin-left: 2rem;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+  overflow: hidden;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .placeholder--dragging {
@@ -203,7 +210,13 @@ function onDrop(event: DragEvent) {
 
 .placeholder-icon {
   font-size: 2.5rem;
+  --md-icon-size: 2.5rem;
   color: var(--md-sys-color-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.placeholder-text {
+  text-align: center;
 }
 
 .drop-hint {
