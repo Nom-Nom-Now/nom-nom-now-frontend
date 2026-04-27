@@ -55,6 +55,15 @@
             "TABLESPOON": "tbsp"
           }
         },
+        "image": {
+          "heading": "Image",
+          "takePhoto": "Take Photo",
+          "fromGallery": "Choose from Gallery",
+          "removeImage": "Remove",
+          "noImage": "No image selected yet",
+          "dropHint": "or drag and drop an image here",
+          "previewAlt": "Recipe image preview"
+        },
         "preparation": {
           "title": "Preparation",
           "description": "Describe the steps to prepare your recipe",
