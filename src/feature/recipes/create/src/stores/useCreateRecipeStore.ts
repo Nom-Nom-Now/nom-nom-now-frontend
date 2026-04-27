@@ -61,6 +61,10 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     });
   }
 
+  function setCategoryIds(ids: number[]) {
+    categoryIds.value = ids;
+  }
+
   function removeIngredient(id: number) {
     ingredients.value = ingredients.value.filter((i) => i.id !== id);
   }
@@ -159,6 +163,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     // Actions
     setRecipeName,
     setServings,
+    setCategoryIds,
     addIngredient,
     removeIngredient,
     updateIngredientAmount,
