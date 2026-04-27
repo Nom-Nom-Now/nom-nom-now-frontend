@@ -64,12 +64,23 @@
           "dropHint": "or drag and drop an image here",
           "previewAlt": "Recipe image preview"
         },
+        "preparation": {
+          "title": "Preparation",
+          "description": "Describe the steps to prepare your recipe",
+          "placeholder": "Enter preparation steps here...",
+          "workingTime": "Working Time",
+          "hours": "Hours",
+          "minutes": "Minutes"
+        },
         "preview": {
           "heading": "Preview",
           "submit": "Create Recipe",
           "submitting": "Submitting…",
           "success": "Recipe created successfully!"
         }
+      },
+      "list": {
+        "createButton": "New Recipe"
       }
     },
 

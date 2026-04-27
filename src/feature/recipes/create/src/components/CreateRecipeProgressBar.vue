@@ -17,7 +17,7 @@
       </div>
 
       <div class="preparationBox" v-if="activeStep.valueOf() === 'preparation'">
-        Preparation Placeholder
+        <PreparationFrame />
       </div>
 
       <div class="categoriesBox" v-if="activeStep.valueOf() === 'categories'">
@@ -43,6 +43,7 @@ import { ref } from 'vue';
 import IngredientsFrame from './ingredients/IngredientsFrame.vue';
 import PreviewFrame from './preview/PreviewFrame.vue';
 import ImageFrame from './image/ImageFrame.vue';
+import PreparationFrame from './preparation/PreparationFrame.vue';
 const { t } = useI18n();
 
 const stepNavigationItems = [
