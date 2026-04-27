@@ -25,7 +25,7 @@
       </div>
 
       <div class="imageBox" v-if="activeStep.valueOf() === 'image'">
-        Image Placeholder
+        <ImageFrame />
       </div>
 
       <div class="previewBox" v-if="activeStep.valueOf() === 'preview'">
@@ -43,6 +43,7 @@ import { ref } from 'vue';
 import IngredientsFrame from './ingredients/IngredientsFrame.vue';
 import PreviewFrame from './preview/PreviewFrame.vue';
 import CategoryFrame from './categories/CategoryFrame.vue';
+import ImageFrame from './image/ImageFrame.vue';
 import PreparationFrame from './preparation/PreparationFrame.vue';
 const { t } = useI18n();
 

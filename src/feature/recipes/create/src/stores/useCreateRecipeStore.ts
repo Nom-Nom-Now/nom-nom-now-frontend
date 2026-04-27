@@ -17,10 +17,15 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
   const instructions = ref('');
   const cookingTime = ref(0);
   const categoryIds = ref<number[]>([]);
+  const recipeImage = ref<File | null>(null);
 
   // Submit-Status
   const isSubmitting = ref(false);
   const submitError = ref<string | null>(null);
+
+  function setRecipeImage(file: File | null) {
+    recipeImage.value = file;
+  }
 
   let nextId = 4;
 
@@ -133,6 +138,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     instructions.value = '';
     cookingTime.value = 0;
     categoryIds.value = [];
+    recipeImage.value = null;
     submitError.value = null;
     isSubmitting.value = false;
     nextId = 4;
@@ -148,6 +154,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     categoryIds,
     isSubmitting,
     submitError,
+    recipeImage,
 
     // Getters
     ingredientCount,
@@ -164,6 +171,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     updateIngredientName,
     moveIngredientUp,
     moveIngredientDown,
+    setRecipeImage,
     submitRecipe,
     $reset,
   };

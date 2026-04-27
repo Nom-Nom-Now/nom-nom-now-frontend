@@ -151,6 +151,15 @@
             "TABLESPOON": "EL"
           }
         },
+        "image": {
+          "heading": "Foto",
+          "takePhoto": "Foto aufnehmen",
+          "fromGallery": "Aus Galerie wählen",
+          "removeImage": "Entfernen",
+          "noImage": "Noch kein Foto ausgewählt",
+          "dropHint": "oder Bild hierher ziehen",
+          "previewAlt": "Vorschau des Rezeptfotos"
+        },
         "preparation": {
           "title": "Zubereitung",
           "description": "Beschreibe die Schritte zur Zubereitung deines Rezepts",
