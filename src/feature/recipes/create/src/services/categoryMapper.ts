@@ -17,9 +17,7 @@ function mapSuperCategoryDto(
   };
 }
 
-function mapCategoryDto(
-  dto: CategoryResponseDto,
-): CategoryOption {
+function mapCategoryDto(dto: CategoryResponseDto): CategoryOption {
   return {
     id: dto.id,
     name: dto.name.trim(),

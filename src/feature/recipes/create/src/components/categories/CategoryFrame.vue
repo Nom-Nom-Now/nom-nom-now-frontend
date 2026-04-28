@@ -1,152 +1,150 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import MdLabel from '../../../../../../components/MdLabel.vue'
-import { loadCategoryLists } from '../../services/categoryMapper'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import MdLabel from '../../../../../../components/MdLabel.vue';
+import { loadCategoryLists } from '../../services/categoryMapper';
 import type {
   CategoryOption,
-  SuperCategoryOption
-} from '../../services/categoryApiTypes.ts'
-import type { ComponentPublicInstance } from 'vue'
+  SuperCategoryOption,
+} from '../../services/categoryApiTypes.ts';
+import type { ComponentPublicInstance } from 'vue';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore.ts';
 
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-type TextFieldElement = HTMLElement & { value: string }
+type TextFieldElement = HTMLElement & { value: string };
 
-const store = useCreateRecipeStore()
+const store = useCreateRecipeStore();
 
-const selectedIds = ref<number[]>([...store.categoryIds])
+const selectedIds = ref<number[]>([...store.categoryIds]);
 
-const categories = ref<CategoryOption[]>([])
-const superCategories = ref<SuperCategoryOption[]>([])
-const loading = ref(false)
-const error = ref<string | null>(null)
+const categories = ref<CategoryOption[]>([]);
+const superCategories = ref<SuperCategoryOption[]>([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
 
-const searchTerms = ref<Record<number, string>>({})
-const openDropdowns = ref<Record<number, boolean>>({})
+const searchTerms = ref<Record<number, string>>({});
+const openDropdowns = ref<Record<number, boolean>>({});
 
 const selectedCategories = computed(() =>
-  categories.value.filter(category =>
-    selectedIds.value.includes(category.id)
-  )
-)
+  categories.value.filter((category) =>
+    selectedIds.value.includes(category.id),
+  ),
+);
 
 const getCategoryLabel = (name: string) =>
-  t(`feature.recipes.createRecipe.categories.${name}`)
+  t(`feature.recipes.createRecipe.categories.${name}`);
 
 const getSuperCategoryLabel = (name: string) =>
-  t(`feature.recipes.createRecipe.categories.${name}`)
+  t(`feature.recipes.createRecipe.categories.${name}`);
 
 const getSearchTerm = (superCategoryId: number) =>
-  searchTerms.value[superCategoryId] ?? ''
+  searchTerms.value[superCategoryId] ?? '';
 
 const setDropdownOpen = (superCategoryId: number, isOpen: boolean) => {
   openDropdowns.value = {
     ...openDropdowns.value,
-    [superCategoryId]: isOpen
-  }
-}
+    [superCategoryId]: isOpen,
+  };
+};
 
 const isDropdownOpen = (superCategoryId: number) =>
-  openDropdowns.value[superCategoryId] ?? false
+  openDropdowns.value[superCategoryId] ?? false;
 
 const onSearchInput = (superCategoryId: number, event: Event) => {
-  const target = event.target as TextFieldElement
+  const target = event.target as TextFieldElement;
 
   searchTerms.value = {
     ...searchTerms.value,
-    [superCategoryId]: target.value ?? ''
-  }
+    [superCategoryId]: target.value ?? '',
+  };
 
-  setDropdownOpen(superCategoryId, true)
-}
+  setDropdownOpen(superCategoryId, true);
+};
 
 const getFilteredCategories = (superCategoryId: number) => {
-  const term = getSearchTerm(superCategoryId).trim().toLowerCase()
+  const term = getSearchTerm(superCategoryId).trim().toLowerCase();
 
-  return categories.value.filter(category => {
-    const matchesSuperCategory = category.superCategoryId === superCategoryId
-    const translatedName = getCategoryLabel(category.name).toLowerCase()
-    const matchesSearch = !term || translatedName.includes(term)
+  return categories.value.filter((category) => {
+    const matchesSuperCategory = category.superCategoryId === superCategoryId;
+    const translatedName = getCategoryLabel(category.name).toLowerCase();
+    const matchesSearch = !term || translatedName.includes(term);
 
-    return matchesSuperCategory && matchesSearch
-  })
-}
+    return matchesSuperCategory && matchesSearch;
+  });
+};
 
 const toggleCategory = (id: number) => {
-
   selectedIds.value = selectedIds.value.includes(id)
-    ? selectedIds.value.filter(value => value !== id)
-    : [...selectedIds.value, id]
+    ? selectedIds.value.filter((value) => value !== id)
+    : [...selectedIds.value, id];
 
-  store.setCategoryIds([...selectedIds.value])
-}
+  store.setCategoryIds([...selectedIds.value]);
+};
 
 const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as Node
+  const target = event.target as Node;
 
   for (const superCategory of superCategories.value) {
-    const dropdown = dropdownRefs.value[superCategory.id]
+    const dropdown = dropdownRefs.value[superCategory.id];
 
     if (dropdown && !dropdown.contains(target)) {
       openDropdowns.value = {
         ...openDropdowns.value,
-        [superCategory.id]: false
-      }
+        [superCategory.id]: false,
+      };
     }
   }
-}
+};
 
-const dropdownRefs = ref<Record<number, HTMLElement | null>>({})
+const dropdownRefs = ref<Record<number, HTMLElement | null>>({});
 
 const setDropdownRef =
-  (id: number) =>
-    (element: Element | ComponentPublicInstance | null) => {
-      dropdownRefs.value[id] = element as HTMLElement | null
-    }
+  (id: number) => (element: Element | ComponentPublicInstance | null) => {
+    dropdownRefs.value[id] = element as HTMLElement | null;
+  };
 
 const removeCategory = (id: number) => {
-  selectedIds.value = selectedIds.value.filter(value => value !== id)
-  store.setCategoryIds([...selectedIds.value])
-}
+  selectedIds.value = selectedIds.value.filter((value) => value !== id);
+  store.setCategoryIds([...selectedIds.value]);
+};
 
-const isChecked = (id: number) => selectedIds.value.includes(id)
+const isChecked = (id: number) => selectedIds.value.includes(id);
 
 const fetchCategories = async () => {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
 
   try {
-    const data = await loadCategoryLists()
-    categories.value = data.categories
-    superCategories.value = data.superCategories
+    const data = await loadCategoryLists();
+    categories.value = data.categories;
+    superCategories.value = data.superCategories;
 
     searchTerms.value = Object.fromEntries(
-      data.superCategories.map(superCategory => [superCategory.id, ''])
-    )
+      data.superCategories.map((superCategory) => [superCategory.id, '']),
+    );
 
     openDropdowns.value = Object.fromEntries(
-      data.superCategories.map(superCategory => [superCategory.id, false])
-    )
+      data.superCategories.map((superCategory) => [superCategory.id, false]),
+    );
   } catch (err) {
     error.value =
-      err instanceof Error ? err.message : 'Fehler beim Laden der Kategorien'
+      err instanceof Error ? err.message : 'Fehler beim Laden der Kategorien';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-  selectedIds.value = [...store.categoryIds]
-}
+  selectedIds.value = [...store.categoryIds];
+};
 
 onMounted(() => {
-  fetchCategories()
-  document.addEventListener('click', handleClickOutside)
-})
+  fetchCategories();
+  document.addEventListener('click', handleClickOutside);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <template>
@@ -189,16 +187,11 @@ onBeforeUnmount(() => {
           :key="superCategory.id"
           class="super-category-block"
         >
-          <MdLabel
-            class="super-category-title"
-          >
+          <MdLabel class="super-category-title">
             {{ getSuperCategoryLabel(superCategory.name) }}
           </MdLabel>
 
-          <div
-            class="search-dropdown"
-            :ref="setDropdownRef(superCategory.id)"
-          >
+          <div class="search-dropdown" :ref="setDropdownRef(superCategory.id)">
             <md-outlined-text-field
               class="search-field"
               :label="t('feature.recipes.createRecipe.categories.selectLabel')"
@@ -207,20 +200,14 @@ onBeforeUnmount(() => {
               @input="onSearchInput(superCategory.id, $event)"
             />
 
-            <div
-              v-if="isDropdownOpen(superCategory.id)"
-              class="dropdown-panel"
-            >
+            <div v-if="isDropdownOpen(superCategory.id)" class="dropdown-panel">
               <div
                 v-for="category in getFilteredCategories(superCategory.id)"
                 :key="category.id"
                 class="dropdown-option"
                 @mousedown.prevent="toggleCategory(category.id)"
               >
-                <md-checkbox
-                  :checked="isChecked(category.id)"
-                  tabindex="-1"
-                />
+                <md-checkbox :checked="isChecked(category.id)" tabindex="-1" />
                 <span>{{ getCategoryLabel(category.name) }}</span>
               </div>
 
@@ -332,7 +319,6 @@ onBeforeUnmount(() => {
   line-height: 1;
   padding: 0;
 }
-
 
 .super-category-block {
   display: flex;
