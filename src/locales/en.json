@@ -40,6 +40,7 @@
           "selectLabel": "Select subcategories",
           "loading": "Loading categories...",
           "empty": "No category found",
+          "loadError": "Error loading categories",
 
           "seasonal": "Seasonal",
           "mainingredient": "Main ingredient",

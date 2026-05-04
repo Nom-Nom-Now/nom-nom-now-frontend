@@ -40,6 +40,7 @@
           "selectLabel": "Unterkategorien auswählen",
           "loading": "Kategorien werden geladen...",
           "empty": "Keine Kategorie gefunden",
+          "loadError": "Fehler beim Laden der Kategorien",
 
           "seasonal": "Saisonal",
           "mainingredient": "Hauptzutat",
