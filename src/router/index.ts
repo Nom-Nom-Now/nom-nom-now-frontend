@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HelloWorld from '../components/HelloWorld.vue';
 import CreateRecipeView from '../views/CreateRecipeView.vue';
+import EditRecipeView from '../views/EditRecipeView.vue';
 import PlanView from '../views/PlanView.vue';
 import RecipesView from '../views/RecipesView.vue';
 import BrowseView from '../views/BrowseView.vue';
@@ -35,6 +36,11 @@ const router = createRouter({
           path: 'create',
           component: CreateRecipeView,
           meta: { titleKey: 'feature.recipes.createRecipe.title' },
+        },
+        {
+          path: ':id/edit',
+          component: EditRecipeView,
+          meta: { titleKey: 'feature.recipes.editRecipe.title' },
         },
         {
           path: 'oldcreate',

@@ -3,6 +3,11 @@ import { computed, ref } from 'vue';
 import type { Ingredient, CreateRecipeState } from '../shared/types/recipe';
 import type { Unit } from '../shared/types/units';
 import { createRecipe } from '../services/createRecipeService';
+import {
+  getRecipe,
+  updateRecipe,
+  mapResponseToState,
+} from '../services/editRecipeService';
 
 export const useCreateRecipeStore = defineStore('createRecipe', () => {
   const recipeName = ref('');
@@ -22,6 +27,12 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
   // Submit-Status
   const isSubmitting = ref(false);
   const submitError = ref<string | null>(null);
+
+  // Edit-Modus
+  const editingRecipeId = ref<number | null>(null);
+  const isLoadingRecipe = ref(false);
+
+  const isEditMode = computed(() => editingRecipeId.value !== null);
 
   function setRecipeImage(file: File | null) {
     recipeImage.value = file;
@@ -101,6 +112,28 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
   }
 
   // --- API ---
+  async function loadRecipe(id: number) {
+    isLoadingRecipe.value = true;
+    try {
+      const response = await getRecipe(id);
+      editingRecipeId.value = id;
+
+      const state = mapResponseToState(response);
+      recipeName.value = state.recipeName;
+      servings.value = state.servings;
+      ingredients.value = state.ingredients;
+      instructions.value = state.instructions ?? '';
+      cookingTime.value = state.cookingTime ?? 0;
+      categoryIds.value = state.categoryIds ?? [];
+    } catch (error) {
+      submitError.value =
+        error instanceof Error ? error.message : 'Failed to load recipe';
+      throw error;
+    } finally {
+      isLoadingRecipe.value = false;
+    }
+  }
+
   async function submitRecipe() {
     submitError.value = null;
     isSubmitting.value = true;
@@ -115,7 +148,12 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
         categoryIds: categoryIds.value,
       };
 
-      const response = await createRecipe(state);
+      let response;
+      if (editingRecipeId.value !== null) {
+        response = await updateRecipe(editingRecipeId.value, state);
+      } else {
+        response = await createRecipe(state);
+      }
       $reset();
       return response;
     } catch (error) {
@@ -141,6 +179,8 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     recipeImage.value = null;
     submitError.value = null;
     isSubmitting.value = false;
+    editingRecipeId.value = null;
+    isLoadingRecipe.value = false;
     nextId = 4;
   }
 
@@ -155,10 +195,13 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     isSubmitting,
     submitError,
     recipeImage,
+    editingRecipeId,
+    isLoadingRecipe,
 
     // Getters
     ingredientCount,
     isIngredientsStepValid,
+    isEditMode,
 
     // Actions
     setRecipeName,
@@ -172,6 +215,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     moveIngredientUp,
     moveIngredientDown,
     setRecipeImage,
+    loadRecipe,
     submitRecipe,
     $reset,
   };

@@ -171,9 +171,13 @@
         "preview": {
           "heading": "Vorschau",
           "submit": "Rezept erstellen",
+          "update": "Rezept aktualisieren",
           "submitting": "Wird gesendet…",
           "success": "Rezept wurde erfolgreich erstellt!"
         }
+      },
+      "editRecipe": {
+        "title": "Rezept bearbeiten"
       },
       "list": {
         "createButton": "Neues Rezept"
