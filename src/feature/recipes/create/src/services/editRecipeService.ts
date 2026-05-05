@@ -4,6 +4,7 @@
  */
 
 import type { CreateRecipeState } from '../shared/types/recipe';
+import type { Unit } from '../shared/types/units';
 import type {
   CreateRecipeRequestDto,
   CreateRecipeResponseDto,

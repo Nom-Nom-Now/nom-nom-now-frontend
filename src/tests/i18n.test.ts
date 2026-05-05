@@ -64,15 +64,17 @@ describe('i18n locale files', () => {
   });
 
   it('should have matching nested keys for feature.recipes.createRecipe', () => {
-    const deCreate = ((de as Record<string, unknown>).feature as Record<string, Record<string, unknown>>).recipes.createRecipe;
-    const enCreate = ((en as Record<string, unknown>).feature as Record<string, Record<string, unknown>>).recipes.createRecipe;
+    const deFeature = de['feature'] as Record<string, unknown>;
+    const enFeature = en['feature'] as Record<string, unknown>;
+    const deCreate = (deFeature['recipes'] as Record<string, unknown>)?.['createRecipe'] as Record<string, unknown>;
+    const enCreate = (enFeature['recipes'] as Record<string, unknown>)?.['createRecipe'] as Record<string, unknown>;
 
     expect(Object.keys(deCreate).sort()).toEqual(Object.keys(enCreate).sort());
   });
 
   it('should have matching keys for navigation', () => {
-    const deNav = (de as Record<string, Record<string, unknown>>).navigation;
-    const enNav = (en as Record<string, Record<string, unknown>>).navigation;
+    const deNav = de['navigation'] as Record<string, unknown>;
+    const enNav = en['navigation'] as Record<string, unknown>;
 
     expect(Object.keys(deNav).sort()).toEqual(Object.keys(enNav).sort());
   });
