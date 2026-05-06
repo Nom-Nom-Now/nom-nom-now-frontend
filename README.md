@@ -20,10 +20,35 @@
 
 ## Schnellstart
 
+Starte zuerst das Backend im `dev`-Profil. Dann kann die App ohne Google Login gegen den lokalen Testnutzer laufen.
+
+Backend-Kurzfassung:
+
+```bash
+cd ../nom-nom-now-backend
+docker compose up -d postgres
+docker compose --profile migrate run --rm flyway
+set -a
+source .env
+set +a
+./mvnw spring-boot:run
+```
+
+Frontend:
+
 ```bash
 npm ci
 npm run dev
 ```
+
+Die lokalen Frontend-URLs stehen in `.env.development`:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:8080
+VITE_BACKEND_URL=http://localhost:8080
+```
+
+Komplette lokale Anleitung: `../nom-nom-now-backend/docs/local-development.md`.
 
 ---
 

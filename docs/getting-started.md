@@ -27,6 +27,12 @@ npm ci
 
 ## Entwicklungsserver starten
 
+Stelle sicher, dass das Backend vorher im `dev`-Profil läuft. Die vollständige Backend-Anleitung liegt hier:
+
+```text
+../nom-nom-now-backend/docs/local-development.md
+```
+
 ```bash
 npm run dev
 ```
@@ -40,17 +46,17 @@ Vite startet einen lokalen Dev-Server (standardmäßig unter `http://localhost:5
 Die App nutzt Vite-Environment-Variablen (Prefix `VITE_`). Erstelle bei Bedarf eine `.env.local`-Datei im Projekt-Root:
 
 ```dotenv
-# URL zum Backend (API-Proxy oder direkter Endpunkt)
-VITE_API_BASE_URL=http://localhost:8080/api
+# Direkter lokaler Backend-Endpunkt
+VITE_API_BASE_URL=http://localhost:8080
 
-# Backend-URL für OAuth-Redirects (Login-Seite)
+# Backend-URL für Login-Redirects
 VITE_BACKEND_URL=http://localhost:8080
 ```
 
 | Variable | Beschreibung | Default |
 |---|---|---|
 | `VITE_API_BASE_URL` | Basis-URL für alle API-Aufrufe (`/recipes`, `/categories`, …) | `""` (leerer String) |
-| `VITE_BACKEND_URL` | Backend-URL für OAuth2/Google-Login-Redirect | `""` |
+| `VITE_BACKEND_URL` | Backend-URL für Login-Redirects. Im Backend-`dev`-Profil wird ohne Google direkt zurück auf `/home` redirected. | `""` |
 
 > **Hinweis:** `.env.local` ist in `.gitignore` enthalten und wird nicht ins Repository eingecheckt.
 
