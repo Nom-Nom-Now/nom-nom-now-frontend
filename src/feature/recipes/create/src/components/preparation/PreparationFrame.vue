@@ -1,27 +1,36 @@
 <script setup lang="ts">
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
+import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
+import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
+const store = useCreateRecipeStore();
+const { instructions, cookingTime } = storeToRefs(store);
 
-const preparationInstructions = ref('');
-const prepareHours = ref('0');
-const prepareMinutes = ref('0');
+const prepareHours = ref(String(Math.floor(cookingTime.value / 60)));
+const prepareMinutes = ref(String(cookingTime.value % 60));
 
-// Calculate total minutes
-const totalMinutes = computed(() => {
+function updateCookingTime() {
   const hours = parseInt(prepareHours.value, 10) || 0;
   const minutes = parseInt(prepareMinutes.value, 10) || 0;
-  return hours * 60 + minutes;
-});
+  cookingTime.value = hours * 60 + minutes;
+}
 
-defineExpose({
-  preparationInstructions,
-  totalMinutes,
-  prepareHours,
-  prepareMinutes,
-});
+function onInstructionsInput(event: Event) {
+  instructions.value = (event.target as HTMLTextAreaElement).value;
+}
+
+function onHoursInput(event: Event) {
+  prepareHours.value = (event.target as HTMLInputElement).value;
+  updateCookingTime();
+}
+
+function onMinutesInput(event: Event) {
+  prepareMinutes.value = (event.target as HTMLInputElement).value;
+  updateCookingTime();
+}
 </script>
 
 <template>
@@ -39,9 +48,10 @@ defineExpose({
 
     <div>
       <textarea
-        v-model="preparationInstructions"
+        :value="instructions"
         :placeholder="t('feature.recipes.createRecipe.preparation.placeholder')"
         class="preparationTextarea"
+        @input="onInstructionsInput"
       />
     </div>
 
@@ -54,19 +64,21 @@ defineExpose({
       <div class="timeInputs">
         <div class="timeInputGroup">
           <md-outlined-text-field
-            v-model="prepareHours"
+            :value="prepareHours"
             type="number"
             min="0"
             :label="t('feature.recipes.createRecipe.preparation.hours')"
+            @input="onHoursInput"
           />
         </div>
         <div class="timeInputGroup">
           <md-outlined-text-field
-            v-model="prepareMinutes"
+            :value="prepareMinutes"
             type="number"
             min="0"
             max="59"
             :label="t('feature.recipes.createRecipe.preparation.minutes')"
+            @input="onMinutesInput"
           />
         </div>
       </div>
