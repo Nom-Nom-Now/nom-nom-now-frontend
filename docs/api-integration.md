@@ -23,7 +23,7 @@ Die API-Kommunikation folgt einer klaren Schichtentrennung:
 | Variable | Beschreibung | Default |
 |---|---|---|
 | `VITE_API_BASE_URL` | Basis-URL für API-Requests | `""` (leerer String) |
-| `VITE_BACKEND_URL` | Backend-URL für OAuth-Redirects | `""` |
+| `VITE_BACKEND_URL` | Backend-URL für Login-Redirects | `""` |
 
 Zugriff im Code:
 
@@ -54,8 +54,16 @@ async function postJson<TReq, TRes>(path: string, body: TReq): Promise<TRes>
 
 - Sendet `POST`-Request mit `Content-Type: application/json`
 - Konstruiert die URL als `${API_BASE_URL}${path}`
+- Sendet Cookies/Sessions mit `credentials: 'include'`
 - Wirft `Error` bei nicht-erfolgreicher Response (`!response.ok`)
 - Parst die Antwort als JSON oder gibt leeres Objekt zurück
+
+Wenn `state.recipeImage` gesetzt ist, sendet der Service stattdessen `multipart/form-data`:
+
+| Part | Typ | Beschreibung |
+|---|---|---|
+| `recipe` | `application/json` | `CreateRecipeRequestDto` |
+| `image` | Datei | Optionales Rezeptbild |
 
 ### Öffentliche API
 
@@ -86,6 +94,7 @@ interface CreateRecipeRequestDto {
   name: string;              // Rezeptname
   instructions: string;      // Zubereitungsanleitung
   cookingTime: number;       // Kochzeit in Minuten
+  pricePerPerson?: number;   // Preis pro Person
   categoryIds: number[];     // Kategorie-IDs
   components: CreateRecipeComponentDto[];
 }
@@ -106,6 +115,8 @@ interface CreateRecipeResponseDto {
   name: string;
   instructions: string;
   cookingTime: number;
+  pricePerPerson: number | null;
+  imageUrl: string | null;
   ownerName: string;
   categories: string;
   components: RecipeComponentResponseDto[];

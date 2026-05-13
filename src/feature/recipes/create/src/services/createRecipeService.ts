@@ -44,8 +44,36 @@ function mapStateToRequestDto(
 async function postJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+  });
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(`POST ${path} failed (${response.status}): ${text}`);
+  }
+
+  return text ? (JSON.parse(text) as TRes) : ({} as TRes);
+}
+
+async function postMultipart<TRes>(
+  path: string,
+  recipe: CreateRecipeRequestDto,
+  image: File,
+): Promise<TRes> {
+  const formData = new FormData();
+  formData.append(
+    'recipe',
+    new Blob([JSON.stringify(recipe)], { type: 'application/json' }),
+  );
+  formData.append('image', image, image.name);
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData,
   });
 
   const text = await response.text();
@@ -65,6 +93,14 @@ export async function createRecipe(
   state: CreateRecipeState,
 ): Promise<CreateRecipeResponseDto> {
   const dto = mapStateToRequestDto(state);
+  if (state.recipeImage) {
+    return postMultipart<CreateRecipeResponseDto>(
+      '/recipes',
+      dto,
+      state.recipeImage,
+    );
+  }
+
   return postJson<CreateRecipeRequestDto, CreateRecipeResponseDto>(
     '/recipes',
     dto,
