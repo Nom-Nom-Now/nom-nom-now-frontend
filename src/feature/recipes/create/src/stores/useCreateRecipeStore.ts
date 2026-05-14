@@ -146,6 +146,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
         instructions: instructions.value,
         cookingTime: cookingTime.value,
         categoryIds: categoryIds.value,
+        recipeImage: recipeImage.value,
       };
 
       let response;

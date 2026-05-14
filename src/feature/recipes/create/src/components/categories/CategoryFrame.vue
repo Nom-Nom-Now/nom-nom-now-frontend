@@ -129,8 +129,8 @@ const fetchCategories = async () => {
       data.superCategories.map((superCategory) => [superCategory.id, false]),
     );
   } catch (err) {
-    error.value =
-      err instanceof Error ? err.message : 'Fehler beim Laden der Kategorien';
+    console.error(err);
+    error.value = t('feature.recipes.createRecipe.categories.loadError');
   } finally {
     loading.value = false;
   }
