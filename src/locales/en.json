@@ -8,12 +8,21 @@
       "friday": "Friday",
       "saturday": "Saturday",
       "sunday": "Sunday"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "plan": "Plan",
+    "recipes": "Recipes",
+    "browse": "Browse"
+  },
+  "feature": {
+    "browse": {
+      "title": "Browse"
     },
-    "navigation": {
-      "home": "Home",
-      "plan": "Plan",
-      "recipes": "Recipes",
-      "browse": "Browse"
+    "mainPage": {
+      "title": "Mainpage",
+      "helloWorld": "Hello World"
     },
     "login": {
       "title": "Login",
@@ -24,7 +33,10 @@
       "imprint": "Imprint"
     },
     "plan": {
-      "title": "Plan"
+      "title": "Plan",
+      "refreshPlan": "Refresh",
+      "today": "Today",
+      "loading": "Loading..."
     },
     "recipes": {
       "title": "Recipes",
@@ -42,150 +54,138 @@
           "selectLabel": "Select subcategories",
           "loading": "Loading categories...",
           "empty": "No category found",
-          "loadError": "Error loading categories",
-
-            "seasonal": "Seasonal",
-            "mainingredient": "Main ingredient",
-            "origin": "Origin",
-            "course": "Course",
-            "special": "Special",
-            "drinks": "Drinks",
-            "preparationmethod": "Preparation method",
-            "dietarytype": "Dietary type",
-
-            "spring": "Spring",
-            "summer": "Summer",
-            "autumn": "Autumn",
-            "winter": "Winter",
-            "allSeason": "All season",
-
-            "meat": "Meat",
-            "fish": "Fish",
-            "vegetables": "Vegetables",
-            "cheese": "Cheese",
-            "rice": "Rice",
-            "potatoes": "Potatoes",
-            "pasta": "Pasta",
-            "eggs": "Eggs",
-            "tofu": "Tofu",
-            "legumes": "Legumes",
-
-            "italian": "Italian",
-            "asian": "Asian",
-            "german": "German",
-            "bavarian": "Bavarian",
-            "french": "French",
-            "mexican": "Mexican",
-            "mediterranean": "Mediterranean",
-            "american": "American",
-            "indian": "Indian",
-            "oriental": "Oriental",
-
-            "breakfast": "Breakfast",
-            "brunch": "Brunch",
-            "lunch": "Lunch",
-            "dinner": "Dinner",
-            "starter": "Starter",
-            "mainCourse": "Main course",
-            "dessert": "Dessert",
-            "snack": "Snack",
-
-            "casseroles": "Casseroles",
-            "soups": "Soups",
-            "salads": "Salads",
-            "fingerFood": "Finger food",
-            "bread": "Bread",
-            "cakes": "Cakes",
-            "pastries": "Pastries",
-            "sauces": "Sauces",
-            "dips": "Dips",
-            "sideDishes": "Side dishes",
-
-            "waterBased": "Water based",
-            "juice": "Juice",
-            "smoothie": "Smoothie",
-            "milkshake": "Milkshake",
-            "coffee": "Coffee",
-            "tea": "Tea",
-            "cocktail": "Cocktail",
-            "mocktail": "Mocktail",
-            "alcoholic": "Alcoholic",
-            "nonAlcoholic": "Non-alcoholic",
-
-            "bake": "Bake",
-            "cook": "Cook",
-            "roast": "Roast",
-            "grill": "Grill",
-            "steam": "Steam",
-            "fry": "Fry",
-            "boil": "Boil",
-            "noBake": "No bake",
-            "slowCook": "Slow cook",
-            "airFry": "Air fry",
-
-            "vegetarian": "Vegetarian",
-            "vegan": "Vegan",
-            "light": "Light",
-            "diet": "Diet",
-            "highProtein": "High protein",
-            "glutenFree": "Gluten free",
-            "lactoseFree": "Lactose free",
-            "lowCarb": "Low carb",
-            "sugarFree": "Sugar free",
-            "keto": "Keto"
-          },
-          "ingredients": {
-            "name": "Name",
-            "nameExample": "e.g. Hawaiian Pizza",
-            "servings": "Servings",
-            "servingsText": "The recipe is for {servingChooser} people",
-            "chooserHeading": "Ingredients and quantities",
-            "amount": "Amount",
-            "unit": "Unit",
-            "ingredient": "Ingredient",
-            "addIngredient": "Add ingredient",
-            "unitValues": {
-              "GRAM": "g",
-              "KILOGRAM": "kg",
-              "MILLILITER": "ml",
-              "LITER": "l",
-              "PIECE": "piece",
-              "TEASPOON": "tsp",
-              "TABLESPOON": "tbsp"
-            }
-          },
-          "image": {
-            "heading": "Image",
-            "takePhoto": "Take Photo",
-            "fromGallery": "Choose from Gallery",
-            "removeImage": "Remove",
-            "noImage": "No image selected yet",
-            "dropHint": "or drag and drop an image here",
-            "previewAlt": "Recipe image preview"
-          },
-          "preparation": {
-            "title": "Preparation",
-            "description": "Describe the steps to prepare your recipe",
-            "placeholder": "Enter preparation steps here...",
-            "workingTime": "Working Time",
-            "hours": "Hours",
-            "minutes": "Minutes"
-          },
-          "preview": {
-            "heading": "Preview",
-            "submit": "Create Recipe",
-            "submitting": "Submitting…",
-            "success": "Recipe created successfully!"
+          "seasonal": "Seasonal",
+          "mainingredient": "Main ingredient",
+          "origin": "Origin",
+          "course": "Course",
+          "special": "Special",
+          "drinks": "Drinks",
+          "preparationmethod": "Preparation method",
+          "dietarytype": "Dietary type",
+          "spring": "Spring",
+          "summer": "Summer",
+          "autumn": "Autumn",
+          "winter": "Winter",
+          "allSeason": "All season",
+          "meat": "Meat",
+          "fish": "Fish",
+          "vegetables": "Vegetables",
+          "cheese": "Cheese",
+          "rice": "Rice",
+          "potatoes": "Potatoes",
+          "pasta": "Pasta",
+          "eggs": "Eggs",
+          "tofu": "Tofu",
+          "legumes": "Legumes",
+          "italian": "Italian",
+          "asian": "Asian",
+          "german": "German",
+          "bavarian": "Bavarian",
+          "french": "French",
+          "mexican": "Mexican",
+          "mediterranean": "Mediterranean",
+          "american": "American",
+          "indian": "Indian",
+          "oriental": "Oriental",
+          "breakfast": "Breakfast",
+          "brunch": "Brunch",
+          "lunch": "Lunch",
+          "dinner": "Dinner",
+          "starter": "Starter",
+          "mainCourse": "Main course",
+          "dessert": "Dessert",
+          "snack": "Snack",
+          "casseroles": "Casseroles",
+          "soups": "Soups",
+          "salads": "Salads",
+          "fingerFood": "Finger food",
+          "bread": "Bread",
+          "cakes": "Cakes",
+          "pastries": "Pastries",
+          "sauces": "Sauces",
+          "dips": "Dips",
+          "sideDishes": "Side dishes",
+          "waterBased": "Water based",
+          "juice": "Juice",
+          "smoothie": "Smoothie",
+          "milkshake": "Milkshake",
+          "coffee": "Coffee",
+          "tea": "Tea",
+          "cocktail": "Cocktail",
+          "mocktail": "Mocktail",
+          "alcoholic": "Alcoholic",
+          "nonAlcoholic": "Non-alcoholic",
+          "bake": "Bake",
+          "cook": "Cook",
+          "roast": "Roast",
+          "grill": "Grill",
+          "steam": "Steam",
+          "fry": "Fry",
+          "boil": "Boil",
+          "noBake": "No bake",
+          "slowCook": "Slow cook",
+          "airFry": "Air fry",
+          "vegetarian": "Vegetarian",
+          "vegan": "Vegan",
+          "light": "Light",
+          "diet": "Diet",
+          "highProtein": "High protein",
+          "glutenFree": "Gluten free",
+          "lactoseFree": "Lactose free",
+          "lowCarb": "Low carb",
+          "sugarFree": "Sugar free",
+          "keto": "Keto"
+        },
+        "ingredients": {
+          "name": "Name",
+          "nameExample": "e.g. Hawaiian Pizza",
+          "servings": "Servings",
+          "servingsText": "The recipe is for {servingChooser} people",
+          "chooserHeading": "Ingredients and quantities",
+          "amount": "Amount",
+          "unit": "Unit",
+          "ingredient": "Ingredient",
+          "addIngredient": "Add ingredient",
+          "unitValues": {
+            "GRAM": "g",
+            "KILOGRAM": "kg",
+            "MILLILITER": "ml",
+            "LITER": "l",
+            "PIECE": "piece",
+            "TEASPOON": "tsp",
+            "TABLESPOON": "tbsp"
           }
         },
-        "list": {
-          "createButton": "New Recipe"
+        "image": {
+          "heading": "Image",
+          "takePhoto": "Take Photo",
+          "fromGallery": "Choose from Gallery",
+          "removeImage": "Remove",
+          "noImage": "No image selected yet",
+          "dropHint": "or drag and drop an image here",
+          "previewAlt": "Recipe image preview"
+        },
+        "preparation": {
+          "title": "Preparation",
+          "description": "Describe the steps to prepare your recipe",
+          "placeholder": "Enter preparation steps here...",
+          "workingTime": "Working Time",
+          "hours": "Hours",
+          "minutes": "Minutes"
+        },
+        "preview": {
+          "heading": "Preview",
+          "submit": "Create Recipe",
+          "submitting": "Submitting…",
+          "success": "Recipe created successfully!"
         }
       },
-
-      "listAllRecipes": {
-        "title": "Recipes"
+      "list": {
+        "createButton": "New Recipe"
       }
+    },
+    "listAllRecipes": {
+      "title": "Recipes"
     }
   }
 }
