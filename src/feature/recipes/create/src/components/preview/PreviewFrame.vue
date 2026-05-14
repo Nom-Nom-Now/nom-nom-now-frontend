@@ -7,7 +7,7 @@ import { ref } from 'vue';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
-const { isSubmitting, submitError, isIngredientsStepValid } =
+const { isSubmitting, submitError, isIngredientsStepValid, isEditMode } =
   storeToRefs(store);
 
 const submitSuccess = ref(false);
@@ -40,7 +40,9 @@ async function handleSubmit() {
         {{
           isSubmitting
             ? t('feature.recipes.createRecipe.preview.submitting')
-            : t('feature.recipes.createRecipe.preview.submit')
+            : isEditMode
+              ? t('feature.recipes.createRecipe.preview.update', 'Aktualisieren')
+              : t('feature.recipes.createRecipe.preview.submit')
         }}
       </md-filled-button>
 

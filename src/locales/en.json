@@ -172,9 +172,13 @@
         "preview": {
           "heading": "Preview",
           "submit": "Create Recipe",
+          "update": "Update Recipe",
           "submitting": "Submitting…",
           "success": "Recipe created successfully!"
         }
+      },
+      "editRecipe": {
+        "title": "Edit Recipe"
       },
       "list": {
         "createButton": "New Recipe"
