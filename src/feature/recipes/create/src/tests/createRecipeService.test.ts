@@ -33,6 +33,8 @@ describe('createRecipeService', () => {
     name: 'Pasta Bolognese',
     instructions: 'Alles kochen.',
     cookingTime: 30,
+    pricePerPerson: null,
+    imageUrl: null,
     ownerName: 'chef',
     categories: 'Italienisch',
     components: [],
@@ -61,6 +63,7 @@ describe('createRecipeService', () => {
     const [url, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]!;
     expect(url).toContain('/recipes');
     expect(options.method).toBe('POST');
+    expect(options.credentials).toBe('include');
 
     const body = JSON.parse(options.body as string);
     expect(body.name).toBe('Pasta Bolognese');
@@ -119,5 +122,32 @@ describe('createRecipeService', () => {
     await expect(createRecipe(buildValidState())).rejects.toThrow(
       /failed.*400/i,
     );
+  });
+
+  it('should send multipart form data when an image is present', async () => {
+    const image = new File(['image-bytes'], 'pasta.png', {
+      type: 'image/png',
+    });
+
+    await createRecipe(buildValidState({ recipeImage: image }));
+
+    const [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]!;
+    expect(options.method).toBe('POST');
+    expect(options.credentials).toBe('include');
+    expect(options.headers).toBeUndefined();
+    expect(options.body).toBeInstanceOf(FormData);
+
+    const formData = options.body as FormData;
+    const uploadedImage = formData.get('image');
+    expect(uploadedImage).toBeInstanceOf(File);
+    expect((uploadedImage as File).name).toBe('pasta.png');
+    expect((uploadedImage as File).type).toBe('image/png');
+
+    const recipePart = formData.get('recipe');
+    expect(recipePart).toBeInstanceOf(Blob);
+
+    const body = JSON.parse(await (recipePart as Blob).text());
+    expect(body.name).toBe('Pasta Bolognese');
+    expect(body.components).toHaveLength(2);
   });
 });

@@ -21,4 +21,5 @@ export interface CreateRecipeState {
   instructions?: string;
   cookingTime?: number;
   categoryIds?: number[];
+  recipeImage?: File | null;
 }

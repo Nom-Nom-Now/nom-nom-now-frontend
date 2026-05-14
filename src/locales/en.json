@@ -15,44 +15,34 @@
       "recipes": "Recipes",
       "browse": "Browse"
     },
-    "feature": {
-      "browse": {
-        "title": "Browse"
-      },
-      "mainPage": {
-        "title": "Mainpage",
-        "helloWorld": "Hello World"
-      },
-      "login": {
-        "title": "Login",
-        "headline": "Welcome to Nom Nom Now",
-        "description": "Sign in with Google to continue.",
-        "button": "Sign in with Google",
-        "privacy": "Privacy",
-        "imprint": "Imprint"
-      },
-      "plan": {
-        "title": "Plan",
-        "refreshPlan": "Refresh",
-        "today": "Today",
-        "loading": "Loading..."
-      },
-      "recipes": {
-        "title": "Recipes",
-        "createRecipe": {
-          "title": "Create Recipe",
-          "stepNavigation": {
-            "ingredients": "Ingredients",
-            "preparation": "Preparation",
-            "categories": "Categories",
-            "image": "Image",
-            "preview": "Preview"
-          },
-          "categories": {
-            "title": "Choose your categories",
-            "selectLabel": "Select subcategories",
-            "loading": "Loading categories...",
-            "empty": "No category found",
+    "login": {
+      "title": "Login",
+      "headline": "Welcome to Nom Nom Now",
+      "description": "Sign in with Google to continue.",
+      "button": "Sign in with Google",
+      "privacy": "Privacy",
+      "imprint": "Imprint"
+    },
+    "plan": {
+      "title": "Plan"
+    },
+    "recipes": {
+      "title": "Recipes",
+      "createRecipe": {
+        "title": "Create Recipe",
+        "stepNavigation": {
+          "ingredients": "Ingredients",
+          "preparation": "Preparation",
+          "categories": "Categories",
+          "image": "Image",
+          "preview": "Preview"
+        },
+        "categories": {
+          "title": "Choose your categories",
+          "selectLabel": "Select subcategories",
+          "loading": "Loading categories...",
+          "empty": "No category found",
+          "loadError": "Error loading categories",
 
             "seasonal": "Seasonal",
             "mainingredient": "Main ingredient",
