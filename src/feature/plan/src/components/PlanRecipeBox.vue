@@ -1,57 +1,73 @@
 <template>
   <div class="recipe-box">
-    <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
+    <div class="recipe-title">{{ recipe.title }}</div>
 
     <div class="recipe-image-container">
       <img :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
     </div>
 
+    <div class="recipe-tags">
+      <span v-for="category in displayCategories" :key="category" class="tag">
+        {{ category }}
+      </span>
+    </div>
+
     <div class="recipe-meta">
       <div class="recipe-time">
         <md-icon>schedule</md-icon>
-        <MdText size="medium"> {{ recipe.duration }} </MdText>
+        <span class="time-text">{{ recipe.duration }}</span>
       </div>
       <span class="recipe-cost">{{ recipe.cost }}</span>
     </div>
-    <MdText class="recipe-description"> {{ recipe.description }} </MdText>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { Recipe } from '../shared/types';
-import MdLabel from '../../../../components/MdLabel.vue';
-import MdText from '../../../../components/MdText.vue';
 
 defineProps<{
   recipe: Recipe;
 }>();
+
+// TODO: Replace with actual categories from backend
+const displayCategories = computed(() => {
+  // Placeholder data - remove when backend is connected
+  return ['#Tags'];
+});
 </script>
 
 <style scoped>
 .recipe-box {
-  background-color: var(--md-sys-color-inverse-on-surface);
-  border-radius: 1rem;
-  padding: 0.25rem 1.25rem 1.25rem 1.25rem;
-  width: 18rem;
-  height: 26rem;
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: 0.875rem;
+  padding: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 0.5rem;
+  height: 16rem;
 }
 
 .recipe-title {
   font-size: 1.5rem;
   font-weight: 500;
-  margin: 0;
   color: var(--md-sys-color-on-surface);
+  text-align: center;
+  line-height: 1.2;
+  height: 2.1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .recipe-image-container {
   width: 100%;
-  height: 12rem;
-  min-height: 12rem;
-  max-height: 12rem;
-  border-radius: 0.75rem;
+  height: 6.5rem;
+  border-radius: 0.625rem;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -63,12 +79,33 @@ defineProps<{
   display: block;
 }
 
+.recipe-tags {
+  display: flex;
+  gap: 0.375rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 2rem;
+  align-items: center;
+}
+
+.tag {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+}
+
 .recipe-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0.5rem 0;
+  margin-top: auto;
+  padding-top: 0.25rem;
 }
 
 .recipe-time {
@@ -76,20 +113,20 @@ defineProps<{
   align-items: center;
   gap: 0.25rem;
   color: var(--md-sys-color-on-surface-variant);
+}
+
+.recipe-time md-icon {
   font-size: 1rem;
+  --md-icon-size: 1rem;
+}
+
+.time-text {
+  font-size: 0.75rem;
 }
 
 .recipe-cost {
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: var(--md-sys-color-on-surface-variant);
-}
-
-.recipe-description {
-  margin: 0;
-  text-align: left;
-  font-size: 1rem;
   font-weight: 500;
-  color: var(--md-sys-color-on-surface);
-  line-height: 1.4;
 }
 </style>

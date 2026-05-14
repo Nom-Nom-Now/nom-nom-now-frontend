@@ -1,35 +1,125 @@
 <template>
   <div class="recipes-list-container">
     <div class="top-bar">
-      <RecipeSearchBar />
-      <md-filled-button type="button" @click="navigateToCreate">{{
-        t('feature.recipes.list.createButton')
-      }}</md-filled-button>
+      <div class="week-navigation">
+        <md-outlined-button @click="goToToday">
+          {{ t('feature.plan.today') }}
+        </md-outlined-button>
+        <md-icon-button @click="goToPreviousWeek">
+          <md-icon>chevron_left</md-icon>
+        </md-icon-button>
+        <span class="current-date">{{ formattedWeekRange }}</span>
+        <md-icon-button
+          :disabled="!canGoToNextWeek"
+          @click="goToNextWeek"
+        >
+          <md-icon>chevron_right</md-icon>
+        </md-icon-button>
+      </div>
+      <md-filled-button type="button" @click="refreshPlan">
+        <md-icon slot="icon">refresh</md-icon>
+        {{ t('feature.plan.refreshPlan') }}
+      </md-filled-button>
     </div>
     <PlanGridContent
       :recipes="store.recipes"
       :is-loading="store.isLoading"
+      :current-week="currentWeekStart"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PlanGridContent from './PlanGridContent.vue';
 import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 
-const router = useRouter();
 const { t } = useI18n();
 const store = useRecipePlanStore();
 
-function navigateToCreate() {
-  router.push('/recipes/create');
+const currentWeekStart = ref(getStartOfWeek(new Date()));
+
+// TODO: Replace this with the real account creation date from backend/auth
+const accountCreatedAt = new Date('2026-05-01');
+
+function getStartOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setHours(0, 0, 0, 0);
+  return new Date(d.setDate(diff));
+}
+
+const minPastWeekStart = computed(() => {
+  return getStartOfWeek(accountCreatedAt);
+});
+
+const maxFutureWeekStart = computed(() => {
+  const nextWeek = getStartOfWeek(new Date());
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  return nextWeek;
+});
+
+const canGoToPreviousWeek = computed(() => {
+  return currentWeekStart.value.getTime() > minPastWeekStart.value.getTime();
+});
+
+const canGoToNextWeek = computed(() => {
+  return currentWeekStart.value.getTime() < maxFutureWeekStart.value.getTime();
+});
+
+function loadPlanForCurrentWeek() {
+  store.fetchRecipes(currentWeekStart.value, accountCreatedAt);
+}
+
+function goToToday() {
+  currentWeekStart.value = getStartOfWeek(new Date());
+  loadPlanForCurrentWeek();
+}
+
+function goToPreviousWeek() {
+  if (!canGoToPreviousWeek.value) {
+    return;
+  }
+
+  const newDate = new Date(currentWeekStart.value);
+  newDate.setDate(newDate.getDate() - 7);
+  currentWeekStart.value = newDate;
+  loadPlanForCurrentWeek();
+}
+
+function goToNextWeek() {
+  if (!canGoToNextWeek.value) {
+    return;
+  }
+
+  const newDate = new Date(currentWeekStart.value);
+  newDate.setDate(newDate.getDate() + 7);
+  currentWeekStart.value = newDate;
+  loadPlanForCurrentWeek();
+}
+
+const formattedWeekRange = computed(() => {
+  const start = new Date(currentWeekStart.value);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+
+  const monthFormatter = new Intl.DateTimeFormat('de-DE', { month: 'long' });
+
+  if (start.getMonth() === end.getMonth()) {
+    return monthFormatter.format(start);
+  }
+
+  return `${monthFormatter.format(start)} - ${monthFormatter.format(end)}`;
+});
+
+function refreshPlan() {
+  loadPlanForCurrentWeek();
 }
 
 onMounted(() => {
-  store.fetchRecipes();
+  loadPlanForCurrentWeek();
 });
 </script>
 
@@ -49,12 +139,31 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-right: 2rem;
+  margin-bottom: 1rem;
   flex-shrink: 0;
+}
+
+.week-navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.current-date {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  min-width: 12rem;
+  text-align: center;
 }
 
 .top-bar md-filled-button {
   height: 3rem;
   --md-filled-button-container-shape: 16px;
+}
+
+.top-bar md-outlined-button {
+  height: 3rem;
+  --md-outlined-button-container-shape: 16px;
 }
 </style>

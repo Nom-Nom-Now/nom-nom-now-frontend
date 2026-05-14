@@ -6,12 +6,59 @@ export const useRecipePlanStore = defineStore('recipeList', () => {
     const recipes = ref<Recipe[]>([]);
     const isLoading = ref(false);
 
-    // TODO: mit richtiger Api austauschen
-    async function fetchRecipes() {
+    function getStartOfWeek(date: Date): Date {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        d.setHours(0, 0, 0, 0);
+        return new Date(d.setDate(diff));
+    }
+
+    function isWeekBeforeAccountCreation(
+        weekStart: Date | undefined,
+        accountCreatedAt: Date | undefined,
+    ): boolean {
+        if (!weekStart || !accountCreatedAt) {
+            return false;
+        }
+
+        return getStartOfWeek(weekStart).getTime() < getStartOfWeek(accountCreatedAt).getTime();
+    }
+
+    function getWeekSeed(weekStart?: Date): number {
+        if (!weekStart) {
+            return Date.now();
+        }
+
+        return Math.floor(weekStart.getTime() / (1000 * 60 * 60 * 24 * 7));
+    }
+
+    function shuffleRecipesForWeek(allRecipes: Recipe[], weekStart?: Date): Recipe[] {
+        const shuffledRecipes = [...allRecipes];
+        let seed = getWeekSeed(weekStart);
+
+        for (let index = shuffledRecipes.length - 1; index > 0; index -= 1) {
+            seed = (seed * 9301 + 49297) % 233280;
+            const swapIndex = seed % (index + 1);
+
+            const currentRecipe = shuffledRecipes[index]!;
+            shuffledRecipes[index] = shuffledRecipes[swapIndex]!;
+            shuffledRecipes[swapIndex] = currentRecipe;
+        }
+
+        return shuffledRecipes;
+    }
+
+    async function fetchRecipes(weekStart?: Date, accountCreatedAt?: Date) {
+        if (isWeekBeforeAccountCreation(weekStart, accountCreatedAt)) {
+            recipes.value = [];
+            return;
+        }
+
         isLoading.value = true;
         try {
             // Platzhalter
-            recipes.value = [
+            const availableRecipes: Recipe[] = [
                 {
                     id: '1',
                     title: 'Lasagne',
@@ -82,6 +129,8 @@ export const useRecipePlanStore = defineStore('recipeList', () => {
                         'Samtige Tomatensuppe mit Basilikum und einem Klecks Crème fraîche.',
                 },
             ];
+
+            recipes.value = shuffleRecipesForWeek(availableRecipes, weekStart);
         } finally {
             isLoading.value = false;
         }
