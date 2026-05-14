@@ -16,6 +16,7 @@ export interface CreateRecipeRequestDto {
   name: string;
   instructions: string;
   cookingTime: number;
+  pricePerPerson?: number;
   categoryIds: number[];
   components: CreateRecipeComponentDto[];
 }
@@ -34,6 +35,8 @@ export interface CreateRecipeResponseDto {
   name: string;
   instructions: string;
   cookingTime: number;
+  pricePerPerson: number | null;
+  imageUrl: string | null;
   ownerName: string;
   categories: string;
   components: RecipeComponentResponseDto[];
