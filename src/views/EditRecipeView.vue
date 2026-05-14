@@ -22,7 +22,7 @@ const store = useCreateRecipeStore();
 
 onMounted(async () => {
   const id = Number(route.params.id);
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     router.replace('/recipes');
     return;
   }

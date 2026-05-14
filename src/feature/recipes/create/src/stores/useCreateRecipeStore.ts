@@ -150,10 +150,10 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
       };
 
       let response;
-      if (editingRecipeId.value !== null) {
-        response = await updateRecipe(editingRecipeId.value, state);
-      } else {
+      if (editingRecipeId.value === null) {
         response = await createRecipe(state);
+      } else {
+        response = await updateRecipe(editingRecipeId.value, state);
       }
       $reset();
       return response;
