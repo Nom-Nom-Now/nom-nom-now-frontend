@@ -1,75 +1,66 @@
 import { describe, it, expect } from 'vitest';
 import router from '../router/index';
 
+const routes = router.options.routes;
+const findRoute = (path: string) => routes.find((route) => route.path === path);
+const expectRoute = (path: string) => {
+  const route = findRoute(path);
+  expect(route, `Missing route: ${path}`).toBeDefined();
+  return route!;
+};
+const expectChildRoute = (parentPath: string, childPath: string) => {
+  const parent = expectRoute(parentPath);
+  const child = parent.children?.find((route) => route.path === childPath);
+  expect(child, `Missing child route: ${parentPath}/${childPath}`).toBeDefined();
+  return child!;
+};
+
 describe('router', () => {
   it('should be defined', () => {
     expect(router).toBeDefined();
   });
 
   it('should have routes defined', () => {
-    expect(router.options.routes).toBeDefined();
-    expect(Array.isArray(router.options.routes)).toBe(true);
-    expect(router.options.routes.length).toBeGreaterThan(0);
+    expect(routes).toBeDefined();
+    expect(Array.isArray(routes)).toBe(true);
+    expect(routes.length).toBeGreaterThan(0);
   });
 
-  it('should have a root "/" route (Login)', () => {
-    const route = router.options.routes.find((r) => r.path === '/');
-    expect(route).toBeDefined();
-  });
-
-  it('should have a "/home" route', () => {
-    const route = router.options.routes.find((r) => r.path === '/home');
-    expect(route).toBeDefined();
-  });
-
-  it('should have a "/plan" route', () => {
-    const route = router.options.routes.find((r) => r.path === '/plan');
-    expect(route).toBeDefined();
+  it('should have required top-level routes', () => {
+    const topLevelPaths = ['/', '/home', '/plan', '/recipes', '/browse'];
+    for (const path of topLevelPaths) {
+      expectRoute(path);
+    }
   });
 
   it('should have a "/recipes" route with children', () => {
-    const route = router.options.routes.find((r) => r.path === '/recipes');
-    expect(route).toBeDefined();
-    expect(route!.children).toBeDefined();
-    expect(route!.children!.length).toBeGreaterThan(0);
+    const route = expectRoute('/recipes');
+    expect(route.children).toBeDefined();
+    expect(route.children!.length).toBeGreaterThan(0);
   });
 
-  it('should have "/recipes/create" child route', () => {
-    const route = router.options.routes.find((r) => r.path === '/recipes');
-    const child = route!.children!.find((c) => c.path === 'create');
-    expect(child).toBeDefined();
-  });
-
-  it('should have "/recipes/:id/edit" child route', () => {
-    const route = router.options.routes.find((r) => r.path === '/recipes');
-    const child = route!.children!.find((c) => c.path === ':id/edit');
-    expect(child).toBeDefined();
-  });
-
-  it('should have "/recipes/oldcreate" child route', () => {
-    const route = router.options.routes.find((r) => r.path === '/recipes');
-    const child = route!.children!.find((c) => c.path === 'oldcreate');
-    expect(child).toBeDefined();
+  it('should have required "/recipes" child routes', () => {
+    const childPaths = ['create', ':id/edit', 'oldcreate'];
+    for (const childPath of childPaths) {
+      expectChildRoute('/recipes', childPath);
+    }
   });
 
   it('should have a "/browse" route with children', () => {
-    const route = router.options.routes.find((r) => r.path === '/browse');
-    expect(route).toBeDefined();
-    expect(route!.children).toBeDefined();
+    const route = expectRoute('/browse');
+    expect(route.children).toBeDefined();
   });
 
   it('should have "/browse/listall" child route', () => {
-    const route = router.options.routes.find((r) => r.path === '/browse');
-    const child = route!.children!.find((c) => c.path === 'listall');
-    expect(child).toBeDefined();
+    expectChildRoute('/browse', 'listall');
   });
 
   it('should have exactly 5 top-level routes', () => {
-    expect(router.options.routes).toHaveLength(5);
+    expect(routes).toHaveLength(5);
   });
 
   it('all top-level routes should have a meta.titleKey', () => {
-    for (const route of router.options.routes) {
+    for (const route of routes) {
       expect(route.meta).toBeDefined();
       expect(route.meta!.titleKey).toBeDefined();
       expect(typeof route.meta!.titleKey).toBe('string');

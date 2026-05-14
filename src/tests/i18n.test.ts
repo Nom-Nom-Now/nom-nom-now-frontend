@@ -2,35 +2,38 @@ import { describe, it, expect } from 'vitest';
 import de from '../locales/de.json';
 import en from '../locales/en.json';
 
+const sortKeys = (keys: string[]) =>
+  [...keys].sort((left, right) => left.localeCompare(right));
+const getNestedValue = (obj: Record<string, unknown>, path: string) =>
+  path.split('.').reduce<unknown>((acc, key) => {
+    if (acc && typeof acc === 'object') {
+      return (acc as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, obj);
+const expectSortedKeysEqual = (left: string[], right: string[]) => {
+  expect(sortKeys(left)).toEqual(sortKeys(right));
+};
+const expectDefinedForLocales = (path: string) => {
+  const deVal = getNestedValue(de as Record<string, unknown>, path);
+  const enVal = getNestedValue(en as Record<string, unknown>, path);
+  expect(deVal, `de.json missing key: ${path}`).toBeDefined();
+  expect(enVal, `en.json missing key: ${path}`).toBeDefined();
+};
+
 describe('i18n locale files', () => {
   it('should have the same top-level keys', () => {
     const deKeys = Object.keys(de);
     const enKeys = Object.keys(en);
-    expect(deKeys.sort()).toEqual(enKeys.sort());
+    expectSortedKeysEqual(deKeys, enKeys);
   });
 
-  it('should have "navigation" key', () => {
-    expect(de).toHaveProperty('navigation');
-    expect(en).toHaveProperty('navigation');
-  });
-
-  it('should have "navigation.home" key', () => {
-    expect(de).toHaveProperty('navigation.home');
-    expect(en).toHaveProperty('navigation.home');
-  });
-
-  it('should have "navigation.recipes" key', () => {
-    expect(de).toHaveProperty('navigation.recipes');
-    expect(en).toHaveProperty('navigation.recipes');
-  });
-
-  it('should have "feature" key', () => {
-    expect(de).toHaveProperty('feature');
-    expect(en).toHaveProperty('feature');
-  });
-
-  it('should have recipe-related keys in both locales', () => {
-    const requiredKeys = [
+  it('should have required keys in both locales', () => {
+    const requiredPaths = [
+      'navigation',
+      'navigation.home',
+      'navigation.recipes',
+      'feature',
       'feature.recipes.title',
       'feature.recipes.createRecipe.title',
       'feature.recipes.editRecipe.title',
@@ -41,16 +44,8 @@ describe('i18n locale files', () => {
       'feature.recipes.createRecipe.preview.heading',
     ];
 
-    for (const key of requiredKeys) {
-      const parts = key.split('.');
-      let deVal: unknown = de;
-      let enVal: unknown = en;
-      for (const part of parts) {
-        deVal = (deVal as Record<string, unknown>)?.[part];
-        enVal = (enVal as Record<string, unknown>)?.[part];
-      }
-      expect(deVal, `de.json missing key: ${key}`).toBeDefined();
-      expect(enVal, `en.json missing key: ${key}`).toBeDefined();
+    for (const path of requiredPaths) {
+      expectDefinedForLocales(path);
     }
   });
 
@@ -60,7 +55,7 @@ describe('i18n locale files', () => {
     const deRecipesKeys = Object.keys(deRecipes.recipes as Record<string, unknown>);
     const enRecipesKeys = Object.keys(enRecipes.recipes as Record<string, unknown>);
 
-    expect(deRecipesKeys.sort()).toEqual(enRecipesKeys.sort());
+    expectSortedKeysEqual(deRecipesKeys, enRecipesKeys);
   });
 
   it('should have matching nested keys for feature.recipes.createRecipe', () => {
@@ -69,13 +64,13 @@ describe('i18n locale files', () => {
     const deCreate = (deFeature['recipes'] as Record<string, unknown>)?.['createRecipe'] as Record<string, unknown>;
     const enCreate = (enFeature['recipes'] as Record<string, unknown>)?.['createRecipe'] as Record<string, unknown>;
 
-    expect(Object.keys(deCreate).sort()).toEqual(Object.keys(enCreate).sort());
+    expectSortedKeysEqual(Object.keys(deCreate), Object.keys(enCreate));
   });
 
   it('should have matching keys for navigation', () => {
     const deNav = de['navigation'] as Record<string, unknown>;
     const enNav = en['navigation'] as Record<string, unknown>;
 
-    expect(Object.keys(deNav).sort()).toEqual(Object.keys(enNav).sort());
+    expectSortedKeysEqual(Object.keys(deNav), Object.keys(enNav));
   });
 });
