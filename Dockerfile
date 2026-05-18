@@ -19,9 +19,11 @@ FROM nginx:alpine
 RUN apk add --no-cache libcap \
     && setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx \
     && touch /run/nginx.pid \
-    && chown -R nginx:nginx /run/nginx.pid /var/cache/nginx /var/log/nginx /usr/share/nginx/html /etc/nginx/conf.d
-COPY --from=build --chown=nginx:nginx /app/dist /usr/share/nginx/html
-COPY --chown=nginx:nginx nginx.conf /etc/nginx/conf.d/default.conf
+    && chown -R nginx:nginx /run/nginx.pid /var/cache/nginx /var/log/nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN chmod -R a-w /usr/share/nginx/html /etc/nginx/conf.d
 USER nginx
 EXPOSE 80
+ENTRYPOINT []
 CMD ["nginx", "-g", "daemon off;"]
