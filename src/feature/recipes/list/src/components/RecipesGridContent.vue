@@ -1,20 +1,65 @@
 <template>
   <div class="recipes-grid-scroll">
-    <div v-if="isLoading" class="loading">Laden...</div>
+    <div v-if="isLoading && recipes.length === 0" class="loading">Laden...</div>
+    <div v-else-if="error && recipes.length === 0" class="status status--error">
+      {{ error }}
+    </div>
+    <div v-else-if="recipes.length === 0" class="status">
+      Keine Rezepte gefunden.
+    </div>
     <div v-else class="recipes-grid">
       <RecipeBox v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+    </div>
+    <div ref="loadMoreSentinel" class="load-more-sentinel" />
+    <div v-if="isLoading && recipes.length > 0" class="loading">Laden...</div>
+    <div v-if="error && recipes.length > 0" class="status status--error">
+      {{ error }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RecipeBox from './RecipeBox.vue';
 import type { Recipe } from '../shared/types';
 
-defineProps<{
+const props = defineProps<{
   recipes: Recipe[];
   isLoading: boolean;
+  error: string | null;
+  canLoadMore: boolean;
 }>();
+
+const emit = defineEmits<{
+  loadMore: [];
+}>();
+
+const loadMoreSentinel = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
+
+function maybeLoadMore(entries: IntersectionObserverEntry[]) {
+  if (entries.some((entry) => entry.isIntersecting) && props.canLoadMore) {
+    emit('loadMore');
+  }
+}
+
+function connectObserver() {
+  observer?.disconnect();
+
+  if (!loadMoreSentinel.value) {
+    return;
+  }
+
+  observer = new IntersectionObserver(maybeLoadMore, {
+    root: loadMoreSentinel.value.parentElement,
+    rootMargin: '320px',
+  });
+  observer.observe(loadMoreSentinel.value);
+}
+
+onMounted(connectObserver);
+onBeforeUnmount(() => observer?.disconnect());
+watch(loadMoreSentinel, connectObserver);
 </script>
 
 <style scoped>
@@ -35,5 +80,18 @@ defineProps<{
   margin-top: 1rem;
   text-align: center;
   color: var(--md-sys-color-on-surface-variant);
+}
+
+.status {
+  margin-top: 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.status--error {
+  color: var(--md-sys-color-error);
+}
+
+.load-more-sentinel {
+  height: 1px;
 }
 </style>
