@@ -7,6 +7,11 @@ import type {
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
+type ApiErrorResponse = {
+  error?: unknown;
+  message?: unknown;
+};
+
 // ---------------------------------------------------------------------------
 // Mapping: Frontend domain model → Backend DTO
 // ---------------------------------------------------------------------------
@@ -52,7 +57,7 @@ async function postJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
   const text = await response.text();
 
   if (!response.ok) {
-    throw new Error(`POST ${path} failed (${response.status}): ${text}`);
+    throw new Error(formatPostError(path, response.status, text));
   }
 
   return text ? (JSON.parse(text) as TRes) : ({} as TRes);
@@ -79,10 +84,43 @@ async function postMultipart<TRes>(
   const text = await response.text();
 
   if (!response.ok) {
-    throw new Error(`POST ${path} failed (${response.status}): ${text}`);
+    throw new Error(formatPostError(path, response.status, text));
   }
 
   return text ? (JSON.parse(text) as TRes) : ({} as TRes);
+}
+
+function formatPostError(path: string, status: number, text: string): string {
+  if (status >= 500) {
+    return `POST ${path} failed (${status}). Please try again.`;
+  }
+
+  const apiError = parseApiError(text);
+  if (apiError) {
+    if (typeof apiError.message === 'string' && apiError.message.length > 0) {
+      return apiError.message;
+    }
+
+    if (typeof apiError.error === 'string' && apiError.error.length > 0) {
+      return `POST ${path} failed (${status}): ${apiError.error}`;
+    }
+  }
+
+  return text
+    ? `POST ${path} failed (${status}): ${text}`
+    : `POST ${path} failed (${status})`;
+}
+
+function parseApiError(text: string): ApiErrorResponse | null {
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text) as ApiErrorResponse;
+  } catch {
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
