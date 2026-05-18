@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
-import { useRecipeListStore } from '../stores/useRecipeListStore';
+import {
+  resolveBackendResourceUrl,
+  useRecipeListStore,
+} from '../stores/useRecipeListStore';
 
 describe('useRecipeListStore', () => {
   beforeEach(() => {
@@ -66,6 +69,15 @@ describe('useRecipeListStore', () => {
 
     expect(store.recipes).toHaveLength(1);
     expect(store.error).toBe('GET /recipes failed (500)');
+  });
+
+  it('should resolve relative image urls against the backend base url', () => {
+    expect(
+      resolveBackendResourceUrl(
+        '/recipes/42/image',
+        'https://api.nomnomnow.example',
+      ),
+    ).toBe('https://api.nomnomnow.example/recipes/42/image');
   });
 });
 

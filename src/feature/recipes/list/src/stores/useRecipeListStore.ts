@@ -102,11 +102,26 @@ function mapRecipe(recipe: RecipeResponseDto): Recipe {
   return {
     id: String(recipe.id),
     title: recipe.name,
-    imageUrl: recipe.imageUrl,
+    imageUrl: resolveBackendResourceUrl(recipe.imageUrl),
     duration: formatDuration(recipe.cookingTime),
     cost: formatCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
   };
+}
+
+export function resolveBackendResourceUrl(
+  path: string | null,
+  baseUrl = API_BASE_URL,
+) {
+  if (!path) {
+    return null;
+  }
+
+  if (!baseUrl) {
+    return path;
+  }
+
+  return new URL(path, baseUrl).toString();
 }
 
 function formatDuration(cookingTime: number | null) {
