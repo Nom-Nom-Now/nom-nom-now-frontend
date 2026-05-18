@@ -75,9 +75,18 @@ describe('useRecipeListStore', () => {
     expect(
       resolveBackendResourceUrl(
         '/recipes/42/image',
-        'https://api.nomnomnow.example',
+        'https://nomnom-now.com/api',
       ),
-    ).toBe('https://api.nomnomnow.example/recipes/42/image');
+    ).toBe('https://nomnom-now.com/api/recipes/42/image');
+  });
+
+  it('should keep absolute image urls unchanged', () => {
+    expect(
+      resolveBackendResourceUrl(
+        'https://cdn.nomnom-now.com/recipes/42/image',
+        'https://nomnom-now.com/api',
+      ),
+    ).toBe('https://cdn.nomnom-now.com/recipes/42/image');
   });
 });
 
