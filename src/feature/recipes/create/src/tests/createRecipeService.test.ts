@@ -124,6 +124,44 @@ describe('createRecipeService', () => {
     );
   });
 
+  it('should surface backend validation messages', async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      text: () =>
+        Promise.resolve(
+          JSON.stringify({
+            status: 400,
+            error: 'Bad Request',
+            message: 'Use each ingredient only once per recipe: Salt',
+          }),
+        ),
+    });
+
+    await expect(createRecipe(buildValidState())).rejects.toThrow(
+      'Use each ingredient only once per recipe: Salt',
+    );
+  });
+
+  it('should hide backend internals on server errors', async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      text: () =>
+        Promise.resolve(
+          JSON.stringify({
+            status: 500,
+            error: 'Internal Server Error',
+            message: 'SQL constraint details',
+          }),
+        ),
+    });
+
+    await expect(createRecipe(buildValidState())).rejects.toThrow(
+      'POST /recipes failed (500). Please try again.',
+    );
+  });
+
   it('should send multipart form data when an image is present', async () => {
     const image = new File(['image-bytes'], 'pasta.png', {
       type: 'image/png',

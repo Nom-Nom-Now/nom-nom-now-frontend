@@ -5,7 +5,6 @@ import PlanView from '../views/PlanView.vue';
 import RecipesView from '../views/RecipesView.vue';
 import BrowseView from '../views/BrowseView.vue';
 import AllRecipesPage from '../feature/list-all-recipes/src/pages/AllRecipesPage.vue';
-import NewRecipeView from '../views/NewRecipeView.vue';
 import LoginPage from '../views/LoginPage.vue';
 
 const router = createRouter({
@@ -34,11 +33,6 @@ const router = createRouter({
         {
           path: 'create',
           component: CreateRecipeView,
-          meta: { titleKey: 'feature.recipes.createRecipe.title' },
-        },
-        {
-          path: 'oldcreate',
-          component: NewRecipeView,
           meta: { titleKey: 'feature.recipes.createRecipe.title' },
         },
       ],
