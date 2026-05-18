@@ -80,6 +80,12 @@ describe('useRecipeListStore', () => {
     ).toBe('https://nomnom-now.com/api/recipes/42/image');
   });
 
+  it('should resolve relative image urls against a relative api base url', () => {
+    expect(resolveBackendResourceUrl('/recipes/42/image', '/api')).toBe(
+      '/api/recipes/42/image',
+    );
+  });
+
   it('should keep absolute image urls unchanged', () => {
     expect(
       resolveBackendResourceUrl(

@@ -124,9 +124,12 @@ export function resolveBackendResourceUrl(
   try {
     return new URL(path).toString();
   } catch {
-    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-    return new URL(path.replace(/^\/+/, ''), normalizedBaseUrl).toString();
+    return joinUrlPath(baseUrl, path);
   }
+}
+
+function joinUrlPath(baseUrl: string, path: string) {
+  return `${baseUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
 }
 
 function formatDuration(cookingTime: number | null) {
