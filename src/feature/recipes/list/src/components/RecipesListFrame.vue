@@ -9,6 +9,9 @@
     <RecipesGridContent
       :recipes="store.recipes"
       :is-loading="store.isLoading"
+      :error="store.error"
+      :can-load-more="store.canLoadMore"
+      @load-more="store.fetchNextPage"
     />
   </div>
 </template>
@@ -38,6 +41,7 @@ onMounted(() => {
 .recipes-list-container {
   width: 100%;
   height: 100%;
+  min-height: 0;
   padding: 1rem;
   display: flex;
   flex-direction: column;

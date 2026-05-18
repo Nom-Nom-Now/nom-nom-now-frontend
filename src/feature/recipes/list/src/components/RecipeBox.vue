@@ -3,7 +3,15 @@
     <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
 
     <div class="recipe-image-container">
-      <img :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
+      <img
+        v-if="recipe.imageUrl"
+        :src="recipe.imageUrl"
+        :alt="recipe.title"
+        class="recipe-image"
+      />
+      <div v-else class="recipe-image-placeholder">
+        <md-icon>restaurant</md-icon>
+      </div>
     </div>
 
     <div class="recipe-meta">
@@ -61,6 +69,19 @@ defineProps<{
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.recipe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.recipe-image-placeholder md-icon {
+  font-size: 3rem;
 }
 
 .recipe-meta {
