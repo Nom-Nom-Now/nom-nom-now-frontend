@@ -129,7 +129,25 @@ export function resolveBackendResourceUrl(
 }
 
 function joinUrlPath(baseUrl: string, path: string) {
-  return `${baseUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+  return `${trimTrailingSlashes(baseUrl)}/${trimLeadingSlashes(path)}`;
+}
+
+function trimTrailingSlashes(value: string) {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') {
+    end -= 1;
+  }
+
+  return value.slice(0, end);
+}
+
+function trimLeadingSlashes(value: string) {
+  let start = 0;
+  while (start < value.length && value[start] === '/') {
+    start += 1;
+  }
+
+  return value.slice(start);
 }
 
 function formatDuration(cookingTime: number | null) {
