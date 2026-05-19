@@ -121,7 +121,7 @@ function pageResponse(page: number, last: boolean, id = '42') {
             pricePerPerson: id === '42' ? 1234 : null,
             imageUrl: id === '42' ? '/recipes/42/image' : null,
             ownerName: null,
-            categories: id === '42' ? ['italian', 'dinner'] : [],
+            categories: id === '42' ? '16,29' : null,
             components: [],
           },
         ],
