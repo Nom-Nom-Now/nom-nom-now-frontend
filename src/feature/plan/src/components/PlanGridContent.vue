@@ -5,7 +5,7 @@
     </div>
     <div v-else class="week-grid">
       <div
-        v-for="day in weekDays"
+        v-for="(day, index) in weekDays"
         :key="day.date.toISOString()"
         class="day-column"
       >
@@ -16,9 +16,8 @@
           }}</span>
         </div>
         <PlanRecipeBox
-          v-for="recipe in getDayRecipes(day.date)"
-          :key="recipe.id"
-          :recipe="recipe"
+          v-if="recipes[index]"
+          :recipe="recipes[index]"
         />
       </div>
     </div>
@@ -61,25 +60,6 @@ const weekDays = computed(() => {
   }
   return days;
 });
-
-function getDayRecipes(date: Date): Recipe[] {
-  const dayIndex = (date.getDay() + 6) % 7;
-  
-  // Verteile Rezepte gleichmäßig, aber mit etwas Variation
-  const recipesForDay: Recipe[] = [];
-  
-  // Nimm 1-2 Rezepte pro Tag
-  for (let i = 0; i < props.recipes.length; i++) {
-    if (i % 7 === dayIndex) {
-      const recipe = props.recipes[i];
-      if (recipe) {
-        recipesForDay.push(recipe);
-      }
-    }
-  }
-  
-  return recipesForDay;
-}
 </script>
 
 <style scoped>

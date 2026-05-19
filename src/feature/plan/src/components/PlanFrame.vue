@@ -5,12 +5,15 @@
         <md-outlined-button @click="goToToday">
           {{ t('feature.plan.today') }}
         </md-outlined-button>
-        <md-icon-button @click="goToPreviousWeek">
+        <md-icon-button 
+          v-if="canGoToPreviousWeek"
+          @click="goToPreviousWeek"
+        >
           <md-icon>chevron_left</md-icon>
         </md-icon-button>
         <span class="current-date">{{ formattedWeekRange }}</span>
-        <md-icon-button
-          :disabled="!canGoToNextWeek"
+        <md-icon-button 
+          v-if="canGoToNextWeek"
           @click="goToNextWeek"
         >
           <md-icon>chevron_right</md-icon>
@@ -51,9 +54,10 @@ function getStartOfWeek(date: Date): Date {
 }
 
 const minPastWeekStart = computed(() => {
-  return accountCreatedAt.value
-    ? getStartOfWeek(accountCreatedAt.value)
-    : undefined;
+  if (!accountCreatedAt.value) {
+    return getStartOfWeek(new Date());
+  }
+  return getStartOfWeek(accountCreatedAt.value);
 });
 
 const maxFutureWeekStart = computed(() => {
@@ -63,18 +67,15 @@ const maxFutureWeekStart = computed(() => {
 });
 
 const canGoToPreviousWeek = computed(() => {
-  return (
-    !minPastWeekStart.value ||
-    currentWeekStart.value.getTime() > minPastWeekStart.value.getTime()
-  );
+  return currentWeekStart.value.getTime() > minPastWeekStart.value.getTime();
 });
 
 const canGoToNextWeek = computed(() => {
   return currentWeekStart.value.getTime() < maxFutureWeekStart.value.getTime();
 });
 
-async function loadPlanForCurrentWeek() {
-  await store.fetchRecipes(currentWeekStart.value, accountCreatedAt.value);
+async function loadPlanForCurrentWeek(forceRandom = false) {
+  await store.fetchRecipes(currentWeekStart.value, accountCreatedAt.value, forceRandom);
 }
 
 async function goToToday() {
@@ -119,7 +120,7 @@ const formattedWeekRange = computed(() => {
 });
 
 async function refreshPlan() {
-  await loadPlanForCurrentWeek();
+  await loadPlanForCurrentWeek(true);
 }
 
 async function initializePlan() {
