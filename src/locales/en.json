@@ -1,4 +1,15 @@
 {
+  "common": {
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
   "navigation": {
     "home": "Home",
     "plan": "Plan",
@@ -27,7 +38,10 @@
       "imprint": "Imprint"
     },
     "plan": {
-      "title": "Plan"
+      "title": "Plan",
+      "refreshPlan": "Refresh",
+      "today": "Today",
+      "loading": "Loading..."
     },
     "recipes": {
       "title": "Recipes",
@@ -52,8 +66,6 @@
           "selectLabel": "Select subcategories",
           "loading": "Loading categories...",
           "empty": "No category found",
-          "loadError": "Error loading categories",
-
           "seasonal": "Seasonal",
           "mainingredient": "Main ingredient",
           "origin": "Origin",
@@ -62,13 +74,11 @@
           "drinks": "Drinks",
           "preparationmethod": "Preparation method",
           "dietarytype": "Dietary type",
-
           "spring": "Spring",
           "summer": "Summer",
           "autumn": "Autumn",
           "winter": "Winter",
           "allSeason": "All season",
-
           "meat": "Meat",
           "fish": "Fish",
           "vegetables": "Vegetables",
@@ -79,7 +89,6 @@
           "eggs": "Eggs",
           "tofu": "Tofu",
           "legumes": "Legumes",
-
           "italian": "Italian",
           "asian": "Asian",
           "german": "German",
@@ -90,7 +99,6 @@
           "american": "American",
           "indian": "Indian",
           "oriental": "Oriental",
-
           "breakfast": "Breakfast",
           "brunch": "Brunch",
           "lunch": "Lunch",
@@ -99,7 +107,6 @@
           "mainCourse": "Main course",
           "dessert": "Dessert",
           "snack": "Snack",
-
           "casseroles": "Casseroles",
           "soups": "Soups",
           "salads": "Salads",
@@ -110,7 +117,6 @@
           "sauces": "Sauces",
           "dips": "Dips",
           "sideDishes": "Side dishes",
-
           "waterBased": "Water based",
           "juice": "Juice",
           "smoothie": "Smoothie",
@@ -121,7 +127,6 @@
           "mocktail": "Mocktail",
           "alcoholic": "Alcoholic",
           "nonAlcoholic": "Non-alcoholic",
-
           "bake": "Bake",
           "cook": "Cook",
           "roast": "Roast",
@@ -132,7 +137,6 @@
           "noBake": "No bake",
           "slowCook": "Slow cook",
           "airFry": "Air fry",
-
           "vegetarian": "Vegetarian",
           "vegan": "Vegan",
           "light": "Light",
@@ -192,7 +196,6 @@
         "createButton": "New Recipe"
       }
     },
-
     "listAllRecipes": {
       "title": "Recipes"
     }

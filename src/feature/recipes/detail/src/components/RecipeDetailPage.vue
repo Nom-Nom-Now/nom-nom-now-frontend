@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { computed, onMounted, ref } from 'vue';
 import MdLabel from '../../../../../components/MdLabel.vue';
 import MdText from '../../../../../components/MdText.vue';
-import { loadCategoryLists } from '../../../create/src/services/categoryMapper';
-import type { CategoryOption } from '../../../create/src/services/categoryApiTypes.ts';
 import type { Recipe } from '../../../list/src/shared/types.ts';
 
-const props = defineProps<{
+defineProps<{
   recipe: Recipe;
 }>();
 
@@ -18,38 +15,8 @@ defineEmits<{
 
 const { t } = useI18n();
 
-const categories = ref<CategoryOption[]>([]);
-const loadingCategories = ref(false);
-
 const getCategoryLabel = (name: string) =>
   t(`feature.recipes.createRecipe.categories.${name}`);
-
-const recipeCategories = computed(() => {
-  if (!props.recipe?.categories || categories.value.length === 0) return [];
-
-  const backendIds = new Set(
-    props.recipe.categories
-      .split(/[,;]/)
-      .map(id => id.trim())
-      .filter(id => id.length > 0)
-  );
-
-  return categories.value.filter((category) =>
-    category.id !== undefined && backendIds.has(String(category.id))
-  );
-});
-
-onMounted(async () => {
-  loadingCategories.value = true;
-  try {
-    const data = await loadCategoryLists();
-    categories.value = data.categories || [];
-  } catch (err) {
-    console.error('Fehler beim Laden der Kategorien im Detail-Overlay:', err);
-  } finally {
-    loadingCategories.value = false;
-  }
-});
 </script>
 
 <template>
@@ -73,10 +40,10 @@ onMounted(async () => {
         <div v-else class="recipe-image-placeholder"> <md-icon>restaurant</md-icon> </div>
       </div>
 
-      <div v-if="recipeCategories.length" class="recipe-detail-chips">
-        <div v-for="category in recipeCategories" :key="category.id" class="detail-chip">
+      <div v-if="recipe.categories && recipe.categories.length" class="recipe-detail-chips">
+        <div v-for="categoryName in recipe.categories" :key="categoryName" class="detail-chip">
           <md-icon class="chip-icon">label</md-icon>
-          <span>{{ getCategoryLabel(category.name) }}</span>
+          <span>{{ getCategoryLabel(categoryName) }}</span>
         </div>
       </div>
 
@@ -102,7 +69,7 @@ onMounted(async () => {
       <div class="recipe-ingredients-section">
         <div class="ingredients-header">
           <md-icon>list</md-icon>
-          <MdLabel size="medium">{{ t('feature.recipes.detail.ingredientsTitle') }}</mdLabel>
+          <MdLabel size="medium">{{ t('feature.recipes.detail.ingredientsTitle') }}</MdLabel>
         </div>
 
         <ul class="ingredients-list">
@@ -228,7 +195,7 @@ onMounted(async () => {
   border: 1px solid var(--md-sys-color-outline-variant, #c7c7c7);
   border-radius: 6px;
   background: var(--md-sys-color-surface-container-low, #f3f3f3);
-  font-size: 0.75rem; /* Etwas kleiner für das kompakte Layout */
+  font-size: 0.75rem;
   color: var(--md-sys-color-on-surface);
 }
 

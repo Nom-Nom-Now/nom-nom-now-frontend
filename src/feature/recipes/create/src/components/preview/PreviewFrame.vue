@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import { ref, computed, inject, type Ref } from 'vue'; // inject hinzugefügt
+import { ref, computed, inject, onMounted, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
+import { loadCategoryLists } from '../../services/categoryMapper'; // Mapper importieren
+import type { CategoryOption } from '../../services/categoryApiTypes.ts';
 import RecipeDetailContent from '../../../../detail/src/components/RecipeDetailContent.vue';
 import type { Recipe } from '../../../../list/src/shared/types.ts';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
 
-// Holt den reaktiven currentUsername aus der App.vue (mit Fallback, falls noch nicht geladen)
 const currentUsername = inject<Ref<string | undefined>>('currentUsername', ref(undefined));
-
 const { isSubmitting, submitError, isIngredientsStepValid } = storeToRefs(store);
 const submitSuccess = ref(false);
+
+const allCategories = ref<CategoryOption[]>([]);
+
+onMounted(async () => {
+  try {
+    const data = await loadCategoryLists();
+    allCategories.value = data.categories || [];
+  } catch (err) {
+    console.error('Fehler beim Laden der Kategorien in der Preview:', err);
+  }
+});
 
 const previewRecipe = computed<Recipe>(() => {
   const localImageUrl = store.recipeImage
     ? URL.createObjectURL(store.recipeImage)
     : null;
+
+  const mappedCategoryNames = (store.categoryIds || [])
+    .map(id => allCategories.value.find(cat => cat.id === id)?.name)
+    .filter((name): name is string => Boolean(name));
 
   return {
     id: 'preview-id',
@@ -27,10 +42,10 @@ const previewRecipe = computed<Recipe>(() => {
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
     cost: '',
     description: store.instructions || '',
-    // Hier nutzen wir den angemeldeten User für die Vorschau
     owner: currentUsername.value || t('feature.recipes.detail.unknownChef'),
 
-    categories: (store.categoryIds || []).join(','),
+    // JETZT NEU: Ein echtes string[] statt des alten CSV-Komma-Strings
+    categories: mappedCategoryNames,
 
     ingredients: (store.ingredients || []).map(ing => ({
       ingredientName: ing.name || '',
@@ -46,7 +61,7 @@ async function handleSubmit() {
     await store.submitRecipe();
     submitSuccess.value = true;
   } catch {
-    // Fehlerhandling erfolgt im Store
+    // Fehlerhandling im Store
   }
 }
 </script>
