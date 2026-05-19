@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import NavigationFrame from './components/Frame/NavigationFrame.vue';
 import TitleFrame from './components/Frame/TitleFrame.vue';
@@ -32,6 +32,27 @@ import CornerRadius from './components/Frame/CornerRadius.vue';
 
 const route = useRoute();
 const showShell = computed(() => !route.meta.hideShell);
+
+const currentUsername = ref<string | undefined>(undefined);
+
+provide('currentUsername', currentUsername);
+
+onMounted(async () => {
+  try {
+    const baseUrl = (import.meta.env.VITE_API_BASE_URL as string) || '';
+
+    const response = await fetch(`${baseUrl}/auth/me`, {
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      currentUsername.value = userData.username || userData.name;
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden des angemeldeten Benutzers:', error);
+  }
+});
 </script>
 
 <style scoped>

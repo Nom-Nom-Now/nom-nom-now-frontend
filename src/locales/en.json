@@ -5,6 +5,11 @@
     "recipes": "Recipes",
     "browse": "Browse"
   },
+  "global": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close"
+  },
   "feature": {
     "browse": {
       "title": "Browse"
@@ -26,6 +31,13 @@
     },
     "recipes": {
       "title": "Recipes",
+      "detail": {
+        "title": "Recipe Details",
+        "byOwner": "Recipe by: {owner}",
+        "ingredientsTitle": "Ingredients",
+        "noDescription": "No description available.",
+        "unknownChef": "Unknown chef"
+      },
       "createRecipe": {
         "title": "Create Recipe",
         "stepNavigation": {

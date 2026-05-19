@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-box">
+  <div class="recipe-box" @click="$emit('select')">
     <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
 
     <div class="recipe-image-container">
@@ -33,6 +33,10 @@ import MdText from '../../../../../components/MdText.vue';
 defineProps<{
   recipe: Recipe;
 }>();
+
+defineEmits<{
+  select: [];
+}>();
 </script>
 
 <style scoped>
@@ -45,6 +49,12 @@ defineProps<{
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
+}
+
+.recipe-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .recipe-title {

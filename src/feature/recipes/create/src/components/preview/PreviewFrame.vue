@@ -1,16 +1,44 @@
 <script setup lang="ts">
-import MdLabel from '../../../../../../components/MdLabel.vue';
+import { ref, computed, inject, type Ref } from 'vue'; // inject hinzugefügt
 import { useI18n } from 'vue-i18n';
-import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
+import RecipeDetailContent from '../../../../detail/src/components/RecipeDetailContent.vue';
+import type { Recipe } from '../../../../list/src/shared/types.ts';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
-const { isSubmitting, submitError, isIngredientsStepValid } =
-  storeToRefs(store);
 
+// Holt den reaktiven currentUsername aus der App.vue (mit Fallback, falls noch nicht geladen)
+const currentUsername = inject<Ref<string | undefined>>('currentUsername', ref(undefined));
+
+const { isSubmitting, submitError, isIngredientsStepValid } = storeToRefs(store);
 const submitSuccess = ref(false);
+
+const previewRecipe = computed<Recipe>(() => {
+  const localImageUrl = store.recipeImage
+    ? URL.createObjectURL(store.recipeImage)
+    : null;
+
+  return {
+    id: 'preview-id',
+    title: store.recipeName || '',
+    imageUrl: localImageUrl,
+    duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
+    cost: '',
+    description: store.instructions || '',
+    // Hier nutzen wir den angemeldeten User für die Vorschau
+    owner: currentUsername.value || t('feature.recipes.detail.unknownChef'),
+
+    categories: (store.categoryIds || []).join(','),
+
+    ingredients: (store.ingredients || []).map(ing => ({
+      ingredientName: ing.name || '',
+      quantity: ing.amount,
+      unit: ing.unit || null
+    }))
+  };
+});
 
 async function handleSubmit() {
   submitSuccess.value = false;
@@ -18,18 +46,19 @@ async function handleSubmit() {
     await store.submitRecipe();
     submitSuccess.value = true;
   } catch {
-    // Fehler wird im Store via submitError gesetzt
+    // Fehlerhandling erfolgt im Store
   }
 }
 </script>
 
 <template>
   <div class="frame">
-    <md-tabs>
-      <MdLabel size="large">
-        {{ t('feature.recipes.createRecipe.preview.heading') }}
-      </MdLabel>
-    </md-tabs>
+    <div class="preview-content-wrapper">
+      <RecipeDetailContent
+        :recipe="previewRecipe"
+        :current-username="currentUsername"
+      />
+    </div>
 
     <div class="actions">
       <md-filled-button
@@ -61,6 +90,12 @@ async function handleSubmit() {
   gap: 2rem;
 }
 
+.preview-content-wrapper {
+  width: 100%;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
+}
+
 .actions {
   display: flex;
   flex-direction: column;
@@ -71,8 +106,8 @@ async function handleSubmit() {
 
 .feedback {
   font: var(--md-sys-typescale-body-medium-weight)
-    var(--md-sys-typescale-body-medium-size)
-    var(--md-sys-typescale-body-medium-font);
+  var(--md-sys-typescale-body-medium-size)
+  var(--md-sys-typescale-body-medium-font);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }
