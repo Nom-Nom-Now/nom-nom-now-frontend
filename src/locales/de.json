@@ -1,4 +1,15 @@
 {
+  "common": {
+    "weekdays": {
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    }
+  },
   "navigation": {
     "home": "Startseite",
     "plan": "Plan",
@@ -22,7 +33,10 @@
       "imprint": "Impressum"
     },
     "plan": {
-      "title": "Plan"
+      "title": "Plan",
+      "refreshPlan" : "Refresh",
+      "today": "Heute",
+      "loading": "Lädt..."
     },
     "recipes": {
       "title": "Rezepte",
