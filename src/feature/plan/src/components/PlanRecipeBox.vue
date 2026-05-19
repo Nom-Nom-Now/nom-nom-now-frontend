@@ -3,7 +3,15 @@
     <div class="recipe-title">{{ recipe.title }}</div>
 
     <div class="recipe-image-container">
-      <img :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
+      <img
+        v-if="recipe.imageUrl"
+        :src="recipe.imageUrl"
+        :alt="recipe.title"
+        class="recipe-image"
+      />
+      <div v-else class="recipe-image-placeholder">
+        <md-icon>restaurant</md-icon>
+      </div>
     </div>
 
     <div class="recipe-tags">
@@ -24,16 +32,20 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Recipe } from '../shared/types';
 
-defineProps<{
+const props = defineProps<{
   recipe: Recipe;
 }>();
 
-// TODO: Replace with actual categories from backend
+const { t, te } = useI18n();
+
 const displayCategories = computed(() => {
-  // Placeholder data - remove when backend is connected
-  return ['#Tags'];
+  return props.recipe.categories.slice(0, 2).map((category) => {
+    const key = `feature.recipes.createRecipe.categories.${category}`;
+    return te(key) ? t(key) : category;
+  });
 });
 </script>
 
@@ -77,6 +89,19 @@ const displayCategories = computed(() => {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.recipe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.recipe-image-placeholder md-icon {
+  font-size: 2.5rem;
 }
 
 .recipe-tags {

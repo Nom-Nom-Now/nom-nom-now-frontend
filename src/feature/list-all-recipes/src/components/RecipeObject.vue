@@ -1,22 +1,41 @@
 <script setup lang="ts">
-import type { Recipe } from '../types/types.ts';
+import { useI18n } from 'vue-i18n';
+import type { Recipe } from '../../../recipes/list/src/shared/types';
 
-const props = defineProps<Recipe>();
+defineProps<{
+  recipe: Recipe;
+}>();
+
+const { t, te } = useI18n();
+
+function formatCategory(category: string) {
+  const key = `feature.recipes.createRecipe.categories.${category}`;
+  return te(key) ? t(key) : category;
+}
 </script>
 
 <template>
   <div class="recipe-object-container">
     <div class="recipe-object-title">
-      <h2>{{ props.name }}</h2>
+      <h2>{{ recipe.title }}</h2>
     </div>
-    <div class="recipe-object-picture">Here is giong to be a picture</div>
+    <div class="recipe-object-picture">
+      <img
+        v-if="recipe.imageUrl"
+        :src="recipe.imageUrl"
+        :alt="recipe.title"
+        class="recipe-image"
+      />
+      <md-icon v-else>restaurant</md-icon>
+    </div>
     <div class="recipe-object-content">
-      <div class="recipe-object-description">
-        Hier könnte später eine Beschreibung stehen
+      <div class="recipe-tags">
+        <span v-for="category in recipe.categories" :key="category">
+          {{ formatCategory(category) }}
+        </span>
       </div>
-      <div class="cooking-time">
-        Cooking time: {{ props.cookingTime }} minuten
-      </div>
+      <div class="recipe-object-description">{{ recipe.description }}</div>
+      <div class="cooking-time">Cooking time: {{ recipe.duration }}</div>
     </div>
   </div>
 </template>
@@ -37,5 +56,21 @@ const props = defineProps<Recipe>();
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.recipe-tags span {
+  border-radius: 0.5rem;
+  background: var(--md-sys-color-surface-container-high);
+  padding: 0.25rem 0.5rem;
 }
 </style>

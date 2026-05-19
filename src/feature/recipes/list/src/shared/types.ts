@@ -5,4 +5,5 @@ export interface Recipe {
   duration: string;
   cost: string;
   description: string;
+  categories: string[];
 }

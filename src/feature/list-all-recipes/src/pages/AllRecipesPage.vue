@@ -1,28 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import type { RecipeList } from '../types/types.ts';
 import RecipeObject from '../components/RecipeObject.vue';
+import { useRecipeListStore } from '../../../recipes/list/src/stores/useRecipeListStore';
 
-const baseUrl = ((import.meta.env.VITE_API_BASE_URL as string) || '') + '/';
-const recipeList = ref<RecipeList>([]);
+const store = useRecipeListStore();
 const searchQuery = ref('');
 
-async function getAllRecipes() {
-  const response = await fetch(baseUrl + 'recipes');
-
-  if (!response.ok) {
-    throw new Error('Something went wrong!');
-  }
-
-  recipeList.value = await response.json();
-}
-
-onMounted(() => getAllRecipes());
+onMounted(() => store.fetchRecipes());
 
 const filteredRecipes = computed(() => {
-  if (!recipeList.value) return recipeList.value;
-  return recipeList.value.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  return store.recipes.filter((recipe) =>
+    recipe.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
 </script>
@@ -48,14 +36,8 @@ const filteredRecipes = computed(() => {
       <RecipeObject
         v-for="recipe in filteredRecipes"
         :key="recipe.id"
-        :id="recipe.id"
-        :name="recipe.name"
-        :instructions="recipe.instructions"
-        :cookingTime="recipe.cookingTime"
-        :categories="recipe.categories"
-        :components="recipe.components"
-      >
-      </RecipeObject>
+        :recipe="recipe"
+      />
     </div>
   </div>
 </template>

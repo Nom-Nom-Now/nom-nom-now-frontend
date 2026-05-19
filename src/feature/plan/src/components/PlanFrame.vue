@@ -34,14 +34,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PlanGridContent from './PlanGridContent.vue';
 import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
+import { fetchAccountCreatedAt } from '../services/authService.ts';
 
 const { t } = useI18n();
 const store = useRecipePlanStore();
 
 const currentWeekStart = ref(getStartOfWeek(new Date()));
-
-// TODO: Replace this with the real account creation date from backend/auth
-const accountCreatedAt = new Date('2026-05-01');
+const accountCreatedAt = ref<Date | undefined>();
 
 function getStartOfWeek(date: Date): Date {
   const d = new Date(date);
@@ -52,7 +51,9 @@ function getStartOfWeek(date: Date): Date {
 }
 
 const minPastWeekStart = computed(() => {
-  return getStartOfWeek(accountCreatedAt);
+  return accountCreatedAt.value
+    ? getStartOfWeek(accountCreatedAt.value)
+    : undefined;
 });
 
 const maxFutureWeekStart = computed(() => {
@@ -62,23 +63,26 @@ const maxFutureWeekStart = computed(() => {
 });
 
 const canGoToPreviousWeek = computed(() => {
-  return currentWeekStart.value.getTime() > minPastWeekStart.value.getTime();
+  return (
+    !minPastWeekStart.value ||
+    currentWeekStart.value.getTime() > minPastWeekStart.value.getTime()
+  );
 });
 
 const canGoToNextWeek = computed(() => {
   return currentWeekStart.value.getTime() < maxFutureWeekStart.value.getTime();
 });
 
-function loadPlanForCurrentWeek() {
-  store.fetchRecipes(currentWeekStart.value, accountCreatedAt);
+async function loadPlanForCurrentWeek() {
+  await store.fetchRecipes(currentWeekStart.value, accountCreatedAt.value);
 }
 
-function goToToday() {
+async function goToToday() {
   currentWeekStart.value = getStartOfWeek(new Date());
-  loadPlanForCurrentWeek();
+  await loadPlanForCurrentWeek();
 }
 
-function goToPreviousWeek() {
+async function goToPreviousWeek() {
   if (!canGoToPreviousWeek.value) {
     return;
   }
@@ -86,10 +90,10 @@ function goToPreviousWeek() {
   const newDate = new Date(currentWeekStart.value);
   newDate.setDate(newDate.getDate() - 7);
   currentWeekStart.value = newDate;
-  loadPlanForCurrentWeek();
+  await loadPlanForCurrentWeek();
 }
 
-function goToNextWeek() {
+async function goToNextWeek() {
   if (!canGoToNextWeek.value) {
     return;
   }
@@ -97,7 +101,7 @@ function goToNextWeek() {
   const newDate = new Date(currentWeekStart.value);
   newDate.setDate(newDate.getDate() + 7);
   currentWeekStart.value = newDate;
-  loadPlanForCurrentWeek();
+  await loadPlanForCurrentWeek();
 }
 
 const formattedWeekRange = computed(() => {
@@ -114,13 +118,21 @@ const formattedWeekRange = computed(() => {
   return `${monthFormatter.format(start)} - ${monthFormatter.format(end)}`;
 });
 
-function refreshPlan() {
-  loadPlanForCurrentWeek();
+async function refreshPlan() {
+  await loadPlanForCurrentWeek();
 }
 
-onMounted(() => {
-  loadPlanForCurrentWeek();
-});
+async function initializePlan() {
+  try {
+    accountCreatedAt.value = await fetchAccountCreatedAt();
+  } catch {
+    accountCreatedAt.value = undefined;
+  }
+
+  await loadPlanForCurrentWeek();
+}
+
+onMounted(initializePlan);
 </script>
 
 <style scoped>
