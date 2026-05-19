@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Recipe } from '../../../recipes/list/src/shared/types';
+import type { Recipe } from '../shared/types.ts';
 import { useRecipeListStore } from '../../../recipes/list/src/stores/useRecipeListStore';
 
 export const useRecipePlanStore = defineStore('recipePlan', () => {

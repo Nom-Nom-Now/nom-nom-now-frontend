@@ -3,7 +3,15 @@
     <div class="recipe-title">{{ recipe.title }}</div>
 
     <div class="recipe-image-container">
-      <img :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
+      <img 
+        v-if="recipe.imageUrl" 
+        :src="recipe.imageUrl" 
+        :alt="recipe.title" 
+        class="recipe-image" 
+      />
+      <div v-else class="recipe-image-placeholder">
+        <md-icon>image</md-icon>
+      </div>
     </div>
 
     <div class="recipe-tags">
@@ -77,6 +85,21 @@ const displayCategories = computed(() => {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.recipe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.recipe-image-placeholder md-icon {
+  font-size: 2rem;
+  --md-icon-size: 2rem;
 }
 
 .recipe-tags {
