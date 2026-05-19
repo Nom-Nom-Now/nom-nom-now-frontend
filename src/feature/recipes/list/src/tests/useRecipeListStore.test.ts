@@ -12,13 +12,21 @@ describe('useRecipeListStore', () => {
   });
 
   it('should load the first backend page and map recipes', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(pageResponse(0, false)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn()
+        .mockResolvedValueOnce(pageResponse(0, false))
+        .mockResolvedValueOnce(categoriesResponse()),
+    );
 
     const store = useRecipeListStore();
 
     await store.fetchRecipes();
 
     expect(fetch).toHaveBeenCalledWith('/recipes?page=0&size=20', {
+      credentials: 'include',
+    });
+    expect(fetch).toHaveBeenCalledWith('/categories', {
       credentials: 'include',
     });
     expect(store.recipes).toEqual([
@@ -29,6 +37,7 @@ describe('useRecipeListStore', () => {
         duration: '60min',
         cost: '12.34 EUR',
         description: 'Bake it.',
+        categories: ['italian', 'dinner'],
       },
     ]);
     expect(store.canLoadMore).toBe(true);
@@ -39,6 +48,7 @@ describe('useRecipeListStore', () => {
       'fetch',
       vi.fn()
         .mockResolvedValueOnce(pageResponse(0, false))
+        .mockResolvedValueOnce(categoriesResponse())
         .mockResolvedValueOnce(pageResponse(1, true, '43')),
     );
 
@@ -59,6 +69,7 @@ describe('useRecipeListStore', () => {
       'fetch',
       vi.fn()
         .mockResolvedValueOnce(pageResponse(0, false))
+        .mockResolvedValueOnce(categoriesResponse())
         .mockResolvedValueOnce({ ok: false, status: 500 }),
     );
 
@@ -109,10 +120,24 @@ function pageResponse(page: number, last: boolean, id = '42') {
             cookingTime: id === '42' ? 60 : null,
             pricePerPerson: id === '42' ? 1234 : null,
             imageUrl: id === '42' ? '/recipes/42/image' : null,
+            categories: id === '42' ? '16,29' : null,
           },
         ],
         number: page,
         last,
+      }),
+  };
+}
+
+function categoriesResponse() {
+  return {
+    ok: true,
+    json: () =>
+      Promise.resolve({
+        categories: [
+          { id: 16, name: 'italian' },
+          { id: 29, name: 'dinner' },
+        ],
       }),
   };
 }

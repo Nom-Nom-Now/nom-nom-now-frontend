@@ -4,7 +4,7 @@ import CreateRecipeView from '../views/CreateRecipeView.vue';
 import PlanView from '../views/PlanView.vue';
 import RecipesView from '../views/RecipesView.vue';
 import BrowseView from '../views/BrowseView.vue';
-import AllRecipesPage from '../feature/list-all-recipes/src/pages/AllRecipesPage.vue';
+import ListRecipesPage from '../feature/recipes/list/src/pages/ListRecipesPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 
 const router = createRouter({
@@ -44,7 +44,7 @@ const router = createRouter({
       children: [
         {
           path: 'listall',
-          component: AllRecipesPage,
+          component: ListRecipesPage,
           meta: { titleKey: 'feature.listAllRecipes.title' },
         },
       ],
