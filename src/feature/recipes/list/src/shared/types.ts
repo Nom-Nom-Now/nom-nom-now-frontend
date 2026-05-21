@@ -1,3 +1,9 @@
+export interface RecipeComponent {
+  ingredientName: string;
+  quantity: number | null;
+  unit: string | null;
+}
+
 export interface Recipe {
   id: string;
   title: string;
@@ -5,5 +11,7 @@ export interface Recipe {
   duration: string;
   cost: string;
   description: string;
+  owner: string;
+  ingredients: RecipeComponent[];
   categories: string[];
 }

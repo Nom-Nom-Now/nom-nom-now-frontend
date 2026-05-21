@@ -16,6 +16,11 @@
     "recipes": "Rezepte",
     "browse": "Entdecken"
   },
+  "global": {
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "close": "Schließen"
+  },
   "feature": {
     "browse": {
       "title": "Entdecken"
@@ -40,6 +45,13 @@
     },
     "recipes": {
       "title": "Rezepte",
+      "detail": {
+        "title": "Rezept-Details",
+        "byOwner": "Rezept von: {owner}",
+        "ingredientsTitle": "Zutaten",
+        "noDescription": "Keine Beschreibung vorhanden.",
+        "unknownChef": "Unbekannter Koch"
+      },
       "createRecipe": {
         "title": "Rezept erstellen",
         "stepNavigation": {

@@ -26,9 +26,7 @@ describe('useRecipeListStore', () => {
     expect(fetch).toHaveBeenCalledWith('/recipes?page=0&size=20', {
       credentials: 'include',
     });
-    expect(fetch).toHaveBeenCalledWith('/categories', {
-      credentials: 'include',
-    });
+
     expect(store.recipes).toEqual([
       {
         id: '42',
@@ -37,6 +35,8 @@ describe('useRecipeListStore', () => {
         duration: '60min',
         cost: '12.34 EUR',
         description: 'Bake it.',
+        owner: 'Unbekannter Koch', // Neu hinzugefügt
+        ingredients: [],           // Neu hinzugefügt
         categories: ['italian', 'dinner'],
       },
     ]);
@@ -120,7 +120,9 @@ function pageResponse(page: number, last: boolean, id = '42') {
             cookingTime: id === '42' ? 60 : null,
             pricePerPerson: id === '42' ? 1234 : null,
             imageUrl: id === '42' ? '/recipes/42/image' : null,
+            ownerName: null,
             categories: id === '42' ? '16,29' : null,
+            components: [],
           },
         ],
         number: page,

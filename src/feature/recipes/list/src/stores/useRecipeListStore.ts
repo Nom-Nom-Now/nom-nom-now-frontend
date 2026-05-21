@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { Recipe } from '../shared/types';
+import type { Recipe, RecipeComponent } from '../shared/types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 const PAGE_SIZE = 20;
@@ -12,7 +12,9 @@ type RecipeResponseDto = {
   cookingTime: number | null;
   pricePerPerson: number | null;
   imageUrl: string | null;
+  ownerName: string;
   categories: string | null;
+  components: RecipeComponent[];
 };
 
 type RecipePageDto = {
@@ -153,6 +155,12 @@ function mapRecipe(
     duration: formatDuration(recipe.cookingTime),
     cost: formatCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
+    owner: recipe.ownerName || 'Unbekannter Koch',
+    ingredients: (recipe.components || []).map(comp => ({
+      ingredientName: comp.ingredientName,
+      quantity: comp.quantity,
+      unit: comp.unit
+    })),
     categories: parseCategoryNames(recipe.categories, categoryNamesById),
   };
 }

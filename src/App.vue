@@ -24,14 +24,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import NavigationFrame from './components/Frame/NavigationFrame.vue';
 import TitleFrame from './components/Frame/TitleFrame.vue';
 import CornerRadius from './components/Frame/CornerRadius.vue';
+import { useAuth } from './composables/useAuth'; // Pfad anpassen!
 
 const route = useRoute();
 const showShell = computed(() => !route.meta.hideShell);
+
+const { loadCurrentUser } = useAuth();
+
+onMounted(() => {
+  loadCurrentUser();
+});
 </script>
 
 <style scoped>

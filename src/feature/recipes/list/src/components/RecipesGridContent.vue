@@ -1,20 +1,28 @@
 <template>
   <div class="recipes-grid-scroll">
     <div v-if="isLoading && recipes.length === 0" class="loading">Laden...</div>
-    <div v-else-if="error && recipes.length === 0" class="status status--error">
-      {{ error }}
+    <div v-else-if="error && recipes.length === 0" class="status status--error">{{ error }}</div>
+    <div v-else-if="recipes.length === 0" class="status">Keine Rezepte gefunden.</div>
+
+    <div class="recipes-grid">
+      <RecipeBox
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        :recipe="recipe"
+        @select="selectedRecipe = recipe"
+      />
     </div>
-    <div v-else-if="recipes.length === 0" class="status">
-      Keine Rezepte gefunden.
-    </div>
-    <div v-else class="recipes-grid">
-      <RecipeBox v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
-    </div>
+
     <div ref="loadMoreSentinel" class="load-more-sentinel" />
     <div v-if="isLoading && recipes.length > 0" class="loading">Laden...</div>
-    <div v-if="error && recipes.length > 0" class="status status--error">
-      {{ error }}
-    </div>
+    <div v-if="error && recipes.length > 0" class="status status--error">{{ error }}</div>
+
+    <RecipeDetailPage
+      v-if="selectedRecipe"
+      :recipe="selectedRecipe"
+      @close="selectedRecipe = null"
+      @fullscreen="switchToFullscreen"
+    />
   </div>
 </template>
 
@@ -22,6 +30,7 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RecipeBox from './RecipeBox.vue';
 import type { Recipe } from '../shared/types';
+import RecipeDetailPage from '../../../detail/src/components/RecipeDetailPage.vue';
 
 const props = defineProps<{
   recipes: Recipe[];
@@ -32,7 +41,17 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   loadMore: [];
+  openFullscreen: [recipe: Recipe];
 }>();
+
+const selectedRecipe = ref<Recipe | null>(null);
+
+function switchToFullscreen() {
+  if (selectedRecipe.value) {
+    emit('openFullscreen', selectedRecipe.value);
+    selectedRecipe.value = null; // Popup schließen
+  }
+}
 
 const loadMoreSentinel = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
@@ -45,11 +64,7 @@ function maybeLoadMore(entries: IntersectionObserverEntry[]) {
 
 function connectObserver() {
   observer?.disconnect();
-
-  if (!loadMoreSentinel.value) {
-    return;
-  }
-
+  if (!loadMoreSentinel.value) return;
   observer = new IntersectionObserver(maybeLoadMore, {
     root: loadMoreSentinel.value.parentElement,
     rootMargin: '320px',
@@ -76,22 +91,11 @@ watch(loadMoreSentinel, connectObserver);
   padding-top: 1rem;
 }
 
-.loading {
+.loading, .status {
   margin-top: 1rem;
   text-align: center;
   color: var(--md-sys-color-on-surface-variant);
 }
-
-.status {
-  margin-top: 1rem;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.status--error {
-  color: var(--md-sys-color-error);
-}
-
-.load-more-sentinel {
-  height: 1px;
-}
+.status--error { color: var(--md-sys-color-error); }
+.load-more-sentinel { height: 1px; }
 </style>
