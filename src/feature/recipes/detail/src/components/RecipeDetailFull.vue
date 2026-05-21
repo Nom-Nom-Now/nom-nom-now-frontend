@@ -3,10 +3,10 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RecipeDetailContent from './RecipeDetailContent.vue';
 import type { Recipe } from '../../../list/src/shared/types.ts';
+import { useAuth } from '../../../../../composables/useAuth';
 
 const props = defineProps<{
   recipe: Recipe;
-  currentUsername?: string;
 }>();
 
 const emit = defineEmits<{
@@ -17,9 +17,11 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+const { currentUsername } = useAuth();
+
 const isOwner = computed(() => {
-  if (!props.currentUsername || !props.recipe?.owner) return false;
-  return props.recipe.owner.toLowerCase() === props.currentUsername.toLowerCase();
+  if (!currentUsername.value || !props.recipe?.owner) return false;
+  return props.recipe.owner.toLowerCase() === currentUsername.value.toLowerCase();
 });
 </script>
 

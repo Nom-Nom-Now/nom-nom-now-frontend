@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, inject, onMounted, type Ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { loadCategoryLists } from '../../services/categoryMapper'; // Mapper importieren
+import { loadCategoryLists } from '../../services/categoryMapper';
+import { useAuth } from '../../../../../../composables/useAuth';
 import type { CategoryOption } from '../../services/categoryApiTypes.ts';
 import RecipeDetailContent from '../../../../detail/src/components/RecipeDetailContent.vue';
 import type { Recipe } from '../../../../list/src/shared/types.ts';
@@ -11,7 +12,8 @@ import type { Recipe } from '../../../../list/src/shared/types.ts';
 const { t } = useI18n();
 const store = useCreateRecipeStore();
 
-const currentUsername = inject<Ref<string | undefined>>('currentUsername', ref(undefined));
+const { currentUsername } = useAuth();
+
 const { isSubmitting, submitError, isIngredientsStepValid } = storeToRefs(store);
 const submitSuccess = ref(false);
 
@@ -42,9 +44,9 @@ const previewRecipe = computed<Recipe>(() => {
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
     cost: '',
     description: store.instructions || '',
+
     owner: currentUsername.value || t('feature.recipes.detail.unknownChef'),
 
-    // JETZT NEU: Ein echtes string[] statt des alten CSV-Komma-Strings
     categories: mappedCategoryNames,
 
     ingredients: (store.ingredients || []).map(ing => ({
