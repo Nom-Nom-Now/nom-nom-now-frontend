@@ -22,4 +22,5 @@ export interface CreateRecipeState {
   cookingTime?: number;
   categoryIds?: number[];
   recipeImage?: File | null;
+  pricePerPerson?: number | null;
 }

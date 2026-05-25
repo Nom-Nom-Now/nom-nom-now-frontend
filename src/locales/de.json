@@ -168,6 +168,9 @@
           "unit": "Einheit",
           "ingredient": "Zutat",
           "addIngredient": "Zutat hinzufügen",
+          "price": "Preis",
+          "totalPrice": "Gesamtpreis (€)",
+          "pricePerPerson": "≈ {price} € pro Person",
           "unitValues": {
             "GRAM": "g",
             "KILOGRAM": "kg",

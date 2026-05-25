@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
 const store = useCreateRecipeStore();
-const { servings, recipeName } = storeToRefs(store);
+const { servings, recipeName, totalPrice, pricePerPerson } = storeToRefs(store);
 
 function onServingsInput(event: Event) {
   const value = Number((event.target as HTMLInputElement).value);
@@ -16,6 +16,12 @@ function onServingsInput(event: Event) {
 
 function onNameInput(event: Event) {
   store.setRecipeName((event.target as HTMLInputElement).value);
+}
+
+function onPriceInput(event: Event) {
+  const raw = (event.target as HTMLInputElement).value;
+  const value = raw === '' ? null : Number(raw);
+  store.setTotalPrice(value);
 }
 </script>
 
@@ -60,6 +66,28 @@ function onNameInput(event: Event) {
       </md-tabs>
     </div>
 
+    <div>
+      <md-tabs>
+        <MdLabel size="large">
+          {{ t('feature.recipes.createRecipe.ingredients.price') }}
+        </MdLabel>
+        <div class="price-row">
+          <md-outlined-text-field
+            class="price-field"
+            :label="t('feature.recipes.createRecipe.ingredients.totalPrice')"
+            type="number"
+            min="0"
+            step="0.01"
+            :value="totalPrice ?? ''"
+            @input="onPriceInput"
+          />
+          <MdLabel v-if="pricePerPerson !== null" size="medium" class="label price-per-person">
+            {{ t('feature.recipes.createRecipe.ingredients.pricePerPerson', { price: pricePerPerson!.toFixed(2) }) }}
+          </MdLabel>
+        </div>
+      </md-tabs>
+    </div>
+
     <IngredientList />
   </div>
 </template>
@@ -77,6 +105,22 @@ function onNameInput(event: Event) {
 
 .label {
   margin-left: 1.5rem;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: 2rem;
+}
+
+.price-field {
+  width: 10rem;
+}
+
+.price-per-person {
+  margin-left: 0;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .serving-chooser {

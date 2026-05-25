@@ -158,6 +158,9 @@
           "unit": "Unit",
           "ingredient": "Ingredient",
           "addIngredient": "Add ingredient",
+          "price": "Price",
+          "totalPrice": "Total price (€)",
+          "pricePerPerson": "≈ {price} € per person",
           "unitValues": {
             "GRAM": "g",
             "KILOGRAM": "kg",

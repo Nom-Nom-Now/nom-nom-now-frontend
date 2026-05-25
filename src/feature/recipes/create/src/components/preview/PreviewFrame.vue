@@ -42,7 +42,7 @@ const previewRecipe = computed<Recipe>(() => {
     title: store.recipeName || '',
     imageUrl: localImageUrl,
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
-    cost: '',
+    cost: store.pricePerPerson !== null ? `${store.pricePerPerson.toFixed(2)} €` : '',
     description: store.instructions || '',
 
     owner: currentUsername.value || t('feature.recipes.detail.unknownChef'),

@@ -18,6 +18,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
   const cookingTime = ref(0);
   const categoryIds = ref<number[]>([]);
   const recipeImage = ref<File | null>(null);
+  const totalPrice = ref<number | null>(null);
 
   // Submit-Status
   const isSubmitting = ref(false);
@@ -51,6 +52,15 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
   function setServings(value: number) {
     servings.value = Math.max(1, value);
   }
+
+  function setTotalPrice(value: number | null) {
+    totalPrice.value = value;
+  }
+
+  const pricePerPerson = computed(() => {
+    if (totalPrice.value === null || totalPrice.value <= 0) return null;
+    return Math.round((totalPrice.value / servings.value) * 100) / 100;
+  });
 
   function addIngredient() {
     ingredients.value.push({
@@ -114,6 +124,9 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
         cookingTime: cookingTime.value,
         categoryIds: categoryIds.value,
         recipeImage: recipeImage.value,
+        pricePerPerson: totalPrice.value !== null && totalPrice.value > 0
+          ? Math.round((totalPrice.value / servings.value) * 100)
+          : null,
       };
 
       const response = await createRecipe(state);
@@ -140,6 +153,7 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     cookingTime.value = 0;
     categoryIds.value = [];
     recipeImage.value = null;
+    totalPrice.value = null;
     submitError.value = null;
     isSubmitting.value = false;
     nextId = 4;
@@ -156,14 +170,17 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
     isSubmitting,
     submitError,
     recipeImage,
+    totalPrice,
 
     // Getters
     ingredientCount,
     isIngredientsStepValid,
+    pricePerPerson,
 
     // Actions
     setRecipeName,
     setServings,
+    setTotalPrice,
     setCategoryIds,
     addIngredient,
     removeIngredient,
