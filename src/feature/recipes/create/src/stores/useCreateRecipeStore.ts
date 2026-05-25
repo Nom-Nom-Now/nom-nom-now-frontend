@@ -124,9 +124,10 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
         cookingTime: cookingTime.value,
         categoryIds: categoryIds.value,
         recipeImage: recipeImage.value,
-        pricePerPerson: totalPrice.value !== null && totalPrice.value > 0
-          ? Math.round((totalPrice.value / servings.value) * 100)
-          : null,
+        pricePerPerson:
+          totalPrice.value !== null && totalPrice.value > 0
+            ? Math.round((totalPrice.value / servings.value) * 100)
+            : null,
       };
 
       const response = await createRecipe(state);

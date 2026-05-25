@@ -14,7 +14,8 @@ describe('useRecipeListStore', () => {
   it('should load the first backend page and map recipes', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn()
+      vi
+        .fn()
         .mockResolvedValueOnce(pageResponse(0, false))
         .mockResolvedValueOnce(categoriesResponse()),
     );
@@ -36,7 +37,7 @@ describe('useRecipeListStore', () => {
         cost: '12.34 EUR',
         description: 'Bake it.',
         owner: 'Unbekannter Koch', // Neu hinzugefügt
-        ingredients: [],           // Neu hinzugefügt
+        ingredients: [], // Neu hinzugefügt
         categories: ['italian', 'dinner'],
       },
     ]);
@@ -46,7 +47,8 @@ describe('useRecipeListStore', () => {
   it('should append the next page and stop on the last page', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn()
+      vi
+        .fn()
         .mockResolvedValueOnce(pageResponse(0, false))
         .mockResolvedValueOnce(categoriesResponse())
         .mockResolvedValueOnce(pageResponse(1, true, '43')),
@@ -67,7 +69,8 @@ describe('useRecipeListStore', () => {
   it('should keep existing recipes and expose an error when the next page fails', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn()
+      vi
+        .fn()
         .mockResolvedValueOnce(pageResponse(0, false))
         .mockResolvedValueOnce(categoriesResponse())
         .mockResolvedValueOnce({ ok: false, status: 500 }),

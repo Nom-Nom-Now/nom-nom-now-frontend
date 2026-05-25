@@ -81,8 +81,16 @@ function onPriceInput(event: Event) {
             :value="totalPrice ?? ''"
             @input="onPriceInput"
           />
-          <MdLabel v-if="pricePerPerson !== null" size="medium" class="label price-per-person">
-            {{ t('feature.recipes.createRecipe.ingredients.pricePerPerson', { price: pricePerPerson!.toFixed(2) }) }}
+          <MdLabel
+            v-if="pricePerPerson !== null"
+            size="medium"
+            class="label price-per-person"
+          >
+            {{
+              t('feature.recipes.createRecipe.ingredients.pricePerPerson', {
+                price: pricePerPerson!.toFixed(2),
+              })
+            }}
           </MdLabel>
         </div>
       </md-tabs>

@@ -39,7 +39,7 @@
     },
     "plan": {
       "title": "Plan",
-      "refreshPlan" : "Refresh",
+      "refreshPlan": "Refresh",
       "today": "Heute",
       "loading": "Lädt..."
     },

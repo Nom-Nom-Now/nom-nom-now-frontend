@@ -22,13 +22,15 @@ const getCategoryLabel = (name: string) =>
 <template>
   <div class="recipe-detail-overlay" @click.self="$emit('close')">
     <div class="recipe-detail-page">
-
       <div class="detail-header-actions">
         <button class="action-button close-button" @click="$emit('close')">
           <md-icon>close</md-icon>
         </button>
 
-        <button class="action-button fullscreen-button" @click="$emit('fullscreen')">
+        <button
+          class="action-button fullscreen-button"
+          @click="$emit('fullscreen')"
+        >
           <md-icon>fullscreen</md-icon>
         </button>
       </div>
@@ -36,12 +38,26 @@ const getCategoryLabel = (name: string) =>
       <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
 
       <div class="recipe-image-container">
-        <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
-        <div v-else class="recipe-image-placeholder"> <md-icon>restaurant</md-icon> </div>
+        <img
+          v-if="recipe.imageUrl"
+          :src="recipe.imageUrl"
+          :alt="recipe.title"
+          class="recipe-image"
+        />
+        <div v-else class="recipe-image-placeholder">
+          <md-icon>restaurant</md-icon>
+        </div>
       </div>
 
-      <div v-if="recipe.categories && recipe.categories.length" class="recipe-detail-chips">
-        <div v-for="categoryName in recipe.categories" :key="categoryName" class="detail-chip">
+      <div
+        v-if="recipe.categories && recipe.categories.length"
+        class="recipe-detail-chips"
+      >
+        <div
+          v-for="categoryName in recipe.categories"
+          :key="categoryName"
+          class="detail-chip"
+        >
           <md-icon class="chip-icon">label</md-icon>
           <span>{{ getCategoryLabel(categoryName) }}</span>
         </div>
@@ -62,27 +78,44 @@ const getCategoryLabel = (name: string) =>
       <div class="recipe-owner-section">
         <md-icon>person</md-icon>
         <MdText size="medium">
-          {{ t('feature.recipes.detail.byOwner', { owner: recipe.owner || t('feature.recipes.detail.unknownChef') }) }}
+          {{
+            t('feature.recipes.detail.byOwner', {
+              owner: recipe.owner || t('feature.recipes.detail.unknownChef'),
+            })
+          }}
         </MdText>
       </div>
 
       <div class="recipe-ingredients-section">
         <div class="ingredients-header">
           <md-icon>list</md-icon>
-          <MdLabel size="medium">{{ t('feature.recipes.detail.ingredientsTitle') }}</MdLabel>
+          <MdLabel size="medium">{{
+            t('feature.recipes.detail.ingredientsTitle')
+          }}</MdLabel>
         </div>
 
         <ul class="ingredients-list">
-          <li v-for="(item, index) in recipe.ingredients" :key="index" class="ingredient-item">
-            <span class="ingredient-name"><strong>{{ item.ingredientName }}</strong></span>
+          <li
+            v-for="(item, index) in recipe.ingredients"
+            :key="index"
+            class="ingredient-item"
+          >
+            <span class="ingredient-name"
+              ><strong>{{ item.ingredientName }}</strong></span
+            >
             <span class="ingredient-quantity">{{ item.quantity || '' }}</span>
             <span class="ingredient-unit">
-              {{ item.unit ? t(`feature.recipes.createRecipe.ingredients.unitValues.${item.unit.toUpperCase()}`) : '' }}
+              {{
+                item.unit
+                  ? t(
+                      `feature.recipes.createRecipe.ingredients.unitValues.${item.unit.toUpperCase()}`,
+                    )
+                  : ''
+              }}
             </span>
           </li>
         </ul>
       </div>
-
     </div>
   </div>
 </template>
@@ -269,7 +302,8 @@ const getCategoryLabel = (name: string) =>
 
 .ingredient-item {
   padding: 4px 0;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+  border-bottom: 1px solid
+    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
   display: grid;
   grid-template-columns: 1fr 3.5rem 3rem;
   font-size: 0.875rem;

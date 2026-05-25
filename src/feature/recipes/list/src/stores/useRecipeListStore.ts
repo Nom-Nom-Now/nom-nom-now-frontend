@@ -156,10 +156,10 @@ function mapRecipe(
     cost: formatCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
     owner: recipe.ownerName || 'Unbekannter Koch',
-    ingredients: (recipe.components || []).map(comp => ({
+    ingredients: (recipe.components || []).map((comp) => ({
       ingredientName: comp.ingredientName,
       quantity: comp.quantity,
-      unit: comp.unit
+      unit: comp.unit,
     })),
     categories: parseCategoryNames(recipe.categories, categoryNamesById),
   };

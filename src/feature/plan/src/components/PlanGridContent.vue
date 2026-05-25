@@ -15,10 +15,7 @@
             day.dateNum
           }}</span>
         </div>
-        <PlanRecipeBox
-          v-if="recipes[index]"
-          :recipe="recipes[index]"
-        />
+        <PlanRecipeBox v-if="recipes[index]" :recipe="recipes[index]" />
       </div>
     </div>
   </div>
@@ -38,7 +35,15 @@ const props = defineProps<{
   currentWeek: Date;
 }>();
 
-const weekDayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const weekDayKeys = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+];
 
 const weekDays = computed(() => {
   const days = [];
