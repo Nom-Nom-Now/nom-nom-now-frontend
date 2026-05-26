@@ -1,8 +1,12 @@
 <template>
   <div class="recipes-grid-scroll">
     <div v-if="isLoading && recipes.length === 0" class="loading">Laden...</div>
-    <div v-else-if="error && recipes.length === 0" class="status status--error">{{ error }}</div>
-    <div v-else-if="recipes.length === 0" class="status">Keine Rezepte gefunden.</div>
+    <div v-else-if="error && recipes.length === 0" class="status status--error">
+      {{ error }}
+    </div>
+    <div v-else-if="recipes.length === 0" class="status">
+      Keine Rezepte gefunden.
+    </div>
 
     <div class="recipes-grid">
       <RecipeBox
@@ -15,7 +19,9 @@
 
     <div ref="loadMoreSentinel" class="load-more-sentinel" />
     <div v-if="isLoading && recipes.length > 0" class="loading">Laden...</div>
-    <div v-if="error && recipes.length > 0" class="status status--error">{{ error }}</div>
+    <div v-if="error && recipes.length > 0" class="status status--error">
+      {{ error }}
+    </div>
 
     <RecipeDetailPage
       v-if="selectedRecipe"
@@ -91,11 +97,16 @@ watch(loadMoreSentinel, connectObserver);
   padding-top: 1rem;
 }
 
-.loading, .status {
+.loading,
+.status {
   margin-top: 1rem;
   text-align: center;
   color: var(--md-sys-color-on-surface-variant);
 }
-.status--error { color: var(--md-sys-color-error); }
-.load-more-sentinel { height: 1px; }
+.status--error {
+  color: var(--md-sys-color-error);
+}
+.load-more-sentinel {
+  height: 1px;
+}
 </style>

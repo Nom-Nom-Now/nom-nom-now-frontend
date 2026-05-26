@@ -5,17 +5,11 @@
         <md-outlined-button @click="goToToday">
           {{ t('feature.plan.today') }}
         </md-outlined-button>
-        <md-icon-button 
-          v-if="canGoToPreviousWeek"
-          @click="goToPreviousWeek"
-        >
+        <md-icon-button v-if="canGoToPreviousWeek" @click="goToPreviousWeek">
           <md-icon>chevron_left</md-icon>
         </md-icon-button>
         <span class="current-date">{{ formattedWeekRange }}</span>
-        <md-icon-button 
-          v-if="canGoToNextWeek"
-          @click="goToNextWeek"
-        >
+        <md-icon-button v-if="canGoToNextWeek" @click="goToNextWeek">
           <md-icon>chevron_right</md-icon>
         </md-icon-button>
       </div>
@@ -75,7 +69,11 @@ const canGoToNextWeek = computed(() => {
 });
 
 async function loadPlanForCurrentWeek(forceRandom = false) {
-  await store.fetchRecipes(currentWeekStart.value, accountCreatedAt.value, forceRandom);
+  await store.fetchRecipes(
+    currentWeekStart.value,
+    accountCreatedAt.value,
+    forceRandom,
+  );
 }
 
 async function goToToday() {

@@ -23,7 +23,10 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
       return false;
     }
 
-    return getStartOfWeek(weekStart).getTime() < getStartOfWeek(accountCreatedAt).getTime();
+    return (
+      getStartOfWeek(weekStart).getTime() <
+      getStartOfWeek(accountCreatedAt).getTime()
+    );
   }
 
   function getWeekSeed(weekStart?: Date, forceRandom = false): number {
@@ -34,7 +37,11 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     return Math.floor(weekStart.getTime() / (1000 * 60 * 60 * 24 * 7));
   }
 
-  function shuffleRecipesForWeek(allRecipes: Recipe[], weekStart?: Date, forceRandom = false): Recipe[] {
+  function shuffleRecipesForWeek(
+    allRecipes: Recipe[],
+    weekStart?: Date,
+    forceRandom = false,
+  ): Recipe[] {
     const shuffledRecipes = [...allRecipes];
     let seed = getWeekSeed(weekStart, forceRandom);
 
@@ -50,7 +57,11 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     return shuffledRecipes.slice(0, 7);
   }
 
-  async function fetchRecipes(weekStart?: Date, accountCreatedAt?: Date, forceRandom = false) {
+  async function fetchRecipes(
+    weekStart?: Date,
+    accountCreatedAt?: Date,
+    forceRandom = false,
+  ) {
     if (isWeekBeforeAccountCreation(weekStart, accountCreatedAt)) {
       recipes.value = [];
       return;
@@ -60,7 +71,11 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     try {
       const recipeListStore = useRecipeListStore();
       await recipeListStore.fetchRecipes();
-      recipes.value = shuffleRecipesForWeek(recipeListStore.recipes, weekStart, forceRandom);
+      recipes.value = shuffleRecipesForWeek(
+        recipeListStore.recipes,
+        weekStart,
+        forceRandom,
+      );
     } finally {
       isLoading.value = false;
     }

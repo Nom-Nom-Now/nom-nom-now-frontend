@@ -12,7 +12,7 @@ export function useAuth() {
     isLoading.value = true;
     try {
       const response = await fetch(`${baseUrl}/auth/me`, {
-        credentials: 'include'
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -29,6 +29,6 @@ export function useAuth() {
   return {
     currentUsername,
     isLoading,
-    loadCurrentUser
+    loadCurrentUser,
   };
 }

@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchAccountCreatedAt, parseBackendDate } from '../services/authService';
+import {
+  fetchAccountCreatedAt,
+  parseBackendDate,
+} from '../services/authService';
 
 describe('authService', () => {
   beforeEach(() => {

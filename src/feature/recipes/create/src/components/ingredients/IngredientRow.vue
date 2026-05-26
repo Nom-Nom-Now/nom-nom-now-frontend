@@ -49,6 +49,11 @@ function onNameInput(event: Event) {
 <template>
   <div class="ingredient-row">
     <md-outlined-text-field
+      :label="t('feature.recipes.createRecipe.ingredients.ingredient')"
+      :value="ingredient.name"
+      @input="onNameInput"
+    ></md-outlined-text-field>
+    <md-outlined-text-field
       :label="t('feature.recipes.createRecipe.ingredients.amount')"
       type="number"
       min="0"
@@ -72,11 +77,6 @@ function onNameInput(event: Event) {
         <path d="M7 10l5 5 5-5z" />
       </svg>
     </div>
-    <md-outlined-text-field
-      :label="t('feature.recipes.createRecipe.ingredients.ingredient')"
-      :value="ingredient.name"
-      @input="onNameInput"
-    ></md-outlined-text-field>
     <div class="swap-buttons">
       <button class="swap-btn" @click="emit('moveUp')" title="Move up">
         <img :src="arrowUpIcon" alt="move up" class="swap-icon" />

@@ -21,21 +21,35 @@ const { currentUsername } = useAuth();
 
 const isOwner = computed(() => {
   if (!currentUsername.value || !props.recipe?.owner) return false;
-  return props.recipe.owner.toLowerCase() === currentUsername.value.toLowerCase();
+  return (
+    props.recipe.owner.toLowerCase() === currentUsername.value.toLowerCase()
+  );
 });
 </script>
 
 <template>
   <div class="recipe-fullscreen-container">
-    <button class="close-button" @click="emit('close')" :title="t('global.close')">
+    <button
+      class="close-button"
+      @click="emit('close')"
+      :title="t('global.close')"
+    >
       <md-icon>close</md-icon>
     </button>
 
     <div v-if="isOwner" class="recipe-screen-actions">
-      <button class="icon-action-button edit" @click="emit('edit', recipe)" :title="t('global.edit')">
+      <button
+        class="icon-action-button edit"
+        @click="emit('edit', recipe)"
+        :title="t('global.edit')"
+      >
         <md-icon>edit</md-icon>
       </button>
-      <button class="icon-action-button delete" @click="emit('delete', recipe.id)" :title="t('global.delete')">
+      <button
+        class="icon-action-button delete"
+        @click="emit('delete', recipe.id)"
+        :title="t('global.delete')"
+      >
         <md-icon>delete</md-icon>
       </button>
     </div>
@@ -74,12 +88,16 @@ const isOwner = computed(() => {
   justify-content: center;
   border-radius: 50%;
   z-index: 1010; /* Höher als der Content */
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .close-button:hover {
   background-color: var(--md-sys-color-surface-container-high);
-  color: var(--md-sys-color-error); /* Färbt das X beim Hover leicht rot/wichtig */
+  color: var(
+    --md-sys-color-error
+  ); /* Färbt das X beim Hover leicht rot/wichtig */
 }
 
 .close-button md-icon {
@@ -106,7 +124,9 @@ const isOwner = computed(() => {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   color: var(--md-sys-color-on-surface-variant);
 }
 

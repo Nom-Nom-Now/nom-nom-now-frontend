@@ -21,7 +21,12 @@ const getCategoryLabel = (name: string) =>
 
     <div class="recipe-left-column">
       <div class="recipe-image-container">
-        <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.title" class="recipe-image" />
+        <img
+          v-if="recipe.imageUrl"
+          :src="recipe.imageUrl"
+          :alt="recipe.title"
+          class="recipe-image"
+        />
         <div v-else class="recipe-image-placeholder">
           <md-icon>restaurant</md-icon>
         </div>
@@ -33,7 +38,8 @@ const getCategoryLabel = (name: string) =>
         </MdText>
 
         <div class="recipe-cost-factor">
-          <strong>Preis pro Person:</strong> <span class="recipe-cost">{{ recipe.cost }}</span>
+          <strong>Preis pro Person:</strong>
+          <span class="recipe-cost">{{ recipe.cost }}</span>
         </div>
       </div>
     </div>
@@ -44,7 +50,12 @@ const getCategoryLabel = (name: string) =>
           <div class="recipe-owner-section">
             <md-icon>person</md-icon>
             <MdText size="medium">
-              {{ t('feature.recipes.detail.byOwner', { owner: recipe.owner || t('feature.recipes.detail.unknownChef') }) }}
+              {{
+                t('feature.recipes.detail.byOwner', {
+                  owner:
+                    recipe.owner || t('feature.recipes.detail.unknownChef'),
+                })
+              }}
             </MdText>
           </div>
 
@@ -55,8 +66,15 @@ const getCategoryLabel = (name: string) =>
         </div>
       </div>
 
-      <div v-if="recipe.categories && recipe.categories.length" class="recipe-detail-chips">
-        <div v-for="categoryName in recipe.categories" :key="categoryName" class="detail-chip">
+      <div
+        v-if="recipe.categories && recipe.categories.length"
+        class="recipe-detail-chips"
+      >
+        <div
+          v-for="categoryName in recipe.categories"
+          :key="categoryName"
+          class="detail-chip"
+        >
           <md-icon class="chip-icon">label</md-icon>
           <span>{{ getCategoryLabel(categoryName) }}</span>
         </div>
@@ -65,15 +83,29 @@ const getCategoryLabel = (name: string) =>
       <div class="recipe-ingredients-section">
         <div class="ingredients-header">
           <md-icon>list</md-icon>
-          <MdLabel size="medium">{{ t('feature.recipes.detail.ingredientsTitle') }}</mdLabel>
+          <MdLabel size="medium">{{
+            t('feature.recipes.detail.ingredientsTitle')
+          }}</MdLabel>
         </div>
 
         <ul class="ingredients-list">
-          <li v-for="(item, index) in recipe.ingredients" :key="index" class="ingredient-item">
-            <span class="ingredient-name"><strong>{{ item.ingredientName }}</strong></span>
+          <li
+            v-for="(item, index) in recipe.ingredients"
+            :key="index"
+            class="ingredient-item"
+          >
+            <span class="ingredient-name"
+              ><strong>{{ item.ingredientName }}</strong></span
+            >
             <span class="ingredient-quantity">{{ item.quantity || '' }}</span>
             <span class="ingredient-unit">
-              {{ item.unit ? t(`feature.recipes.createRecipe.ingredients.unitValues.${item.unit.toUpperCase()}`) : '' }}
+              {{
+                item.unit
+                  ? t(
+                      `feature.recipes.createRecipe.ingredients.unitValues.${item.unit.toUpperCase()}`,
+                    )
+                  : ''
+              }}
             </span>
           </li>
         </ul>
@@ -87,8 +119,8 @@ const getCategoryLabel = (name: string) =>
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
-    "header header"
-    "left right";
+    'header header'
+    'left right';
   gap: 1.5rem 4rem;
   width: 100%;
   max-width: 100%;
@@ -259,23 +291,31 @@ const getCategoryLabel = (name: string) =>
 
 .ingredient-item {
   padding: 12px 0;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
+  border-bottom: 1px solid
+    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
   display: grid;
   grid-template-columns: 1fr 4rem 4rem;
   gap: 12px;
 }
 
-.ingredient-name { text-align: left; font-weight: bold; }
-.ingredient-quantity { text-align: right; }
-.ingredient-unit { text-align: left; }
+.ingredient-name {
+  text-align: left;
+  font-weight: bold;
+}
+.ingredient-quantity {
+  text-align: right;
+}
+.ingredient-unit {
+  text-align: left;
+}
 
 @media (max-width: 768px) {
   .recipe-fullscreen-layout {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "header"
-      "left"
-      "right";
+      'header'
+      'left'
+      'right';
     gap: 1.5rem;
   }
 
