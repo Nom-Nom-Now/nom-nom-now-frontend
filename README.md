@@ -92,7 +92,7 @@ Rules:
 - Reference Jira issue ID when applicable  
 
 ### Repository Structure
-A clear layout helps everyone find things quickly.
+clear layout helps everyone find things quickly.
 
 ```text
 src/        # Application code
