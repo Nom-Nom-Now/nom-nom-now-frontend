@@ -16,6 +16,11 @@
     "recipes": "Rezepte",
     "browse": "Entdecken"
   },
+  "languages": {
+    "title": "Sprache wechseln",
+    "de": "Deutsch",
+    "en": "Englisch"
+  },
   "global": {
     "edit": "Bearbeiten",
     "delete": "Löschen",
