@@ -119,9 +119,10 @@ function shuffleRecipesForWeek(
 ): Recipe[] {
   const recipesToShuffle = [...availableRecipes];
 
-  const random = forceRandom || !weekStart
-    ? Math.random
-    : createSeededRandom(getWeekSeed(weekStart));
+  const random =
+    forceRandom || !weekStart
+      ? Math.random
+      : createSeededRandom(getWeekSeed(weekStart));
 
   for (let index = recipesToShuffle.length - 1; index > 0; index -= 1) {
     const randomIndex = Math.floor(random() * (index + 1));

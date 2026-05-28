@@ -25,7 +25,10 @@ export type RecipeResponseDto = {
 export async function fetchWeeklyRecipePlan(
   weekStart: Date,
 ): Promise<RecipePlanResponseDto[]> {
-  const url = new URL(`${API_BASE_URL}/api/recipe-plans`, window.location.origin);
+  const url = new URL(
+    `${API_BASE_URL}/api/recipe-plans`,
+    window.location.origin,
+  );
   url.searchParams.set('weekStart', formatDateOnly(weekStart));
 
   const response = await fetch(toRequestUrl(url), {
@@ -43,7 +46,10 @@ export async function saveWeeklyRecipePlan(
   weekStart: Date,
   recipeIds: Array<number | string>,
 ): Promise<RecipePlanResponseDto[]> {
-  const url = new URL(`${API_BASE_URL}/api/recipe-plans`, window.location.origin);
+  const url = new URL(
+    `${API_BASE_URL}/api/recipe-plans`,
+    window.location.origin,
+  );
 
   const response = await fetch(toRequestUrl(url), {
     method: 'POST',
