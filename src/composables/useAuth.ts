@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 
 const currentUsername = ref<string | undefined>(undefined);
+const currentUserId = ref<string | undefined>(undefined);
 const isLoading = ref(false);
 
 export function useAuth() {
@@ -18,6 +19,7 @@ export function useAuth() {
       if (response.ok) {
         const userData = await response.json();
         currentUsername.value = userData.username || userData.name;
+        currentUserId.value = String(userData.id);
       }
     } catch (error) {
       console.error('Fehler beim Laden des angemeldeten Benutzers:', error);
@@ -28,6 +30,7 @@ export function useAuth() {
 
   return {
     currentUsername,
+    currentUserId,
     isLoading,
     loadCurrentUser,
   };

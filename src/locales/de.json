@@ -206,7 +206,8 @@
         }
       },
       "list": {
-        "createButton": "Neues Rezept"
+        "createButton": "Neues Rezept",
+        "myRecipesOnly": "Meine Rezepte"
       }
     },
 
