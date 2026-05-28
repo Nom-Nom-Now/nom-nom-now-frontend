@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Recipe } from '../shared/types';
-import { useRecipeListStore } from '../../../recipes/list/src/stores/useRecipeListStore';
+import {
+  resolveBackendResourceUrl,
+  useRecipeListStore,
+} from '../../../recipes/list/src/stores/useRecipeListStore';
 import {
   fetchWeeklyRecipePlan,
   saveWeeklyRecipePlan,
@@ -156,8 +159,8 @@ function mapRecipeResponse(recipe: RecipeResponseDto): Recipe {
     id: String(recipe.id),
     title: recipe.name,
     imageUrl: resolveBackendResourceUrl(recipe.imageUrl),
-    duration: formatDuration(recipe.cookingTime),
-    cost: formatCost(recipe.pricePerPerson),
+    duration: formatPlanDuration(recipe.cookingTime),
+    cost: formatPlanCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
     categories: parseCategories(recipe.categories),
   };
@@ -174,45 +177,7 @@ function parseCategories(categories: string | null) {
     .filter(Boolean);
 }
 
-function resolveBackendResourceUrl(path: string | null) {
-  if (!path) {
-    return null;
-  }
-
-  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL as string) || '';
-
-  if (!apiBaseUrl) {
-    return path;
-  }
-
-  try {
-    return new URL(path).toString();
-  } catch {
-    return `${trimTrailingSlashes(apiBaseUrl)}/${trimLeadingSlashes(path)}`;
-  }
-}
-
-function trimTrailingSlashes(value: string) {
-  let end = value.length;
-
-  while (end > 0 && value[end - 1] === '/') {
-    end -= 1;
-  }
-
-  return value.slice(0, end);
-}
-
-function trimLeadingSlashes(value: string) {
-  let start = 0;
-
-  while (start < value.length && value[start] === '/') {
-    start += 1;
-  }
-
-  return value.slice(start);
-}
-
-function formatDuration(cookingTime: number | null) {
+function formatPlanDuration(cookingTime: number | null) {
   if (cookingTime === null) {
     return '-';
   }
@@ -220,7 +185,7 @@ function formatDuration(cookingTime: number | null) {
   return `${cookingTime}min`;
 }
 
-function formatCost(pricePerPerson: number | null) {
+function formatPlanCost(pricePerPerson: number | null) {
   if (pricePerPerson === null) {
     return '-';
   }
