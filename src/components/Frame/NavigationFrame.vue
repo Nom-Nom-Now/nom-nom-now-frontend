@@ -9,7 +9,10 @@
             class="nav-link"
             active-class="nav-link-active"
           >
-            <NavigationItem :text="t(item.textKey)" :icon-name="item.iconName" />
+            <NavigationItem
+              :text="t(item.textKey)"
+              :icon-name="item.iconName"
+            />
           </RouterLink>
         </li>
       </ul>
@@ -23,7 +26,11 @@
         class="lang-select"
         :title="t('languages.title')"
       >
-        <option v-for="langCode in availableLanguageCodes" :key="langCode" :value="langCode">
+        <option
+          v-for="langCode in availableLanguageCodes"
+          :key="langCode"
+          :value="langCode"
+        >
           {{ t(`languages.${langCode}`) }}
         </option>
       </select>
@@ -39,9 +46,21 @@ const { t, locale } = useI18n();
 
 const navigationItems = [
   { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/home' },
-  { textKey: 'navigation.plan', iconName: 'calendar_meal_24dp_1F1F1F', to: '/plan' },
-  { textKey: 'navigation.recipes', iconName: 'chef_hat_24dp_1F1F1F', to: '/recipes' },
-  { textKey: 'navigation.browse', iconName: 'wb_incandescent_24dp_1F1F1F', to: '/browse' },
+  {
+    textKey: 'navigation.plan',
+    iconName: 'calendar_meal_24dp_1F1F1F',
+    to: '/plan',
+  },
+  {
+    textKey: 'navigation.recipes',
+    iconName: 'chef_hat_24dp_1F1F1F',
+    to: '/recipes',
+  },
+  {
+    textKey: 'navigation.browse',
+    iconName: 'wb_incandescent_24dp_1F1F1F',
+    to: '/browse',
+  },
 ];
 const availableLanguageCodes = ['de', 'en'];
 </script>
