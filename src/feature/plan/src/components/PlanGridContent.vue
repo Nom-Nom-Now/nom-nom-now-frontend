@@ -3,6 +3,9 @@
     <div v-if="isLoading" class="loading">
       {{ t('feature.plan.loading') }}
     </div>
+    <div v-else-if="error" class="error-message">
+      {{ error }}
+    </div>
     <div v-else class="week-grid">
       <div
         v-for="(day, index) in weekDays"
@@ -32,6 +35,7 @@ const { t } = useI18n();
 const props = defineProps<{
   recipes: Recipe[];
   isLoading: boolean;
+  error: string | null;
   currentWeek: Date;
 }>();
 
@@ -125,5 +129,16 @@ const weekDays = computed(() => {
   text-align: center;
   padding: 2rem;
   color: var(--md-sys-color-on-surface-variant);
+}
+
+.error-message {
+  margin: 2rem auto;
+  max-width: 32rem;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  text-align: center;
+  font-weight: 500;
 }
 </style>

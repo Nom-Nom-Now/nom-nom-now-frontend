@@ -21,6 +21,7 @@
     <PlanGridContent
       :recipes="store.recipes"
       :is-loading="store.isLoading"
+      :error="store.error"
       :current-week="currentWeekStart"
     />
   </div>
