@@ -2,10 +2,17 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Recipe } from '../shared/types';
 import { useRecipeListStore } from '../../../recipes/list/src/stores/useRecipeListStore';
+import {
+  fetchWeeklyRecipePlan,
+  saveWeeklyRecipePlan,
+  type RecipePlanResponseDto,
+  type RecipeResponseDto,
+} from '../services/WeeklyRecipePlanService.ts';
 
 export const useRecipePlanStore = defineStore('recipePlan', () => {
   const recipes = ref<Recipe[]>([]);
   const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
   function getStartOfWeek(date: Date): Date {
     const d = new Date(date);
@@ -29,34 +36,6 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     );
   }
 
-  function getWeekSeed(weekStart?: Date, forceRandom = false): number {
-    if (!weekStart || forceRandom) {
-      return Date.now();
-    }
-
-    return Math.floor(weekStart.getTime() / (1000 * 60 * 60 * 24 * 7));
-  }
-
-  function shuffleRecipesForWeek(
-    allRecipes: Recipe[],
-    weekStart?: Date,
-    forceRandom = false,
-  ): Recipe[] {
-    const shuffledRecipes = [...allRecipes];
-    let seed = getWeekSeed(weekStart, forceRandom);
-
-    for (let index = shuffledRecipes.length - 1; index > 0; index -= 1) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const swapIndex = seed % (index + 1);
-
-      const currentRecipe = shuffledRecipes[index]!;
-      shuffledRecipes[index] = shuffledRecipes[swapIndex]!;
-      shuffledRecipes[swapIndex] = currentRecipe;
-    }
-
-    return shuffledRecipes.slice(0, 7);
-  }
-
   async function fetchRecipes(
     weekStart?: Date,
     accountCreatedAt?: Date,
@@ -68,18 +47,183 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     }
 
     isLoading.value = true;
+    error.value = null;
+
     try {
+      if (weekStart && !forceRandom) {
+        const savedPlan = await fetchWeeklyRecipePlan(weekStart);
+
+        if (savedPlan.length > 0) {
+          recipes.value = savedPlan
+            .sort((left, right) => left.planDate.localeCompare(right.planDate))
+            .map(mapPlannedRecipe);
+          return;
+        }
+      }
+
       const recipeListStore = useRecipeListStore();
       await recipeListStore.fetchRecipes();
-      recipes.value = shuffleRecipesForWeek(
+
+      if (recipeListStore.error) {
+        throw new Error(recipeListStore.error);
+      }
+
+      const generatedRecipes = shuffleRecipesForWeek(
         recipeListStore.recipes,
         weekStart,
         forceRandom,
       );
+
+      if (generatedRecipes.length === 0) {
+        throw new Error('No recipes available for creating a weekly plan.');
+      }
+
+      if (weekStart) {
+        const savedPlan = await saveWeeklyRecipePlan(
+          weekStart,
+          generatedRecipes.map((recipe) => recipe.id),
+        );
+
+        if (savedPlan.length === 0) {
+          throw new Error('Meal plan could not be created.');
+        }
+
+        recipes.value = savedPlan
+          .sort((left, right) => left.planDate.localeCompare(right.planDate))
+          .map(mapPlannedRecipe);
+        return;
+      }
+
+      recipes.value = generatedRecipes;
+    } catch (fetchError) {
+      error.value =
+        fetchError instanceof Error
+          ? fetchError.message
+          : 'Meal plan could not be loaded.';
+      recipes.value = [];
     } finally {
       isLoading.value = false;
     }
   }
 
-  return { recipes, isLoading, fetchRecipes };
+  return { recipes, isLoading, error, fetchRecipes };
 });
+
+function shuffleRecipesForWeek(
+  availableRecipes: Recipe[],
+  weekStart?: Date,
+  forceRandom = false,
+): Recipe[] {
+  const recipesToShuffle = [...availableRecipes];
+
+  const random = forceRandom || !weekStart
+    ? Math.random
+    : createSeededRandom(getWeekSeed(weekStart));
+
+  for (let index = recipesToShuffle.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(random() * (index + 1));
+    const currentRecipe = recipesToShuffle[index]!;
+
+    recipesToShuffle[index] = recipesToShuffle[randomIndex]!;
+    recipesToShuffle[randomIndex] = currentRecipe;
+  }
+
+  return recipesToShuffle.slice(0, 7);
+}
+
+function getWeekSeed(weekStart: Date): number {
+  const startOfWeek = new Date(weekStart);
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  return Math.floor(startOfWeek.getTime() / 86_400_000);
+}
+
+function createSeededRandom(seed: number): () => number {
+  let currentSeed = seed;
+
+  return () => {
+    currentSeed = (currentSeed * 16_807) % 2_147_483_647;
+    return (currentSeed - 1) / 2_147_483_646;
+  };
+}
+
+function mapPlannedRecipe(plan: RecipePlanResponseDto): Recipe {
+  return mapRecipeResponse(plan.recipe);
+}
+
+function mapRecipeResponse(recipe: RecipeResponseDto): Recipe {
+  return {
+    id: String(recipe.id),
+    title: recipe.name,
+    imageUrl: resolveBackendResourceUrl(recipe.imageUrl),
+    duration: formatDuration(recipe.cookingTime),
+    cost: formatCost(recipe.pricePerPerson),
+    description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
+    categories: parseCategories(recipe.categories),
+  };
+}
+
+function parseCategories(categories: string | null) {
+  if (!categories) {
+    return [];
+  }
+
+  return categories
+    .split(',')
+    .map((category) => category.trim())
+    .filter(Boolean);
+}
+
+function resolveBackendResourceUrl(path: string | null) {
+  if (!path) {
+    return null;
+  }
+
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL as string) || '';
+
+  if (!apiBaseUrl) {
+    return path;
+  }
+
+  try {
+    return new URL(path).toString();
+  } catch {
+    return `${trimTrailingSlashes(apiBaseUrl)}/${trimLeadingSlashes(path)}`;
+  }
+}
+
+function trimTrailingSlashes(value: string) {
+  let end = value.length;
+
+  while (end > 0 && value[end - 1] === '/') {
+    end -= 1;
+  }
+
+  return value.slice(0, end);
+}
+
+function trimLeadingSlashes(value: string) {
+  let start = 0;
+
+  while (start < value.length && value[start] === '/') {
+    start += 1;
+  }
+
+  return value.slice(start);
+}
+
+function formatDuration(cookingTime: number | null) {
+  if (cookingTime === null) {
+    return '-';
+  }
+
+  return `${cookingTime}min`;
+}
+
+function formatCost(pricePerPerson: number | null) {
+  if (pricePerPerson === null) {
+    return '-';
+  }
+
+  return `${(pricePerPerson / 100).toFixed(2)} EUR`;
+}
