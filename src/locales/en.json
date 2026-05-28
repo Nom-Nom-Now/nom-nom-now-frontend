@@ -16,6 +16,11 @@
     "recipes": "Recipes",
     "browse": "Browse"
   },
+  "languages": {
+    "title": "Change language",
+    "de": "German",
+    "en": "English"
+  },
   "global": {
     "edit": "Edit",
     "delete": "Delete",
