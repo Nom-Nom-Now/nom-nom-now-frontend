@@ -40,15 +40,23 @@ export const useRecipeListStore = defineStore('recipeList', () => {
   const isLastPage = ref(false);
   const categoryNamesById = ref<Record<string, string> | null>(null);
   const currentOwnerId = ref<string | undefined>(undefined);
+  const searchQuery = ref<string | undefined>(undefined);
 
   const canLoadMore = computed(() => !isLoading.value && !isLastPage.value);
 
-  async function fetchRecipes(ownerId?: string) {
+  let abortController: AbortController | null = null;
+
+  async function fetchRecipes(ownerId?: string, newSearchQuery?: string) {
+    abortController?.abort();
+    abortController = new AbortController();
+
     recipes.value = [];
     currentPage.value = -1;
     isLastPage.value = false;
     error.value = null;
+    isLoading.value = false;
     currentOwnerId.value = ownerId;
+    searchQuery.value = newSearchQuery;
 
     await fetchNextPage();
   }
@@ -63,8 +71,9 @@ export const useRecipeListStore = defineStore('recipeList', () => {
 
     try {
       const nextPage = currentPage.value + 1;
+      const signal = abortController?.signal;
       const [page, categories] = await Promise.all([
-        fetchRecipePage(nextPage, currentOwnerId.value),
+        fetchRecipePage(nextPage, currentOwnerId.value, searchQuery.value, signal),
         loadCategoryNamesById(),
       ]);
       const nextRecipes = page.content.map((recipe) =>
@@ -79,6 +88,9 @@ export const useRecipeListStore = defineStore('recipeList', () => {
       currentPage.value = page.number;
       isLastPage.value = page.last;
     } catch (fetchError) {
+      if (fetchError instanceof DOMException && fetchError.name === 'AbortError') {
+        return;
+      }
       error.value =
         fetchError instanceof Error
           ? fetchError.message
@@ -101,6 +113,7 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     isLoading,
     error,
     canLoadMore,
+    searchQuery,
     fetchRecipes,
     fetchNextPage,
   };
@@ -109,14 +122,21 @@ export const useRecipeListStore = defineStore('recipeList', () => {
 async function fetchRecipePage(
   page: number,
   ownerId?: string,
+  searchQuery?: string,
+  signal?: AbortSignal,
 ): Promise<RecipePageDto> {
   const basePath = ownerId ? `/recipes/user/${ownerId}` : '/recipes';
   const url = new URL(`${API_BASE_URL}${basePath}`, window.location.origin);
   url.searchParams.set('page', String(page));
   url.searchParams.set('size', String(PAGE_SIZE));
 
+  if (searchQuery) {
+    url.searchParams.set('q', searchQuery);
+  }
+
   const response = await fetch(toRequestUrl(url), {
     credentials: 'include',
+    signal,
   });
 
   if (!response.ok) {
