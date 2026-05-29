@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-box">
+  <div class="recipe-box" @click="$emit('select')">
     <div class="recipe-title">{{ recipe.title }}</div>
 
     <div class="recipe-image-container">
@@ -39,6 +39,10 @@ const props = defineProps<{
   recipe: Recipe;
 }>();
 
+defineEmits<{
+  select: [];
+}>();
+
 const { t, te } = useI18n();
 
 const displayCategories = computed(() => {
@@ -60,6 +64,12 @@ const displayCategories = computed(() => {
   flex-direction: column;
   gap: 0.5rem;
   height: 16rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.recipe-box:hover {
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .recipe-title {

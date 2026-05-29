@@ -163,19 +163,25 @@ function mapRecipeResponse(recipe: RecipeResponseDto): Recipe {
     duration: formatPlanDuration(recipe.cookingTime),
     cost: formatPlanCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
+    owner: recipe.ownerName || 'Unbekannter Koch',
+    ingredients: (recipe.components || []).map((comp) => ({
+      ingredientName: comp.ingredientName,
+      quantity: comp.quantity,
+      unit: comp.unit,
+    })),
     categories: parseCategories(recipe.categories),
   };
 }
 
-function parseCategories(categories: string | null) {
-  if (!categories) {
+function parseCategories(categoryNamesString: string | null): string[] {
+  if (!categoryNamesString || categoryNamesString.trim() === '') {
     return [];
   }
 
-  return categories
+  return categoryNamesString
     .split(',')
-    .map((category) => category.trim())
-    .filter(Boolean);
+    .map((name) => name.trim())
+    .filter((name) => name.length > 0);
 }
 
 function formatPlanDuration(cookingTime: number | null) {

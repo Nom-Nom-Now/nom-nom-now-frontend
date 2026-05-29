@@ -6,4 +6,12 @@ export interface Recipe {
   cost: string;
   description: string;
   categories: string[];
+  owner: string;
+  ingredients: RecipeComponent[];
+}
+
+export interface RecipeComponent {
+  ingredientName: string;
+  quantity: number | null;
+  unit: string | null;
 }

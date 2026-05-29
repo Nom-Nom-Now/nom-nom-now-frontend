@@ -23,22 +23,12 @@ type RecipePageDto = {
   last: boolean;
 };
 
-type CategoriesResponseDto = {
-  categories: CategoryResponseDto[];
-};
-
-type CategoryResponseDto = {
-  id: number | string;
-  name: string;
-};
-
 export const useRecipeListStore = defineStore('recipeList', () => {
   const recipes = ref<Recipe[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const currentPage = ref(-1);
   const isLastPage = ref(false);
-  const categoryNamesById = ref<Record<string, string> | null>(null);
   const currentOwnerId = ref<string | undefined>(undefined);
   const searchQuery = ref<string | undefined>(undefined);
 
@@ -72,13 +62,10 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     try {
       const nextPage = currentPage.value + 1;
       const signal = abortController?.signal;
-      const [page, categories] = await Promise.all([
-        fetchRecipePage(nextPage, currentOwnerId.value, searchQuery.value, signal),
-        loadCategoryNamesById(),
-      ]);
-      const nextRecipes = page.content.map((recipe) =>
-        mapRecipe(recipe, categories),
-      );
+
+      const page = await fetchRecipePage(nextPage, currentOwnerId.value, searchQuery.value, signal);
+
+      const nextRecipes = page.content.map((recipe) => mapRecipe(recipe));
       const knownRecipeIds = new Set(recipes.value.map((recipe) => recipe.id));
 
       recipes.value = [
@@ -98,14 +85,6 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     } finally {
       isLoading.value = false;
     }
-  }
-
-  async function loadCategoryNamesById() {
-    if (!categoryNamesById.value) {
-      categoryNamesById.value = await fetchCategoryNamesById();
-    }
-
-    return categoryNamesById.value;
   }
 
   return {
@@ -146,34 +125,11 @@ async function fetchRecipePage(
   return (await response.json()) as RecipePageDto;
 }
 
-async function fetchCategoryNamesById(): Promise<Record<string, string>> {
-  const url = new URL(`${API_BASE_URL}/categories`, window.location.origin);
-
-  const response = await fetch(toRequestUrl(url), {
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    throw new Error(`GET /categories failed (${response.status})`);
-  }
-
-  const categoryResponse = (await response.json()) as CategoriesResponseDto;
-  return Object.fromEntries(
-    categoryResponse.categories.map((category) => [
-      String(category.id),
-      category.name,
-    ]),
-  );
-}
-
 function toRequestUrl(url: URL) {
   return API_BASE_URL ? url.toString() : `${url.pathname}${url.search}`;
 }
 
-function mapRecipe(
-  recipe: RecipeResponseDto,
-  categoryNamesById: Record<string, string>,
-): Recipe {
+function mapRecipe(recipe: RecipeResponseDto): Recipe {
   return {
     id: String(recipe.id),
     title: recipe.name,
@@ -187,22 +143,19 @@ function mapRecipe(
       quantity: comp.quantity,
       unit: comp.unit,
     })),
-    categories: parseCategoryNames(recipe.categories, categoryNamesById),
+    categories: parseCategoryNames(recipe.categories),
   };
 }
 
-function parseCategoryNames(
-  categoryIds: string | null,
-  categoryNamesById: Record<string, string>,
-) {
-  if (!categoryIds) {
+function parseCategoryNames(categoryNamesString: string | null): string[] {
+  if (!categoryNamesString || categoryNamesString.trim() === '') {
     return [];
   }
 
-  return categoryIds
+  return categoryNamesString
     .split(',')
-    .map((categoryId) => categoryNamesById[categoryId.trim()])
-    .filter((category): category is string => Boolean(category));
+    .map((name) => name.trim())
+    .filter((name) => name.length > 0);
 }
 
 export function resolveBackendResourceUrl(

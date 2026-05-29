@@ -1,3 +1,5 @@
+import type { RecipeComponent } from '../shared/types';
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
 export type RecipePlanResponseDto = {
@@ -18,8 +20,9 @@ export type RecipeResponseDto = {
   cookingTime: number | null;
   pricePerPerson: number | null;
   imageUrl: string | null;
-  ownerName?: string;
+  ownerName: string;
   categories: string | null;
+  components: RecipeComponent[];
 };
 
 export async function fetchWeeklyRecipePlan(

@@ -12,7 +12,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should load the first backend page and map recipes', async () => {
-    stubFetch(pageResponse(0, false), categoriesResponse());
+    stubFetch(pageResponse(0, false));
 
     const store = useRecipeListStore();
     await store.fetchRecipes();
@@ -28,14 +28,14 @@ describe('useRecipeListStore', () => {
         description: 'Bake it.',
         owner: 'Unbekannter Koch',
         ingredients: [],
-        categories: ['italian', 'dinner'],
+        categories: ['16', '29'],
       },
     ]);
     expect(store.canLoadMore).toBe(true);
   });
 
   it('should append the next page and stop on the last page', async () => {
-    stubFetch(pageResponse(0, false), categoriesResponse(), pageResponse(1, true, '43'));
+    stubFetch(pageResponse(0, false), pageResponse(1, true, '43'));
 
     const store = useRecipeListStore();
     await store.fetchRecipes();
@@ -49,7 +49,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should keep existing recipes and expose an error when the next page fails', async () => {
-    stubFetch(pageResponse(0, false), categoriesResponse(), { ok: false, status: 500 });
+    stubFetch(pageResponse(0, false), { ok: false, status: 500 });
 
     const store = useRecipeListStore();
     await store.fetchRecipes();
@@ -81,7 +81,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should fetch all recipes when no ownerId is provided', async () => {
-    stubFetch(pageResponse(0, true), categoriesResponse());
+    stubFetch(pageResponse(0, true));
 
     const store = useRecipeListStore();
     await store.fetchRecipes();
@@ -90,7 +90,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should fetch user recipes when ownerId is provided', async () => {
-    stubFetch(pageResponse(0, true), categoriesResponse());
+    stubFetch(pageResponse(0, true));
 
     const store = useRecipeListStore();
     await store.fetchRecipes('42');
@@ -99,7 +99,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should fetch recipes with search query parameter', async () => {
-    stubFetch(pageResponse(0, true), categoriesResponse());
+    stubFetch(pageResponse(0, true));
 
     const store = useRecipeListStore();
     await store.fetchRecipes(undefined, 'pizza');
@@ -108,7 +108,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should not add q parameter when search query is undefined', async () => {
-    stubFetch(pageResponse(0, true), categoriesResponse());
+    stubFetch(pageResponse(0, true));
 
     const store = useRecipeListStore();
     await store.fetchRecipes();
@@ -117,7 +117,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should fetch user recipes with search query', async () => {
-    stubFetch(pageResponse(0, true), categoriesResponse());
+    stubFetch(pageResponse(0, true));
 
     const store = useRecipeListStore();
     await store.fetchRecipes('42', 'pasta');
@@ -126,7 +126,7 @@ describe('useRecipeListStore', () => {
   });
 
   it('should not set error when fetch is aborted', async () => {
-    stubFetch(new DOMException('aborted', 'AbortError'), categoriesResponse());
+    stubFetch(new DOMException('aborted', 'AbortError'));
 
     const store = useRecipeListStore();
     await store.fetchRecipes(undefined, 'test');
@@ -173,19 +173,6 @@ function pageResponse(page: number, last: boolean, id = '42') {
         ],
         number: page,
         last,
-      }),
-  };
-}
-
-function categoriesResponse() {
-  return {
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        categories: [
-          { id: 16, name: 'italian' },
-          { id: 29, name: 'dinner' },
-        ],
       }),
   };
 }
