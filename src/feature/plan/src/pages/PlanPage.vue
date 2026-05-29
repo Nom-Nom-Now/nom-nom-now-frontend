@@ -11,7 +11,9 @@ import PlanFrame from '../components/PlanFrame.vue';
 <style scoped>
 .list-recipes-page {
   width: 100%;
-  align-self: flex-start;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 </style>

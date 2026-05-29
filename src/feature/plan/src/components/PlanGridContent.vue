@@ -14,21 +14,33 @@
       >
         <div class="day-header">
           <span class="day-name">{{ day.name }}</span>
-          <span class="day-date" :class="{ 'is-today': day.isToday }">{{
-            day.dateNum
-          }}</span>
+          <span class="day-date" :class="{ 'is-today': day.isToday }">
+            {{ day.dateNum }}
+          </span>
         </div>
-        <PlanRecipeBox v-if="recipes[index]" :recipe="recipes[index]" />
+        <PlanRecipeBox
+          v-if="recipes[index]"
+          :recipe="recipes[index]"
+          @select="selectedRecipe = recipes[index]"
+        />
       </div>
     </div>
+
+    <RecipeDetailPage
+      v-if="selectedRecipe"
+      :recipe="selectedRecipe"
+      @close="selectedRecipe = null"
+      @fullscreen="switchToFullscreen"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PlanRecipeBox from './PlanRecipeBox.vue';
 import type { Recipe } from '../shared/types';
+import RecipeDetailPage from '../../../recipes/detail/src/components/RecipeDetailPage.vue';
 
 const { t } = useI18n();
 
@@ -38,6 +50,19 @@ const props = defineProps<{
   error: string | null;
   currentWeek: Date;
 }>();
+
+const emit = defineEmits<{
+  'open-fullscreen': [recipe: Recipe];
+}>();
+
+const selectedRecipe = ref<Recipe | null>(null);
+
+function switchToFullscreen() {
+  if (selectedRecipe.value) {
+    emit('open-fullscreen', selectedRecipe.value);
+    selectedRecipe.value = null;
+  }
+}
 
 const weekDayKeys = [
   'monday',
