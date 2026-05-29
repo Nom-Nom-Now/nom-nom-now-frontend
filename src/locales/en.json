@@ -201,7 +201,8 @@
         }
       },
       "list": {
-        "createButton": "New Recipe"
+        "createButton": "New Recipe",
+        "myRecipesOnly": "My Recipes"
       }
     },
     "listAllRecipes": {

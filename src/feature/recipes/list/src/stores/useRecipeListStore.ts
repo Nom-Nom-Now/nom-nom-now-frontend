@@ -39,14 +39,16 @@ export const useRecipeListStore = defineStore('recipeList', () => {
   const currentPage = ref(-1);
   const isLastPage = ref(false);
   const categoryNamesById = ref<Record<string, string> | null>(null);
+  const currentOwnerId = ref<string | undefined>(undefined);
 
   const canLoadMore = computed(() => !isLoading.value && !isLastPage.value);
 
-  async function fetchRecipes() {
+  async function fetchRecipes(ownerId?: string) {
     recipes.value = [];
     currentPage.value = -1;
     isLastPage.value = false;
     error.value = null;
+    currentOwnerId.value = ownerId;
 
     await fetchNextPage();
   }
@@ -62,7 +64,7 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     try {
       const nextPage = currentPage.value + 1;
       const [page, categories] = await Promise.all([
-        fetchRecipePage(nextPage),
+        fetchRecipePage(nextPage, currentOwnerId.value),
         loadCategoryNamesById(),
       ]);
       const nextRecipes = page.content.map((recipe) =>
@@ -104,8 +106,12 @@ export const useRecipeListStore = defineStore('recipeList', () => {
   };
 });
 
-async function fetchRecipePage(page: number): Promise<RecipePageDto> {
-  const url = new URL(`${API_BASE_URL}/recipes`, window.location.origin);
+async function fetchRecipePage(
+  page: number,
+  ownerId?: string,
+): Promise<RecipePageDto> {
+  const basePath = ownerId ? `/recipes/user/${ownerId}` : '/recipes';
+  const url = new URL(`${API_BASE_URL}${basePath}`, window.location.origin);
   url.searchParams.set('page', String(page));
   url.searchParams.set('size', String(PAGE_SIZE));
 
@@ -114,7 +120,7 @@ async function fetchRecipePage(page: number): Promise<RecipePageDto> {
   });
 
   if (!response.ok) {
-    throw new Error(`GET /recipes failed (${response.status})`);
+    throw new Error(`GET ${basePath} failed (${response.status})`);
   }
 
   return (await response.json()) as RecipePageDto;

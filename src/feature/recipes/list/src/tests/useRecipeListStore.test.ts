@@ -108,6 +108,42 @@ describe('useRecipeListStore', () => {
       ),
     ).toBe('https://cdn.nomnom-now.com/recipes/42/image');
   });
+
+  it('should fetch all recipes when no ownerId is provided', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce(pageResponse(0, true))
+        .mockResolvedValueOnce(categoriesResponse()),
+    );
+
+    const store = useRecipeListStore();
+
+    await store.fetchRecipes();
+
+    expect(fetch).toHaveBeenCalledWith('/recipes?page=0&size=20', {
+      credentials: 'include',
+    });
+  });
+
+  it('should fetch user recipes when ownerId is provided', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce(pageResponse(0, true))
+        .mockResolvedValueOnce(categoriesResponse()),
+    );
+
+    const store = useRecipeListStore();
+
+    await store.fetchRecipes('42');
+
+    expect(fetch).toHaveBeenCalledWith('/recipes/user/42?page=0&size=20', {
+      credentials: 'include',
+    });
+  });
 });
 
 function pageResponse(page: number, last: boolean, id = '42') {

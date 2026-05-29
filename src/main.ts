@@ -14,6 +14,7 @@ import '@material/web/textfield/filled-text-field.js';
 import '@material/web/textfield/outlined-text-field.js';
 import '@material/web/select/outlined-select.js';
 import '@material/web/icon/icon.js';
+import '@material/web/switch/switch.js';
 
 const app = createApp(App);
 const pinia = createPinia();
