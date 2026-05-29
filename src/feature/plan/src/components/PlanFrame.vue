@@ -30,17 +30,16 @@
     <div v-if="fullscreenRecipe" class="local-fullscreen-container">
       <RecipeDetailFull
         :recipe="fullscreenRecipe"
-        :current-username="currentUsername?.valueOf()"
         @close="handleCloseFullscreen"
         @edit="handleEditRecipe"
-        @delete="handleDeleteRecipe"
+        @deleted="handleRecipeDeleted"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, inject, type Ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PlanGridContent from './PlanGridContent.vue';
 import RecipeDetailFull from '../../../recipes/detail/src/components/RecipeDetailFull.vue';
@@ -54,7 +53,6 @@ const store = useRecipePlanStore();
 const currentWeekStart = ref(getStartOfWeek(new Date()));
 const accountCreatedAt = ref<Date | undefined>();
 
-const currentUsername = inject<Ref<string | undefined>>('currentUsername');
 const fullscreenRecipe = ref<Recipe | null>(null);
 
 function handleOpenFullscreen(recipe: Recipe) {
@@ -69,8 +67,8 @@ function handleEditRecipe(recipe: Recipe) {
   console.log('edit im plan aufgerufen', recipe);
 }
 
-function handleDeleteRecipe(recipeId: string) {
-  console.log('delete im plan aufgerufen für Rezept-ID:', recipeId);
+function handleRecipeDeleted() {
+  handleCloseFullscreen();
 }
 
 function getStartOfWeek(date: Date): Date {

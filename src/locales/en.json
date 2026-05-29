@@ -57,6 +57,13 @@
         "noDescription": "No description available.",
         "unknownChef": "Unknown chef"
       },
+      "edit": {
+        "deleteConfirmation": "Are you sure you want to permanently delete this recipe?",
+        "deleteSuccess": "The recipe was successfully deleted.",
+        "deleteError": "The recipe could not be deleted. Either you are not the owner or an error occurred.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
       "createRecipe": {
         "title": "Create Recipe",
         "stepNavigation": {

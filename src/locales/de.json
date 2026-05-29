@@ -57,6 +57,13 @@
         "noDescription": "Keine Beschreibung vorhanden.",
         "unknownChef": "Unbekannter Koch"
       },
+      "edit": {
+        "deleteConfirmation": "Möchtest du dieses Rezept wirklich dauerhaft löschen?",
+        "deleteSuccess": "Das Rezept wurde erfolgreich gelöscht.",
+        "deleteError": "Das Rezept konnte nicht gelöscht werden. Du bist entweder nicht der Besitzer oder es ist ein Fehler aufgetreten.",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen"
+      },
       "createRecipe": {
         "title": "Rezept erstellen",
         "stepNavigation": {

@@ -27,16 +27,15 @@
     <RecipeDetailFull
       v-if="fullscreenRecipe"
       :recipe="fullscreenRecipe"
-      :current-username="currentUsername?.valueOf()"
       @close="handleCloseFullscreen"
       @edit="handleEditRecipe"
-      @delete="handleDeleteRecipe"
+      @deleted="handleRecipeDeleted"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, inject, type Ref } from 'vue';
+import { onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';
@@ -50,8 +49,6 @@ const router = useRouter();
 const { t } = useI18n();
 const store = useRecipeListStore();
 const { currentUserId } = useAuth();
-
-const currentUsername = inject<Ref<string | undefined>>('currentUsername');
 
 const fullscreenRecipe = ref<Recipe | null>(null);
 const showMyRecipesOnly = ref(false);
@@ -80,8 +77,10 @@ function handleEditRecipe(recipe: Recipe) {
   console.log('edit aufgerufen', recipe);
 }
 
-function handleDeleteRecipe(recipeId: string) {
-  console.log('delete aufgerufen für Rezept-ID:', recipeId);
+function handleRecipeDeleted() {
+  handleCloseFullscreen();
+  const ownerId = showMyRecipesOnly.value ? currentUserId.value : undefined;
+  store.fetchRecipes(ownerId, store.searchQuery);
 }
 
 function navigateToCreate() {
