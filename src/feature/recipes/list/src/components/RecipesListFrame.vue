@@ -1,7 +1,7 @@
 <template>
   <div class="recipes-list-container">
     <div class="top-bar">
-      <RecipeSearchBar />
+      <RecipeSearchBar @update:search="handleSearch" />
       <div class="filter-toggle">
         <md-switch
           :selected="showMyRecipesOnly"
@@ -19,6 +19,7 @@
       :is-loading="store.isLoading"
       :error="store.error"
       :can-load-more="store.canLoadMore"
+      :search-query="store.searchQuery"
       @load-more="store.fetchNextPage"
       @open-fullscreen="handleOpenFullscreen"
     />
@@ -59,7 +60,12 @@ function handleToggleMyRecipes(event: Event) {
   const target = event.target as HTMLElement & { selected: boolean };
   showMyRecipesOnly.value = target.selected;
   const ownerId = target.selected ? currentUserId.value : undefined;
-  store.fetchRecipes(ownerId);
+  store.fetchRecipes(ownerId, store.searchQuery);
+}
+
+function handleSearch(query: string) {
+  const ownerId = showMyRecipesOnly.value ? currentUserId.value : undefined;
+  store.fetchRecipes(ownerId, query || undefined);
 }
 
 function handleOpenFullscreen(recipe: Recipe) {

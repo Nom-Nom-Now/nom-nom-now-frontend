@@ -5,7 +5,7 @@
       {{ error }}
     </div>
     <div v-else-if="recipes.length === 0" class="status">
-      Keine Rezepte gefunden.
+      {{ props.searchQuery ? `Keine Rezepte für "${props.searchQuery}" gefunden.` : 'Keine Rezepte vorhanden.' }}
     </div>
 
     <div class="recipes-grid">
@@ -43,6 +43,7 @@ const props = defineProps<{
   isLoading: boolean;
   error: string | null;
   canLoadMore: boolean;
+  searchQuery?: string;
 }>();
 
 const emit = defineEmits<{

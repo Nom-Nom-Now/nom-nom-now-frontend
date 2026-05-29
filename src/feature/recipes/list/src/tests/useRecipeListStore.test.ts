@@ -12,22 +12,12 @@ describe('useRecipeListStore', () => {
   });
 
   it('should load the first backend page and map recipes', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(pageResponse(0, false))
-        .mockResolvedValueOnce(categoriesResponse()),
-    );
+    stubFetch(pageResponse(0, false), categoriesResponse());
 
     const store = useRecipeListStore();
-
     await store.fetchRecipes();
 
-    expect(fetch).toHaveBeenCalledWith('/recipes?page=0&size=20', {
-      credentials: 'include',
-    });
-
+    expectFetchCalledWith('/recipes?page=0&size=20');
     expect(store.recipes).toEqual([
       {
         id: '42',
@@ -36,8 +26,8 @@ describe('useRecipeListStore', () => {
         duration: '60min',
         cost: '12.34 EUR',
         description: 'Bake it.',
-        owner: 'Unbekannter Koch', // Neu hinzugefügt
-        ingredients: [], // Neu hinzugefügt
+        owner: 'Unbekannter Koch',
+        ingredients: [],
         categories: ['italian', 'dinner'],
       },
     ]);
@@ -45,39 +35,23 @@ describe('useRecipeListStore', () => {
   });
 
   it('should append the next page and stop on the last page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(pageResponse(0, false))
-        .mockResolvedValueOnce(categoriesResponse())
-        .mockResolvedValueOnce(pageResponse(1, true, '43')),
-    );
+    stubFetch(pageResponse(0, false), categoriesResponse(), pageResponse(1, true, '43'));
 
     const store = useRecipeListStore();
-
     await store.fetchRecipes();
     await store.fetchNextPage();
 
     expect(store.recipes.map((recipe) => recipe.id)).toEqual(['42', '43']);
-    expect(fetch).toHaveBeenLastCalledWith('/recipes?page=1&size=20', {
+    expect(fetch).toHaveBeenLastCalledWith('/recipes?page=1&size=20', expect.objectContaining({
       credentials: 'include',
-    });
+    }));
     expect(store.canLoadMore).toBe(false);
   });
 
   it('should keep existing recipes and expose an error when the next page fails', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(pageResponse(0, false))
-        .mockResolvedValueOnce(categoriesResponse())
-        .mockResolvedValueOnce({ ok: false, status: 500 }),
-    );
+    stubFetch(pageResponse(0, false), categoriesResponse(), { ok: false, status: 500 });
 
     const store = useRecipeListStore();
-
     await store.fetchRecipes();
     await store.fetchNextPage();
 
@@ -87,10 +61,7 @@ describe('useRecipeListStore', () => {
 
   it('should resolve relative image urls against the backend base url', () => {
     expect(
-      resolveBackendResourceUrl(
-        '/recipes/42/image',
-        'https://nomnom-now.com/api',
-      ),
+      resolveBackendResourceUrl('/recipes/42/image', 'https://nomnom-now.com/api'),
     ).toBe('https://nomnom-now.com/api/recipes/42/image');
   });
 
@@ -110,41 +81,77 @@ describe('useRecipeListStore', () => {
   });
 
   it('should fetch all recipes when no ownerId is provided', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(pageResponse(0, true))
-        .mockResolvedValueOnce(categoriesResponse()),
-    );
+    stubFetch(pageResponse(0, true), categoriesResponse());
 
     const store = useRecipeListStore();
-
     await store.fetchRecipes();
 
-    expect(fetch).toHaveBeenCalledWith('/recipes?page=0&size=20', {
-      credentials: 'include',
-    });
+    expectFetchCalledWith('/recipes?page=0&size=20');
   });
 
   it('should fetch user recipes when ownerId is provided', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(pageResponse(0, true))
-        .mockResolvedValueOnce(categoriesResponse()),
-    );
+    stubFetch(pageResponse(0, true), categoriesResponse());
 
     const store = useRecipeListStore();
-
     await store.fetchRecipes('42');
 
-    expect(fetch).toHaveBeenCalledWith('/recipes/user/42?page=0&size=20', {
-      credentials: 'include',
-    });
+    expectFetchCalledWith('/recipes/user/42?page=0&size=20');
+  });
+
+  it('should fetch recipes with search query parameter', async () => {
+    stubFetch(pageResponse(0, true), categoriesResponse());
+
+    const store = useRecipeListStore();
+    await store.fetchRecipes(undefined, 'pizza');
+
+    expectFetchCalledWith('/recipes?page=0&size=20&q=pizza');
+  });
+
+  it('should not add q parameter when search query is undefined', async () => {
+    stubFetch(pageResponse(0, true), categoriesResponse());
+
+    const store = useRecipeListStore();
+    await store.fetchRecipes();
+
+    expectFetchCalledWith('/recipes?page=0&size=20');
+  });
+
+  it('should fetch user recipes with search query', async () => {
+    stubFetch(pageResponse(0, true), categoriesResponse());
+
+    const store = useRecipeListStore();
+    await store.fetchRecipes('42', 'pasta');
+
+    expectFetchCalledWith('/recipes/user/42?page=0&size=20&q=pasta');
+  });
+
+  it('should not set error when fetch is aborted', async () => {
+    stubFetch(new DOMException('aborted', 'AbortError'), categoriesResponse());
+
+    const store = useRecipeListStore();
+    await store.fetchRecipes(undefined, 'test');
+
+    expect(store.error).toBeNull();
   });
 });
+
+function stubFetch(...responses: unknown[]) {
+  const mock = vi.fn();
+  for (const response of responses) {
+    if (response instanceof Error || response instanceof DOMException) {
+      mock.mockRejectedValueOnce(response);
+    } else {
+      mock.mockResolvedValueOnce(response);
+    }
+  }
+  vi.stubGlobal('fetch', mock);
+}
+
+function expectFetchCalledWith(url: string) {
+  expect(fetch).toHaveBeenCalledWith(url, expect.objectContaining({
+    credentials: 'include',
+  }));
+}
 
 function pageResponse(page: number, last: boolean, id = '42') {
   return {
