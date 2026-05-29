@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes-list-container plan-wrapper-relative">
+  <div class="recipes-list-container">
     <div class="top-bar">
       <div class="week-navigation">
         <md-outlined-button @click="goToToday">
@@ -172,15 +172,13 @@ onMounted(initializePlan);
 .recipes-list-container {
   position: relative;
   width: 100%;
-
-  flex-grow: 1;
-  min-height: 31.25rem;
-
+  height: 100%;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 .top-bar {
@@ -194,10 +192,12 @@ onMounted(initializePlan);
 
 :deep(.plan-week-view) {
   flex-grow: 1;
+  overflow-y: auto;
   min-height: 0;
 }
 
 .local-fullscreen-container {
+
   position: absolute;
   top: 0;
   left: 0;
