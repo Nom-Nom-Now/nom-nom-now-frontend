@@ -3,11 +3,13 @@ import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import IngredientList from './IngredientList.vue';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { storeToRefs } from 'pinia';
+import { inject, toRefs } from 'vue';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
-const { servings, recipeName, totalPrice, pricePerPerson } = storeToRefs(store);
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
+const { servings, recipeName, totalPrice, pricePerPerson } = toRefs(store);
 
 function onServingsInput(event: Event) {
   const value = Number((event.target as HTMLInputElement).value);

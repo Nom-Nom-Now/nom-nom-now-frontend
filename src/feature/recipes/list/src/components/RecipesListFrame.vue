@@ -44,10 +44,12 @@ import RecipeDetailFull from '../../../detail/src/components/RecipeDetailFull.vu
 import { useRecipeListStore } from '../stores/useRecipeListStore';
 import { useAuth } from '../../../../../composables/useAuth';
 import type { Recipe } from '../shared/types';
+import { useEditRecipeStore } from '../../../edit/src/stores/useEditRecipeStore.ts';
 
 const router = useRouter();
 const { t } = useI18n();
 const store = useRecipeListStore();
+const editStore = useEditRecipeStore();
 const { currentUserId } = useAuth();
 
 const fullscreenRecipe = ref<Recipe | null>(null);
@@ -74,7 +76,8 @@ function handleCloseFullscreen() {
 }
 
 function handleEditRecipe(recipe: Recipe) {
-  console.log('edit aufgerufen', recipe);
+  editStore.fillWithRecipe(recipe);
+  router.push(`/recipes/edit/${recipe.id}`);
 }
 
 function handleRecipeDeleted() {

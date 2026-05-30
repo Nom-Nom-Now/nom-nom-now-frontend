@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
@@ -10,7 +10,9 @@ import RecipeDetailContent from '../../../../detail/src/components/RecipeDetailC
 import type { Recipe } from '../../../../list/src/shared/types.ts';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
 
 const { currentUsername } = useAuth();
 
@@ -30,9 +32,16 @@ onMounted(async () => {
 });
 
 const previewRecipe = computed<Recipe>(() => {
-  const localImageUrl = store.recipeImage
-    ? URL.createObjectURL(store.recipeImage)
-    : null;
+  let resolvedImageUrl: string | null = null;
+
+  if (store.recipeImage) {
+    resolvedImageUrl = URL.createObjectURL(store.recipeImage);
+  } else if ('existingImageUrl' in store) {
+    const url = (store as { existingImageUrl: unknown }).existingImageUrl;
+    if (typeof url === 'string') {
+      resolvedImageUrl = url;
+    }
+  }
 
   const mappedCategoryNames = (store.categoryIds || [])
     .map((id) => allCategories.value.find((cat) => cat.id === id)?.name)
@@ -41,7 +50,7 @@ const previewRecipe = computed<Recipe>(() => {
   return {
     id: 'preview-id',
     title: store.recipeName || '',
-    imageUrl: localImageUrl,
+    imageUrl: resolvedImageUrl,
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
     cost:
       store.pricePerPerson !== null

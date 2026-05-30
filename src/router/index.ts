@@ -6,6 +6,7 @@ import RecipesView from '../views/RecipesView.vue';
 import BrowseView from '../views/BrowseView.vue';
 import ListRecipesPage from '../feature/recipes/list/src/pages/ListRecipesPage.vue';
 import LoginPage from '../views/LoginPage.vue';
+import EditRecipeView from '../views/EditRecipeView.vue';
 
 const router = createRouter({
   history: createWebHistory('/'),
@@ -34,6 +35,12 @@ const router = createRouter({
           path: 'create',
           component: CreateRecipeView,
           meta: { titleKey: 'feature.recipes.createRecipe.title' },
+        },
+        {
+          path: 'edit/:id',
+          component: EditRecipeView,
+          props: true,
+          meta: { titleKey: 'feature.recipes.edit.title' },
         },
       ],
     },

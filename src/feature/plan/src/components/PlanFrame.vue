@@ -46,9 +46,12 @@ import RecipeDetailFull from '../../../recipes/detail/src/components/RecipeDetai
 import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 import { fetchAccountCreatedAt } from '../services/authService.ts';
 import type { Recipe } from '../shared/types';
+import router from '../../../../router';
+import { useEditRecipeStore } from '../../../recipes/edit/src/stores/useEditRecipeStore.ts';
 
 const { t } = useI18n();
 const store = useRecipePlanStore();
+const editStore = useEditRecipeStore();
 
 const currentWeekStart = ref(getStartOfWeek(new Date()));
 const accountCreatedAt = ref<Date | undefined>();
@@ -64,7 +67,8 @@ function handleCloseFullscreen() {
 }
 
 function handleEditRecipe(recipe: Recipe) {
-  console.log('edit im plan aufgerufen', recipe);
+  editStore.fillWithRecipe(recipe);
+  router.push(`/recipes/edit/${recipe.id}`);
 }
 
 function handleRecipeDeleted() {

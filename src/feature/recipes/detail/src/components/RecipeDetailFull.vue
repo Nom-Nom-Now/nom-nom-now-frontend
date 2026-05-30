@@ -11,7 +11,7 @@
     <div v-if="isOwner" class="recipe-screen-actions">
       <button
         class="icon-action-button edit"
-        @click="emit('edit', recipe)"
+        @click="emit('edit', props.recipe)"
         :title="t('global.edit')"
       >
         <md-icon>edit</md-icon>
@@ -45,7 +45,7 @@ import { useI18n } from 'vue-i18n';
 import RecipeDetailContent from './RecipeDetailContent.vue';
 import type { Recipe } from '../../../list/src/shared/types.ts';
 import { useAuth } from '../../../../../composables/useAuth';
-import { deleteRecipe } from '../../../edit/service/deleteRecipeService.ts';
+import { deleteRecipe } from '../../../edit/src/service/deleteRecipeService.ts';
 
 const props = defineProps<{
   recipe: Recipe;

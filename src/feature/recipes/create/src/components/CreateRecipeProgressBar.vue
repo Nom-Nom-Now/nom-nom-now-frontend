@@ -39,12 +39,16 @@
 import StepNavigationButton from '../../../../../components/StepNavigationButton.vue';
 
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 import IngredientsFrame from './ingredients/IngredientsFrame.vue';
 import PreviewFrame from './preview/PreviewFrame.vue';
 import CategoryFrame from './categories/CategoryFrame.vue';
 import ImageFrame from './image/ImageFrame.vue';
 import PreparationFrame from './preparation/PreparationFrame.vue';
+import { useCreateRecipeStore } from '../stores/useCreateRecipeStore';
+
+const store = useCreateRecipeStore();
+provide('recipeStore', store);
 const { t } = useI18n();
 
 const stepNavigationItems = [

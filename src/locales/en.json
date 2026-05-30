@@ -58,11 +58,13 @@
         "unknownChef": "Unknown chef"
       },
       "edit": {
+        "loading": "Loading recipe data...",
         "deleteConfirmation": "Are you sure you want to permanently delete this recipe?",
         "deleteSuccess": "The recipe was successfully deleted.",
         "deleteError": "The recipe could not be deleted. Either you are not the owner or an error occurred.",
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "title": "Edit Recipe"
       },
       "createRecipe": {
         "title": "Create Recipe",
