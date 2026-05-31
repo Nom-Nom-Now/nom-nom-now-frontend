@@ -13,10 +13,20 @@
           <md-icon>chevron_right</md-icon>
         </md-icon-button>
       </div>
-      <md-filled-button type="button" @click="refreshPlan">
-        <md-icon slot="icon">refresh</md-icon>
-        {{ t('feature.plan.refreshPlan') }}
-      </md-filled-button>
+      <div class="plan-actions">
+        <md-filled-tonal-button
+          type="button"
+          :disabled="isGeneratingShoppingList"
+          @click="generateList"
+        >
+          <md-icon slot="icon">shopping_cart</md-icon>
+          {{ t('feature.plan.generateShoppingList') }}
+        </md-filled-tonal-button>
+        <md-filled-button type="button" @click="refreshPlan">
+          <md-icon slot="icon">refresh</md-icon>
+          {{ t('feature.plan.refreshPlan') }}
+        </md-filled-button>
+      </div>
     </div>
 
     <PlanGridContent
@@ -24,7 +34,9 @@
       :is-loading="store.isLoading"
       :error="store.error"
       :current-week="currentWeekStart"
+      :refreshing-day-keys="store.refreshingDayKeys"
       @open-fullscreen="handleOpenFullscreen"
+      @refresh-day="refreshDay"
     />
 
     <div v-if="fullscreenRecipe" class="local-fullscreen-container">
@@ -41,18 +53,22 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, inject, type Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import PlanGridContent from './PlanGridContent.vue';
 import RecipeDetailFull from '../../../recipes/detail/src/components/RecipeDetailFull.vue';
 import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 import { fetchAccountCreatedAt } from '../services/authService.ts';
+import { generateShoppingList } from '../../../shopping-lists/src/services/ShoppingListService';
 import type { Recipe } from '../shared/types';
 
+const router = useRouter();
 const { t } = useI18n();
 const store = useRecipePlanStore();
 
 const currentWeekStart = ref(getStartOfWeek(new Date()));
 const accountCreatedAt = ref<Date | undefined>();
+const isGeneratingShoppingList = ref(false);
 
 const currentUsername = inject<Ref<string | undefined>>('currentUsername');
 const fullscreenRecipe = ref<Recipe | null>(null);
@@ -155,6 +171,31 @@ async function refreshPlan() {
   await loadPlanForCurrentWeek(true);
 }
 
+async function refreshDay(dayIndex: number) {
+  await store.refreshDay(
+    currentWeekStart.value,
+    dayIndex,
+    accountCreatedAt.value,
+  );
+}
+
+async function generateList() {
+  isGeneratingShoppingList.value = true;
+  store.error = null;
+
+  try {
+    const shoppingList = await generateShoppingList(currentWeekStart.value);
+    await router.push(`/shopping-lists/${shoppingList.id}`);
+  } catch (generateError) {
+    store.error =
+      generateError instanceof Error
+        ? generateError.message
+        : 'Shopping list could not be generated.';
+  } finally {
+    isGeneratingShoppingList.value = false;
+  }
+}
+
 async function initializePlan() {
   try {
     accountCreatedAt.value = await fetchAccountCreatedAt();
@@ -197,7 +238,6 @@ onMounted(initializePlan);
 }
 
 .local-fullscreen-container {
-
   position: absolute;
   top: 0;
   left: 0;
@@ -214,6 +254,12 @@ onMounted(initializePlan);
   gap: 0.5rem;
 }
 
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .current-date {
   font-size: 1.125rem;
   font-weight: 500;
@@ -223,9 +269,11 @@ onMounted(initializePlan);
 }
 
 .top-bar md-filled-button,
+.top-bar md-filled-tonal-button,
 .top-bar md-outlined-button {
   height: 3rem;
   --md-filled-button-container-shape: 1rem;
+  --md-filled-tonal-button-container-shape: 1rem;
   --md-outlined-button-container-shape: 1rem;
 }
 </style>

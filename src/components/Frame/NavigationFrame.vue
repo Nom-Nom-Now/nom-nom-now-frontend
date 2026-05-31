@@ -57,9 +57,9 @@ const navigationItems = [
     to: '/recipes',
   },
   {
-    textKey: 'navigation.browse',
-    iconName: 'wb_incandescent_24dp_1F1F1F',
-    to: '/browse',
+    textKey: 'navigation.shoppingLists',
+    iconName: 'shopping_list_24dp_1F1F1F',
+    to: '/shopping-lists',
   },
 ];
 const availableLanguageCodes = ['de', 'en'];

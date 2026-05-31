@@ -14,7 +14,7 @@
     "home": "Startseite",
     "plan": "Plan",
     "recipes": "Rezepte",
-    "browse": "Entdecken"
+    "shoppingLists": "Einkaufslisten"
   },
   "languages": {
     "title": "Sprache wechseln",
@@ -45,8 +45,18 @@
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
+      "refreshDay": "{day} refreshen",
+      "generateShoppingList": "Einkaufsliste generieren",
       "today": "Heute",
       "loading": "Lädt..."
+    },
+    "shoppingLists": {
+      "title": "Einkaufslisten",
+      "loading": "Einkaufslisten werden geladen...",
+      "loadingDetail": "Einkaufsliste wird geladen...",
+      "empty": "Noch keine Einkaufslisten vorhanden.",
+      "selectList": "Wähle eine Einkaufsliste aus.",
+      "itemCount": "{count} Zutaten"
     },
     "recipes": {
       "title": "Rezepte",

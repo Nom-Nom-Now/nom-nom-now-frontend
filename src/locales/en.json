@@ -14,7 +14,7 @@
     "home": "Home",
     "plan": "Plan",
     "recipes": "Recipes",
-    "browse": "Browse"
+    "shoppingLists": "Shopping lists"
   },
   "languages": {
     "title": "Change language",
@@ -45,8 +45,18 @@
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
+      "refreshDay": "Refresh {day}",
+      "generateShoppingList": "Generate shopping list",
       "today": "Today",
       "loading": "Loading..."
+    },
+    "shoppingLists": {
+      "title": "Shopping lists",
+      "loading": "Loading shopping lists...",
+      "loadingDetail": "Loading shopping list...",
+      "empty": "No shopping lists yet.",
+      "selectList": "Select a shopping list.",
+      "itemCount": "{count} ingredients"
     },
     "recipes": {
       "title": "Recipes",
