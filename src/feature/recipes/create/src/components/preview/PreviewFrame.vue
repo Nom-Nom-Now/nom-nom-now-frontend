@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, inject } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
@@ -10,9 +10,7 @@ import RecipeDetailContent from '../../../../detail/src/components/RecipeDetailC
 import type { Recipe } from '../../../../list/src/shared/types.ts';
 
 const { t } = useI18n();
-type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
-
-const store = inject<RecipeStoreInstance>('recipeStore')!;
+const store = useCreateRecipeStore();
 
 const { currentUsername } = useAuth();
 
@@ -32,16 +30,9 @@ onMounted(async () => {
 });
 
 const previewRecipe = computed<Recipe>(() => {
-  let resolvedImageUrl: string | null = null;
-
-  if (store.recipeImage) {
-    resolvedImageUrl = URL.createObjectURL(store.recipeImage);
-  } else if ('existingImageUrl' in store) {
-    const url = (store as { existingImageUrl: unknown }).existingImageUrl;
-    if (typeof url === 'string') {
-      resolvedImageUrl = url;
-    }
-  }
+  const localImageUrl = store.recipeImage
+    ? URL.createObjectURL(store.recipeImage)
+    : null;
 
   const mappedCategoryNames = (store.categoryIds || [])
     .map((id) => allCategories.value.find((cat) => cat.id === id)?.name)
@@ -50,7 +41,7 @@ const previewRecipe = computed<Recipe>(() => {
   return {
     id: 'preview-id',
     title: store.recipeName || '',
-    imageUrl: resolvedImageUrl,
+    imageUrl: localImageUrl,
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
     cost:
       store.pricePerPerson !== null
@@ -124,7 +115,7 @@ async function handleSubmit() {
   width: 100%;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid
-    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
+  var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
 }
 
 .actions {
@@ -137,8 +128,8 @@ async function handleSubmit() {
 
 .feedback {
   font: var(--md-sys-typescale-body-medium-weight)
-    var(--md-sys-typescale-body-medium-size)
-    var(--md-sys-typescale-body-medium-font);
+  var(--md-sys-typescale-body-medium-size)
+  var(--md-sys-typescale-body-medium-font);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }

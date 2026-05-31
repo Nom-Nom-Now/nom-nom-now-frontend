@@ -3,7 +3,10 @@ import { computed, ref } from 'vue';
 import type { Ingredient } from '../../../create/src/shared/types/recipe';
 import type { Unit } from '../../../create/src/shared/types/units.ts';
 import type { Recipe } from '../../../list/src/shared/types.ts';
-import { updateRecipe } from '../service/editRecipeApiService';
+import {
+  type EditRecipePayload,
+  updateRecipe,
+} from '../service/editRecipeApiService';
 
 export const useEditRecipeStore = defineStore('editRecipe', () => {
   const recipeId = ref<number | null>(null);
@@ -24,6 +27,7 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
 
   const isSubmitting = ref(false);
   const submitError = ref<string | null>(null);
+  const originalSnapshot = ref<string | null>(null);
 
   let nextId = 1;
 
@@ -34,11 +38,11 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     recipeName.value = recipe.title || '';
     instructions.value = recipe.description || '';
 
-    const parsedTime = parseInt(recipe.duration);
-    cookingTime.value = isNaN(parsedTime) ? 0 : parsedTime;
+    const parsedTime = Number.parseInt(recipe.duration);
+    cookingTime.value = Number.isNaN(parsedTime) ? 0 : parsedTime;
 
-    const parsedPrice = parseFloat(recipe.cost.replace(/[^0-9.]/g, ''));
-    totalPrice.value = isNaN(parsedPrice) ? null : parsedPrice;
+    const parsedPrice = Number.parseFloat(recipe.cost.replace(/[^0-9.]/g, ''));
+    totalPrice.value = Number.isNaN(parsedPrice) ? null : parsedPrice;
 
     rawCategoryNames.value = recipe.categories || [];
     categoryIds.value = [];
@@ -61,6 +65,7 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
       ];
       nextId = 4;
     }
+    originalSnapshot.value = createSnapshotString();
   }
 
   function setRecipeImage(file: File | null) {
@@ -87,6 +92,25 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     if (totalPrice.value === null || totalPrice.value <= 0) return null;
     return Math.round((totalPrice.value / servings.value) * 100) / 100;
   });
+
+  const isDirty = computed(() => {
+    if (!originalSnapshot.value) return false;
+    return originalSnapshot.value !== createSnapshotString();
+  });
+
+  function createSnapshotString(): string {
+    return JSON.stringify({
+      recipeName: recipeName.value,
+      servings: servings.value,
+      // IDs ignorieren wir beim Vergleich, falls sich interne IDs verschieben
+      ingredients: ingredients.value.map(i => ({ name: i.name, amount: i.amount, unit: i.unit })),
+      instructions: instructions.value,
+      cookingTime: cookingTime.value,
+      categoryIds: [...categoryIds.value].sort((a, b) => a - b),
+      totalPrice: totalPrice.value,
+      hasNewImage: recipeImage.value !== null
+    });
+  }
 
   function setRecipeName(name: string) {
     recipeName.value = name;
@@ -157,14 +181,16 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     isSubmitting.value = true;
 
     try {
-      const updateData = {
+      const updateData: EditRecipePayload = {
         recipeName: recipeName.value,
         servings: servings.value,
         ingredients: ingredients.value,
         instructions: instructions.value,
         cookingTime: cookingTime.value,
         categoryIds: categoryIds.value,
-        pricePerPerson: pricePerPerson.value ? Math.round(pricePerPerson.value * 100) : null,
+        pricePerPerson: pricePerPerson.value !== null && pricePerPerson.value > 0
+          ? Math.round(pricePerPerson.value * 100)
+          : null,
       };
 
       const response = await updateRecipe(recipeId.value, updateData, recipeImage.value);
@@ -194,6 +220,7 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     submitError.value = null;
     isSubmitting.value = false;
     nextId = 1;
+    originalSnapshot.value = null;
   }
 
   return {
@@ -214,6 +241,8 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     ingredientCount,
     isIngredientsStepValid,
     pricePerPerson,
+
+    isDirty,
 
     fillWithRecipe,
     setRecipeName,

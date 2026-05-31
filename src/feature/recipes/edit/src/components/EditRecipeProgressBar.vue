@@ -2,18 +2,20 @@
 import StepNavigationButton from '../../../../../components/StepNavigationButton.vue';
 
 import { useI18n } from 'vue-i18n';
-import { ref, provide, onMounted } from 'vue';
+import { ref, provide } from 'vue';
 
 import IngredientsFrame from '../../../create/src/components/ingredients/IngredientsFrame.vue';
-import PreviewFrame from '../../../create/src/components/preview/PreviewFrame.vue';
+import EditRecipePreview from './EditRecipePreview.vue';
 import CategoryFrame from '../../../create/src/components/categories/CategoryFrame.vue';
 import ImageFrame from '../../../create/src/components/image/ImageFrame.vue';
 import PreparationFrame from '../../../create/src/components/preparation/PreparationFrame.vue';
 
 import { useEditRecipeStore } from '../stores/useEditRecipeStore';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const editStore = useEditRecipeStore();
+const router = useRouter();
 
 provide('recipeStore', editStore);
 
@@ -50,19 +52,13 @@ const setActiveStep = (step: string) => {
   activeStep.value = step;
 };
 
-onMounted(() => {
-  console.log(
-    '=============== 🍍 PINIA DEBUG: EDIT STORE BEIM START ===============',
-  );
-  console.log('Rezept-ID:', editStore.recipeId);
-  console.log('Rezept-Name:', editStore.recipeName);
-  console.log('Zutaten Anzahl:', editStore.ingredients.length);
+const handleCancelEdit = () => {
+  router.back();
+};
 
-  console.table(JSON.parse(JSON.stringify(editStore.$state)));
-  console.log(
-    '======================================================================',
-  );
-});
+const closeEditorAndRefresh = () => {
+  router.back();
+};
 </script>
 
 <template>
@@ -92,7 +88,10 @@ onMounted(() => {
         <ImageFrame />
       </div>
       <div class="previewBox" v-if="activeStep === 'preview'">
-        <PreviewFrame />
+        <EditRecipePreview
+          @cancel="handleCancelEdit"
+          @success="closeEditorAndRefresh"
+        />
       </div>
     </div>
   </div>

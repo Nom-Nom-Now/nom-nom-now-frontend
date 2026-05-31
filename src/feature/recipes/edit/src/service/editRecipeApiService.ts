@@ -1,29 +1,85 @@
-import type { Recipe } from '../../../list/src/shared/types.ts';
+import type { Ingredient } from '../../../create/src/shared/types/recipe';
+import type {
+  CreateRecipeRequestDto,
+  CreateRecipeResponseDto,
+  CreateRecipeComponentDto
+} from '../../../create/src/services/createRecipeApi.ts';
 
-/**
- * Sendet ein Update für ein bestehendes Rezept an das Backend.
- * Entspricht dem Controller-Endpunkt mit MediaType.MULTIPART_FORM_DATA_VALUE
- */
-export async function updateRecipe(id: number, recipeData: any, imageFile?: File | null): Promise<Recipe> {
-  const formData = new FormData();
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
-  const recipeBlob = new Blob([JSON.stringify(recipeData)], {
-    type: 'application/json',
-  });
-  formData.append('recipe', recipeBlob);
+export interface EditRecipePayload {
+  recipeName: string;
+  servings: number;
+  ingredients: Ingredient[];
+  instructions: string;
+  cookingTime: number;
+  categoryIds: number[];
+  pricePerPerson: number | null;
+}
 
-  if (imageFile) {
-    formData.append('image', imageFile);
-  }
+function mapIngredientToComponent(ingredient: Ingredient): CreateRecipeComponentDto {
+  return {
+    name: ingredient.name.trim(),
+    quantity: ingredient.amount ?? 0,
+    unit: ingredient.unit,
+  };
+}
 
-  const response = await fetch(`/api/recipes/${id}`, {
+function mapPayloadToRequestDto(payload: EditRecipePayload): CreateRecipeRequestDto {
+  return {
+    name: payload.recipeName.trim(),
+    instructions: payload.instructions?.trim() ?? '',
+    cookingTime: payload.cookingTime ?? 0,
+    pricePerPerson: payload.pricePerPerson ?? undefined,
+    categoryIds: payload.categoryIds ?? [],
+    components: payload.ingredients
+      .filter((i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0)
+      .map(mapIngredientToComponent),
+  };
+}
+
+async function putJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'PUT',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  if (!response.ok) throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
+  return text ? (JSON.parse(text) as TRes) : ({} as TRes);
+}
+
+async function putMultipart<TRes>(path: string, recipe: CreateRecipeRequestDto, image: File): Promise<TRes> {
+  const formData = new FormData();
+  formData.append(
+    'recipe',
+    new Blob([JSON.stringify(recipe)], { type: 'application/json' }),
+  );
+  formData.append('image', image, image.name);
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'PUT',
+    credentials: 'include',
     body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error(`Fehler beim Aktualisieren des Rezepts (Status: ${response.status})`);
+  const text = await response.text();
+  if (!response.ok) throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
+  return text ? (JSON.parse(text) as TRes) : ({} as TRes);
+}
+
+export async function updateRecipe(
+  id: number,
+  payload: EditRecipePayload,
+  image: File | null
+): Promise<CreateRecipeResponseDto> {
+  const dto = mapPayloadToRequestDto(payload);
+
+  if (image) {
+    return putMultipart<CreateRecipeResponseDto>(`/recipes/${id}`, dto, image);
   }
 
-  return await response.json();
+  return putJson<CreateRecipeRequestDto, CreateRecipeResponseDto>(`/recipes/${id}`, dto);
 }
