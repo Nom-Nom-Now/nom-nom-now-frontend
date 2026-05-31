@@ -30,9 +30,23 @@
     "browse": {
       "title": "Entdecken"
     },
-    "mainPage": {
+    "home": {
       "title": "Startseite",
-      "helloWorld": "Hallo Welt"
+      "todayEyebrow": "Heute",
+      "todayTitle": "Heute kochen",
+      "noTodayRecipe": "Für heute ist noch kein Rezept geplant.",
+      "openPlan": "Zum Wochenplan",
+      "weekTitle": "Diese Woche",
+      "viewAll": "Alle ansehen",
+      "loadingPlan": "Wochenplan wird geladen...",
+      "noRecipe": "Kein Rezept",
+      "shoppingTitle": "Einkauf",
+      "openShoppingLists": "Zu den Einkaufslisten",
+      "loadingShoppingLists": "Einkaufslisten werden geladen...",
+      "noShoppingList": "Noch keine Einkaufsliste vorhanden.",
+      "actionsTitle": "Schnellaktionen",
+      "createRecipe": "Rezept erstellen",
+      "browseRecipes": "Rezepte ansehen"
     },
     "login": {
       "title": "Anmelden",

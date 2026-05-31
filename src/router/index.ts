@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HelloWorld from '../components/HelloWorld.vue';
+import HomePage from '../feature/home/src/pages/HomePage.vue';
 import CreateRecipeView from '../views/CreateRecipeView.vue';
 import PlanView from '../views/PlanView.vue';
 import RecipesView from '../views/RecipesView.vue';
@@ -16,8 +16,8 @@ const router = createRouter({
     },
     {
       path: '/home',
-      component: HelloWorld,
-      meta: { titleKey: 'feature.mainPage.title' },
+      component: HomePage,
+      meta: { titleKey: 'feature.home.title' },
     },
     {
       path: '/plan',
