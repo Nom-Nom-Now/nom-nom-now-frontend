@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import type { Ingredient } from '../feature/recipes/create/src/shared/types/recipe';
 import type { Unit } from '../feature/recipes/create/src/shared/types/units.ts';
+import type { Recipe } from '../feature/plan/src/shared/types.ts';
 
 export function useRecipeIngredients() {
   const ingredients = ref<Ingredient[]>([]);
@@ -70,7 +71,8 @@ export function useRecipeIngredients() {
     arr[index + 1] = temp;
   }
 
-  function setIngredientsFromRecipe(recipeIngredients: any[]) {
+  function setIngredientsFromRecipe(recipeIngredients: Recipe['ingredients']) {
+    if (!recipeIngredients) return;
     ingredients.value = recipeIngredients.map((ing, index) => ({
       id: index + 1,
       amount: ing.quantity,
