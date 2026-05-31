@@ -15,8 +15,15 @@ vi.mock('vue-router', () => ({
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     locale: { value: 'de-DE' },
-    t: (key: string, values?: Record<string, unknown>) =>
-      values?.count !== undefined ? `${values.count} Zutaten` : key,
+    t: (key: string, values?: Record<string, unknown>) => {
+      const count = values?.count;
+
+      if (typeof count === 'number' || typeof count === 'string') {
+        return `${count} Zutaten`;
+      }
+
+      return key;
+    },
   }),
 }));
 

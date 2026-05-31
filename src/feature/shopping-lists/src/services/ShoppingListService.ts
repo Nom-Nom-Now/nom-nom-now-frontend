@@ -25,7 +25,7 @@ export async function generateShoppingList(
 ): Promise<ShoppingListDto> {
   const url = new URL(
     `${API_BASE_URL}/api/shopping-lists`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {
@@ -49,7 +49,7 @@ export async function generateShoppingList(
 export async function fetchShoppingLists(): Promise<ShoppingListSummaryDto[]> {
   const url = new URL(
     `${API_BASE_URL}/api/shopping-lists`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {
@@ -68,7 +68,7 @@ export async function fetchShoppingList(
 ): Promise<ShoppingListDto> {
   const url = new URL(
     `${API_BASE_URL}/api/shopping-lists/${id}`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {

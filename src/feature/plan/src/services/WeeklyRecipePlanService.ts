@@ -30,7 +30,7 @@ export async function fetchWeeklyRecipePlan(
 ): Promise<RecipePlanResponseDto[]> {
   const url = new URL(
     `${API_BASE_URL}/api/recipe-plans`,
-    window.location.origin,
+    globalThis.location.origin,
   );
   url.searchParams.set('weekStart', formatDateOnly(weekStart));
 
@@ -51,7 +51,7 @@ export async function saveWeeklyRecipePlan(
 ): Promise<RecipePlanResponseDto[]> {
   const url = new URL(
     `${API_BASE_URL}/api/recipe-plans`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {
@@ -79,7 +79,7 @@ export async function refreshRecipePlanDay(
   const dateKey = formatDateOnly(planDate);
   const url = new URL(
     `${API_BASE_URL}/api/recipe-plans/${dateKey}/refresh`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {
