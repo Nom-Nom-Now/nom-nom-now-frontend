@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
+import { createPinia, setActivePinia } from 'pinia';
 import PlanFrame from '../components/PlanFrame.vue';
 import { generateShoppingList } from '../../../shopping-lists/src/services/ShoppingListService';
 
@@ -42,6 +43,9 @@ vi.mock('../../../shopping-lists/src/services/ShoppingListService', () => ({
 
 describe('PlanFrame', () => {
   beforeEach(() => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
     pushMock.mockReset();
     fetchRecipesMock.mockResolvedValue(undefined);
     storeMock.error = null;
@@ -58,6 +62,7 @@ describe('PlanFrame', () => {
 
     const wrapper = mount(PlanFrame, {
       global: {
+        plugins: [createPinia()],
         stubs: {
           PlanGridContent: true,
           RecipeDetailFull: true,
