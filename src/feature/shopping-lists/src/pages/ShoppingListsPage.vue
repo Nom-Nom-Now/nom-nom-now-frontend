@@ -80,6 +80,10 @@ import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useShoppingListStore } from '../stores/useShoppingListStore';
+import {
+  formatCreatedAt as formatCreatedAtValue,
+  formatWeekRange,
+} from '../../../../formatters/dateFormatters';
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -106,32 +110,11 @@ async function loadSelectedList() {
 }
 
 function formatWeek(weekStart: string) {
-  const start = parseDateOnly(weekStart);
-  const end = parseDateOnly(weekStart);
-  end.setDate(end.getDate() + 6);
-
-  return `${formatDate(start)} - ${formatDate(end)}`;
+  return formatWeekRange(weekStart, locale.value);
 }
 
 function formatCreatedAt(createdAt: string) {
-  const date = new Date(createdAt);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  return new Intl.DateTimeFormat(locale.value, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(date);
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat(locale.value, {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(date);
+  return formatCreatedAtValue(createdAt, locale.value);
 }
 
 function formatQuantity(quantity: number) {
@@ -142,11 +125,6 @@ function formatQuantity(quantity: number) {
 
 function formatUnit(unit: string) {
   return t(`feature.recipes.createRecipe.ingredients.unitValues.${unit}`);
-}
-
-function parseDateOnly(date: string) {
-  const [year, month, day] = date.split('-').map(Number);
-  return new Date(year || 0, (month || 1) - 1, day || 1);
 }
 </script>
 
