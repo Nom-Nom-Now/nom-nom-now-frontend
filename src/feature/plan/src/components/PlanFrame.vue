@@ -61,7 +61,6 @@ import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 import { fetchAccountCreatedAt } from '../services/authService.ts';
 import { generateShoppingList } from '../../../shopping-lists/src/services/ShoppingListService';
 import type { Recipe } from '../shared/types';
-import router from '../../../../router';
 import { useEditRecipeStore } from '../../../recipes/edit/src/stores/useEditRecipeStore.ts';
 
 const router = useRouter();
