@@ -3,26 +3,40 @@
     <div v-if="isLoading" class="loading">
       {{ t('feature.plan.loading') }}
     </div>
-    <div v-else-if="error" class="error-message">
-      {{ error }}
-    </div>
-    <div v-else class="week-grid">
-      <div
-        v-for="(day, index) in weekDays"
-        :key="day.date.toISOString()"
-        class="day-column"
-      >
-        <div class="day-header">
-          <span class="day-name">{{ day.name }}</span>
-          <span class="day-date" :class="{ 'is-today': day.isToday }">
-            {{ day.dateNum }}
-          </span>
+    <div v-else>
+      <div v-if="error" class="error-message">
+        {{ error }}
+      </div>
+      <div class="week-grid">
+        <div
+          v-for="(day, index) in weekDays"
+          :key="day.date.toISOString()"
+          class="day-column"
+        >
+          <div class="day-header">
+            <div class="day-title-row">
+              <span class="day-name">{{ day.name }}</span>
+              <md-icon-button
+                class="day-refresh-button"
+                type="button"
+                :disabled="isDayRefreshing(day.key)"
+                :aria-label="t('feature.plan.refreshDay', { day: day.name })"
+                :title="t('feature.plan.refreshDay', { day: day.name })"
+                @click.stop="emit('refresh-day', index)"
+              >
+                <md-icon>refresh</md-icon>
+              </md-icon-button>
+            </div>
+            <span class="day-date" :class="{ 'is-today': day.isToday }">
+              {{ day.dateNum }}
+            </span>
+          </div>
+          <PlanRecipeBox
+            v-if="recipes[index]"
+            :recipe="recipes[index]"
+            @select="selectedRecipe = recipes[index]"
+          />
         </div>
-        <PlanRecipeBox
-          v-if="recipes[index]"
-          :recipe="recipes[index]"
-          @select="selectedRecipe = recipes[index]"
-        />
       </div>
     </div>
 
@@ -49,10 +63,12 @@ const props = defineProps<{
   isLoading: boolean;
   error: string | null;
   currentWeek: Date;
+  refreshingDayKeys: string[];
 }>();
 
 const emit = defineEmits<{
   'open-fullscreen': [recipe: Recipe];
+  'refresh-day': [dayIndex: number];
 }>();
 
 const selectedRecipe = ref<Recipe | null>(null);
@@ -87,6 +103,7 @@ const weekDays = computed(() => {
 
     days.push({
       date,
+      key: formatDateOnly(date),
       name: t(`common.weekdays.${weekDayKeys[i]}`),
       dateNum: date.getDate(),
       isToday,
@@ -94,12 +111,24 @@ const weekDays = computed(() => {
   }
   return days;
 });
+
+function formatDateOnly(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function isDayRefreshing(dayKey: string) {
+  return props.refreshingDayKeys.includes(dayKey);
+}
 </script>
 
 <style scoped>
 .plan-week-view {
   flex-grow: 1;
-  overflow-y: auto;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -107,9 +136,10 @@ const weekDays = computed(() => {
 
 .week-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(6rem, 1fr));
   gap: 1rem;
   align-items: start;
+  min-width: min(100%, 48rem);
 }
 
 .day-column {
@@ -122,8 +152,17 @@ const weekDays = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.125rem;
   flex-shrink: 0;
+}
+
+.day-title-row {
+  min-height: 2rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
 }
 
 .day-name {
@@ -131,6 +170,12 @@ const weekDays = computed(() => {
   font-weight: 500;
   color: var(--md-sys-color-on-surface-variant);
   text-transform: capitalize;
+}
+
+.day-refresh-button {
+  width: 2rem;
+  height: 2rem;
+  --md-icon-button-icon-size: 1.125rem;
 }
 
 .day-date {
