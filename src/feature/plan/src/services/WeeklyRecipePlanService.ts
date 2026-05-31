@@ -30,7 +30,7 @@ export async function fetchWeeklyRecipePlan(
 ): Promise<RecipePlanResponseDto[]> {
   const url = new URL(
     `${API_BASE_URL}/api/recipe-plans`,
-    window.location.origin,
+    globalThis.location.origin,
   );
   url.searchParams.set('weekStart', formatDateOnly(weekStart));
 
@@ -51,7 +51,7 @@ export async function saveWeeklyRecipePlan(
 ): Promise<RecipePlanResponseDto[]> {
   const url = new URL(
     `${API_BASE_URL}/api/recipe-plans`,
-    window.location.origin,
+    globalThis.location.origin,
   );
 
   const response = await fetch(toRequestUrl(url), {
@@ -73,7 +73,30 @@ export async function saveWeeklyRecipePlan(
   return (await response.json()) as RecipePlanResponseDto[];
 }
 
-function formatDateOnly(date: Date) {
+export async function refreshRecipePlanDay(
+  planDate: Date,
+): Promise<RecipePlanResponseDto> {
+  const dateKey = formatDateOnly(planDate);
+  const url = new URL(
+    `${API_BASE_URL}/api/recipe-plans/${dateKey}/refresh`,
+    globalThis.location.origin,
+  );
+
+  const response = await fetch(toRequestUrl(url), {
+    method: 'PATCH',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `PATCH /api/recipe-plans/${dateKey}/refresh failed (${response.status})`,
+    );
+  }
+
+  return (await response.json()) as RecipePlanResponseDto;
+}
+
+export function formatDateOnly(date: Date) {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
   const day = `${date.getDate()}`.padStart(2, '0');

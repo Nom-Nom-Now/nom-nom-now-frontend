@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HelloWorld from '../components/HelloWorld.vue';
+import HomePage from '../feature/home/src/pages/HomePage.vue';
 import CreateRecipeView from '../views/CreateRecipeView.vue';
 import PlanView from '../views/PlanView.vue';
 import RecipesView from '../views/RecipesView.vue';
-import BrowseView from '../views/BrowseView.vue';
-import ListRecipesPage from '../feature/recipes/list/src/pages/ListRecipesPage.vue';
+import ShoppingListsView from '../views/ShoppingListsView.vue';
 import LoginPage from '../views/LoginPage.vue';
 import EditRecipeView from '../views/EditRecipeView.vue';
 
@@ -18,8 +17,8 @@ const router = createRouter({
     },
     {
       path: '/home',
-      component: HelloWorld,
-      meta: { titleKey: 'feature.mainPage.title' },
+      component: HomePage,
+      meta: { titleKey: 'feature.home.title' },
     },
     {
       path: '/plan',
@@ -45,16 +44,9 @@ const router = createRouter({
       ],
     },
     {
-      path: '/browse',
-      component: BrowseView,
-      meta: { titleKey: 'feature.browse.title' },
-      children: [
-        {
-          path: 'listall',
-          component: ListRecipesPage,
-          meta: { titleKey: 'feature.listAllRecipes.title' },
-        },
-      ],
+      path: '/shopping-lists/:id?',
+      component: ShoppingListsView,
+      meta: { titleKey: 'feature.shoppingLists.title' },
     },
   ],
 });

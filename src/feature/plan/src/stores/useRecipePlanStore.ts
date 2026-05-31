@@ -6,7 +6,9 @@ import {
   useRecipeListStore,
 } from '../../../recipes/list/src/stores/useRecipeListStore';
 import {
+  formatDateOnly,
   fetchWeeklyRecipePlan,
+  refreshRecipePlanDay,
   saveWeeklyRecipePlan,
   type RecipePlanResponseDto,
   type RecipeResponseDto,
@@ -16,6 +18,7 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
   const recipes = ref<Recipe[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const refreshingDayKeys = ref<string[]>([]);
 
   function getStartOfWeek(date: Date): Date {
     const d = new Date(date);
@@ -109,7 +112,54 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     }
   }
 
-  return { recipes, isLoading, error, fetchRecipes };
+  async function refreshDay(
+    weekStart: Date,
+    dayIndex: number,
+    accountCreatedAt?: Date,
+  ) {
+    const planDate = new Date(weekStart);
+    planDate.setDate(planDate.getDate() + dayIndex);
+
+    if (isWeekBeforeAccountCreation(planDate, accountCreatedAt)) {
+      return;
+    }
+
+    const dayKey = formatDateOnly(planDate);
+    setDayRefreshing(dayKey, true);
+    error.value = null;
+
+    try {
+      const refreshedPlan = await refreshRecipePlanDay(planDate);
+      const nextRecipes = [...recipes.value];
+
+      nextRecipes[dayIndex] = mapPlannedRecipe(refreshedPlan);
+      recipes.value = nextRecipes;
+    } catch (refreshError) {
+      error.value =
+        refreshError instanceof Error
+          ? refreshError.message
+          : 'Meal plan day could not be refreshed.';
+    } finally {
+      setDayRefreshing(dayKey, false);
+    }
+  }
+
+  function setDayRefreshing(dayKey: string, isRefreshing: boolean) {
+    refreshingDayKeys.value = isRefreshing
+      ? [...new Set([...refreshingDayKeys.value, dayKey])]
+      : refreshingDayKeys.value.filter(
+          (refreshingKey) => refreshingKey !== dayKey,
+        );
+  }
+
+  return {
+    recipes,
+    isLoading,
+    error,
+    refreshingDayKeys,
+    fetchRecipes,
+    refreshDay,
+  };
 });
 
 function shuffleRecipesForWeek(

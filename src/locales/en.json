@@ -14,7 +14,7 @@
     "home": "Home",
     "plan": "Plan",
     "recipes": "Recipes",
-    "browse": "Browse"
+    "shoppingLists": "Shopping lists"
   },
   "languages": {
     "title": "Change language",
@@ -30,9 +30,23 @@
     "browse": {
       "title": "Browse"
     },
-    "mainPage": {
-      "title": "Mainpage",
-      "helloWorld": "Hello World"
+    "home": {
+      "title": "Home",
+      "todayEyebrow": "Today",
+      "todayTitle": "Cook today",
+      "noTodayRecipe": "No recipe is planned for today yet.",
+      "openPlan": "Open weekly plan",
+      "weekTitle": "This week",
+      "viewAll": "View all",
+      "loadingPlan": "Loading weekly plan...",
+      "noRecipe": "No recipe",
+      "shoppingTitle": "Shopping",
+      "openShoppingLists": "Open shopping lists",
+      "loadingShoppingLists": "Loading shopping lists...",
+      "noShoppingList": "No shopping list yet.",
+      "actionsTitle": "Quick actions",
+      "createRecipe": "Create recipe",
+      "browseRecipes": "Browse recipes"
     },
     "login": {
       "title": "Login",
@@ -45,8 +59,18 @@
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
+      "refreshDay": "Refresh {day}",
+      "generateShoppingList": "Generate shopping list",
       "today": "Today",
       "loading": "Loading..."
+    },
+    "shoppingLists": {
+      "title": "Shopping lists",
+      "loading": "Loading shopping lists...",
+      "loadingDetail": "Loading shopping list...",
+      "empty": "No shopping lists yet.",
+      "selectList": "Select a shopping list.",
+      "itemCount": "{count} ingredients"
     },
     "recipes": {
       "title": "Recipes",
