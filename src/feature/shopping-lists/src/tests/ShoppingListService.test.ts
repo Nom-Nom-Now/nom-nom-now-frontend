@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  deleteShoppingList,
   fetchShoppingList,
   fetchShoppingLists,
   generateShoppingList,
@@ -75,6 +76,41 @@ describe('ShoppingListService', () => {
       credentials: 'include',
     });
     expect(response.items[0]?.ingredientName).toBe('Tomato');
+  });
+
+  it('should reject empty shopping list ids before fetching', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(fetchShoppingList('')).rejects.toThrow(
+      'Shopping list id is required.',
+    );
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('should delete one shopping list by id', async () => {
+    stubFetch({
+      ok: true,
+    });
+
+    await deleteShoppingList(7);
+
+    expect(fetch).toHaveBeenCalledWith('/api/shopping-lists/7', {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+  });
+
+  it('should reject empty shopping list ids before deleting', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(deleteShoppingList('')).rejects.toThrow(
+      'Shopping list id is required.',
+    );
+
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

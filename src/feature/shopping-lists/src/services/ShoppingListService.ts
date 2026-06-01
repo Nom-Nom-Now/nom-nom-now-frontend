@@ -66,8 +66,13 @@ export async function fetchShoppingLists(): Promise<ShoppingListSummaryDto[]> {
 export async function fetchShoppingList(
   id: number | string,
 ): Promise<ShoppingListDto> {
+  const normalizedId = String(id).trim();
+  if (!normalizedId) {
+    throw new Error('Shopping list id is required.');
+  }
+
   const url = new URL(
-    `${API_BASE_URL}/api/shopping-lists/${id}`,
+    `${API_BASE_URL}/api/shopping-lists/${normalizedId}`,
     globalThis.location.origin,
   );
 
@@ -77,11 +82,34 @@ export async function fetchShoppingList(
 
   if (!response.ok) {
     throw new Error(
-      `GET /api/shopping-lists/${id} failed (${response.status})`,
+      `GET /api/shopping-lists/${normalizedId} failed (${response.status})`,
     );
   }
 
   return (await response.json()) as ShoppingListDto;
+}
+
+export async function deleteShoppingList(id: number | string): Promise<void> {
+  const normalizedId = String(id).trim();
+  if (!normalizedId) {
+    throw new Error('Shopping list id is required.');
+  }
+
+  const url = new URL(
+    `${API_BASE_URL}/api/shopping-lists/${normalizedId}`,
+    globalThis.location.origin,
+  );
+
+  const response = await fetch(toRequestUrl(url), {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `DELETE /api/shopping-lists/${normalizedId} failed (${response.status})`,
+    );
+  }
 }
 
 function formatDateOnly(date: Date) {
