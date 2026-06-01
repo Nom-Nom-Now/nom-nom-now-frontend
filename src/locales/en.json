@@ -23,6 +23,7 @@
   },
   "global": {
     "edit": "Edit",
+    "cancel": "Cancel",
     "delete": "Delete",
     "close": "Close"
   },
@@ -71,6 +72,9 @@
       "loadingDetail": "Loading shopping list...",
       "empty": "No shopping lists yet.",
       "selectList": "Select a shopping list.",
+      "delete": "Delete shopping list",
+      "deleteDialogTitle": "Delete shopping list?",
+      "deleteDialogDescription": "This shopping list will be permanently deleted.",
       "itemCount": "{count} ingredients"
     },
     "recipes": {
@@ -242,7 +246,12 @@
       },
       "list": {
         "createButton": "New Recipe",
-        "myRecipesOnly": "My Recipes"
+        "myRecipesOnly": "My Recipes",
+        "filterCategories": "Categories",
+        "filterClear": "Clear",
+        "filterApply": "Apply",
+        "filterLoading": "Loading...",
+        "filterError": "Categories could not be loaded."
       }
     },
     "listAllRecipes": {

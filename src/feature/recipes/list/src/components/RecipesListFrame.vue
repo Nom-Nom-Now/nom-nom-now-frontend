@@ -2,6 +2,7 @@
   <div class="recipes-list-container">
     <div class="top-bar">
       <RecipeSearchBar @update:search="handleSearch" />
+      <RecipeCategoryFilter @apply-filter="handleCategoryFilter" />
       <div class="filter-toggle">
         <md-switch
           :selected="showMyRecipesOnly"
@@ -41,6 +42,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';
+import RecipeCategoryFilter from './RecipeCategoryFilter.vue';
 import RecipesGridContent from './RecipesGridContent.vue';
 import RecipeDetailFull from '../../../detail/src/components/RecipeDetailFull.vue';
 import { useRecipeListStore } from '../stores/useRecipeListStore';
@@ -67,6 +69,10 @@ function handleToggleMyRecipes(event: Event) {
 function handleSearch(query: string) {
   const ownerId = showMyRecipesOnly.value ? currentUserId.value : undefined;
   store.fetchRecipes(ownerId, query || undefined);
+}
+
+function handleCategoryFilter(categoryIds: number[]) {
+  store.fetchByCategories(categoryIds);
 }
 
 function handleOpenFullscreen(recipe: Recipe) {

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import type { Recipe, RecipeComponent } from '../shared/types';
 import { apiFetch } from '../../../../../services/apiFetch';
+import { filterRecipesByCategories } from '../services/categoryFilterService';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 const PAGE_SIZE = 20;
@@ -32,6 +33,7 @@ export const useRecipeListStore = defineStore('recipeList', () => {
   const isLastPage = ref(false);
   const currentOwnerId = ref<string | undefined>(undefined);
   const searchQuery = ref<string | undefined>(undefined);
+  const selectedCategoryIds = ref<number[]>([]);
 
   const canLoadMore = computed(() => !isLoading.value && !isLastPage.value);
 
@@ -48,6 +50,26 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     isLoading.value = false;
     currentOwnerId.value = ownerId;
     searchQuery.value = newSearchQuery;
+    selectedCategoryIds.value = [];
+
+    await fetchNextPage();
+  }
+
+  async function fetchByCategories(categoryIds: number[]) {
+    abortController?.abort();
+    abortController = new AbortController();
+
+    recipes.value = [];
+    currentPage.value = -1;
+    isLastPage.value = false;
+    error.value = null;
+    isLoading.value = false;
+    selectedCategoryIds.value = categoryIds;
+
+    if (categoryIds.length === 0) {
+      await fetchRecipes(currentOwnerId.value, searchQuery.value);
+      return;
+    }
 
     await fetchNextPage();
   }
@@ -64,12 +86,23 @@ export const useRecipeListStore = defineStore('recipeList', () => {
       const nextPage = currentPage.value + 1;
       const signal = abortController?.signal;
 
-      const page = await fetchRecipePage(
-        nextPage,
-        currentOwnerId.value,
-        searchQuery.value,
-        signal,
-      );
+      let page: RecipePageDto;
+
+      if (selectedCategoryIds.value.length > 0) {
+        page = await filterRecipesByCategories(
+          selectedCategoryIds.value,
+          nextPage,
+          PAGE_SIZE,
+          signal,
+        );
+      } else {
+        page = await fetchRecipePage(
+          nextPage,
+          currentOwnerId.value,
+          searchQuery.value,
+          signal,
+        );
+      }
 
       const nextRecipes = page.content.map((recipe) => mapRecipe(recipe));
       const knownRecipeIds = new Set(recipes.value.map((recipe) => recipe.id));
@@ -102,7 +135,9 @@ export const useRecipeListStore = defineStore('recipeList', () => {
     error,
     canLoadMore,
     searchQuery,
+    selectedCategoryIds,
     fetchRecipes,
+    fetchByCategories,
     fetchNextPage,
   };
 });

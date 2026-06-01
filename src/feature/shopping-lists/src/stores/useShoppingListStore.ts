@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import {
+  deleteShoppingList as deleteShoppingListRequest,
   fetchShoppingList,
   fetchShoppingLists,
   type ShoppingListDto,
@@ -13,6 +14,7 @@ export const useShoppingListStore = defineStore('shoppingLists', () => {
   const selectedShoppingList = ref<ShoppingList | null>(null);
   const isLoading = ref(false);
   const isDetailLoading = ref(false);
+  const isDeleting = ref(false);
   const error = ref<string | null>(null);
 
   async function loadShoppingLists() {
@@ -34,6 +36,11 @@ export const useShoppingListStore = defineStore('shoppingLists', () => {
   }
 
   async function loadShoppingList(id: string) {
+    if (!id.trim()) {
+      clearSelectedShoppingList();
+      return;
+    }
+
     isDetailLoading.value = true;
     error.value = null;
 
@@ -50,14 +57,42 @@ export const useShoppingListStore = defineStore('shoppingLists', () => {
     }
   }
 
+  function clearSelectedShoppingList() {
+    selectedShoppingList.value = null;
+    isDetailLoading.value = false;
+    error.value = null;
+  }
+
+  async function deleteShoppingList(id: string) {
+    isDeleting.value = true;
+    error.value = null;
+
+    try {
+      await deleteShoppingListRequest(id);
+      selectedShoppingList.value = null;
+      await loadShoppingLists();
+    } catch (deleteError) {
+      error.value =
+        deleteError instanceof Error
+          ? deleteError.message
+          : 'Shopping list could not be deleted.';
+      throw deleteError;
+    } finally {
+      isDeleting.value = false;
+    }
+  }
+
   return {
     shoppingLists,
     selectedShoppingList,
     isLoading,
     isDetailLoading,
+    isDeleting,
     error,
     loadShoppingLists,
     loadShoppingList,
+    clearSelectedShoppingList,
+    deleteShoppingList,
   };
 });
 

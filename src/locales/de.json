@@ -23,6 +23,7 @@
   },
   "global": {
     "edit": "Bearbeiten",
+    "cancel": "Abbrechen",
     "delete": "Löschen",
     "close": "Schließen"
   },
@@ -71,6 +72,9 @@
       "loadingDetail": "Einkaufsliste wird geladen...",
       "empty": "Noch keine Einkaufslisten vorhanden.",
       "selectList": "Wähle eine Einkaufsliste aus.",
+      "delete": "Einkaufsliste löschen",
+      "deleteDialogTitle": "Einkaufsliste löschen?",
+      "deleteDialogDescription": "Diese Einkaufsliste wird dauerhaft gelöscht.",
       "itemCount": "{count} Zutaten"
     },
     "recipes": {
@@ -252,7 +256,12 @@
       },
       "list": {
         "createButton": "Neues Rezept",
-        "myRecipesOnly": "Meine Rezepte"
+        "myRecipesOnly": "Meine Rezepte",
+        "filterCategories": "Kategorien",
+        "filterClear": "Zurücksetzen",
+        "filterApply": "Anwenden",
+        "filterLoading": "Laden...",
+        "filterError": "Kategorien konnten nicht geladen werden."
       }
     },
 
