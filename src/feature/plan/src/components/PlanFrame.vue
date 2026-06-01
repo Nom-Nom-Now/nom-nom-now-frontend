@@ -45,7 +45,7 @@
         :current-username="currentUsername?.valueOf()"
         @close="handleCloseFullscreen"
         @edit="handleEditRecipe"
-        @delete="handleDeleteRecipe"
+        @deleted="handleRecipeDeleted"
       />
     </div>
   </div>
@@ -61,10 +61,12 @@ import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 import { fetchAccountCreatedAt } from '../services/authService.ts';
 import { generateShoppingList } from '../../../shopping-lists/src/services/ShoppingListService';
 import type { Recipe } from '../shared/types';
+import { useEditRecipeStore } from '../../../recipes/edit/src/stores/useEditRecipeStore.ts';
 
 const router = useRouter();
 const { t } = useI18n();
 const store = useRecipePlanStore();
+const editStore = useEditRecipeStore();
 
 const currentWeekStart = ref(getStartOfWeek(new Date()));
 const accountCreatedAt = ref<Date | undefined>();
@@ -82,11 +84,12 @@ function handleCloseFullscreen() {
 }
 
 function handleEditRecipe(recipe: Recipe) {
-  console.log('edit im plan aufgerufen', recipe);
+  editStore.fillWithRecipe(recipe);
+  router.push(`/recipes/edit/${recipe.id}`);
 }
 
-function handleDeleteRecipe(recipeId: string) {
-  console.log('delete im plan aufgerufen für Rezept-ID:', recipeId);
+function handleRecipeDeleted() {
+  handleCloseFullscreen();
 }
 
 function getStartOfWeek(date: Date): Date {

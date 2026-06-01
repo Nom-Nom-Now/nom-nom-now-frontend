@@ -3,11 +3,13 @@ import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import IngredientRow from './IngredientRow.vue';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { storeToRefs } from 'pinia';
+import { inject, toRefs } from 'vue';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
-const { ingredients } = storeToRefs(store);
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
+const { ingredients } = toRefs(store);
 </script>
 
 <template>

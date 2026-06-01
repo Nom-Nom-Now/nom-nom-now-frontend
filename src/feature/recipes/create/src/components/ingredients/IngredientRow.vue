@@ -7,10 +7,12 @@ import { UNIT_VALUES } from '../../shared/types/units';
 import type { Unit } from '../../shared/types/units';
 import type { Ingredient } from '../../shared/types/recipe';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
 
 const props = defineProps<{
   ingredient: Ingredient;

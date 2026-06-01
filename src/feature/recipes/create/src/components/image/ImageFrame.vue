@@ -2,32 +2,53 @@
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
-import { storeToRefs } from 'pinia';
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { ref, watch, onBeforeUnmount, inject, toRefs } from 'vue';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
-const { recipeImage } = storeToRefs(store);
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
+const { recipeImage } = toRefs(store);
 const fileInput = ref<HTMLInputElement | null>(null);
 const cameraInput = ref<HTMLInputElement | null>(null);
 const imagePreviewUrl = ref<string | null>(null);
 
 function buildPreviewUrl(file: File | null) {
   if (imagePreviewUrl.value) {
-    URL.revokeObjectURL(imagePreviewUrl.value);
+    if (!imagePreviewUrl.value.startsWith('http')) {
+      URL.revokeObjectURL(imagePreviewUrl.value);
+    }
     imagePreviewUrl.value = null;
   }
+
   if (file) {
     imagePreviewUrl.value = URL.createObjectURL(file);
+  } else if ('existingImageUrl' in store) {
+    const url = (store as { existingImageUrl: unknown }).existingImageUrl;
+    if (typeof url === 'string' && url.length > 0) {
+      imagePreviewUrl.value = url;
+    }
   }
 }
 
-// Sync preview with persisted store state (handles remount when switching steps)
 buildPreviewUrl(recipeImage.value);
-watch(recipeImage, (file) => buildPreviewUrl(file));
+
+watch(
+  [
+    recipeImage,
+    () =>
+      'existingImageUrl' in store
+        ? (store as { existingImageUrl: unknown }).existingImageUrl
+        : null,
+  ],
+  () => {
+    buildPreviewUrl(recipeImage.value);
+  },
+  { immediate: true },
+);
 
 onBeforeUnmount(() => {
-  if (imagePreviewUrl.value) {
+  if (imagePreviewUrl.value && !imagePreviewUrl.value.startsWith('http')) {
     URL.revokeObjectURL(imagePreviewUrl.value);
   }
 });
@@ -49,6 +70,9 @@ function handleCapture(event: Event) {
 
 function removeImage() {
   store.setRecipeImage(null);
+  if ('existingImageUrl' in store) {
+    (store as { existingImageUrl: string | null }).existingImageUrl = null;
+  }
   if (fileInput.value) fileInput.value.value = '';
   if (cameraInput.value) cameraInput.value.value = '';
 }
@@ -61,7 +85,6 @@ function openCamera() {
   cameraInput.value?.click();
 }
 
-// Drag & Drop
 const isDragging = ref(false);
 
 function onDragOver(event: DragEvent) {
@@ -92,7 +115,6 @@ function onDrop(event: DragEvent) {
       </MdLabel>
     </md-tabs>
 
-    <!-- Image Preview -->
     <div v-if="imagePreviewUrl" class="preview-container">
       <img
         :src="imagePreviewUrl"
@@ -105,7 +127,6 @@ function onDrop(event: DragEvent) {
       </md-outlined-button>
     </div>
 
-    <!-- Placeholder when no image (drop zone) -->
     <div
       v-else
       class="placeholder"
@@ -123,7 +144,6 @@ function onDrop(event: DragEvent) {
       </MdLabel>
     </div>
 
-    <!-- Action Buttons -->
     <div class="actions">
       <md-filled-button @click="openCamera">
         <md-icon slot="icon">photo_camera</md-icon>
@@ -136,7 +156,6 @@ function onDrop(event: DragEvent) {
       </md-outlined-button>
     </div>
 
-    <!-- Hidden inputs -->
     <input
       ref="fileInput"
       type="file"
