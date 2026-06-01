@@ -51,6 +51,7 @@
     "login": {
       "title": "Login",
       "headline": "Welcome to Nom Nom Now",
+      "sessionExpired": "Your session has expired. Please sign in again.",
       "description": "Sign in with Google to continue.",
       "button": "Sign in with Google",
       "privacy": "Privacy",

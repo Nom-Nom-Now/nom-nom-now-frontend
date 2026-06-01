@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { apiFetch, UnauthorizedError } from '../services/apiFetch';
 
 const currentUsername = ref<string | undefined>(undefined);
 const currentUserId = ref<string | undefined>(undefined);
@@ -12,7 +13,7 @@ export function useAuth() {
 
     isLoading.value = true;
     try {
-      const response = await fetch(`${baseUrl}/auth/me`, {
+      const response = await apiFetch(`${baseUrl}/auth/me`, {
         credentials: 'include',
       });
 
@@ -22,6 +23,11 @@ export function useAuth() {
         currentUserId.value = String(userData.id);
       }
     } catch (error) {
+      currentUsername.value = undefined;
+      currentUserId.value = undefined;
+      if (error instanceof UnauthorizedError) {
+        return;
+      }
       console.error('Fehler beim Laden des angemeldeten Benutzers:', error);
     } finally {
       isLoading.value = false;

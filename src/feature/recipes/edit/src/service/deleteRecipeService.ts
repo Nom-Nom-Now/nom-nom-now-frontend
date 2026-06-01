@@ -1,7 +1,9 @@
+import { apiFetch } from '../../../../../services/apiFetch';
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
 async function deleteRequest(path: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await apiFetch(`${API_BASE_URL}${path}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   });

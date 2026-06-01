@@ -1,4 +1,5 @@
 import type { RecipeComponent } from '../shared/types';
+import { apiFetch } from '../../../../services/apiFetch';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
@@ -34,7 +35,7 @@ export async function fetchWeeklyRecipePlan(
   );
   url.searchParams.set('weekStart', formatDateOnly(weekStart));
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     credentials: 'include',
   });
 
@@ -54,7 +55,7 @@ export async function saveWeeklyRecipePlan(
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -82,7 +83,7 @@ export async function refreshRecipePlanDay(
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     method: 'PATCH',
     credentials: 'include',
   });

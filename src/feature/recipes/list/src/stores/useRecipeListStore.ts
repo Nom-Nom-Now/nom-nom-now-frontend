@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import type { Recipe, RecipeComponent } from '../shared/types';
+import { apiFetch } from '../../../../../services/apiFetch';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 const PAGE_SIZE = 20;
@@ -121,7 +122,7 @@ async function fetchRecipePage(
     url.searchParams.set('q', searchQuery);
   }
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     credentials: 'include',
     signal,
   });
