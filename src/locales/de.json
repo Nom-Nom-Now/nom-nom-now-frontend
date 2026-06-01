@@ -81,6 +81,21 @@
         "noDescription": "Keine Beschreibung vorhanden.",
         "unknownChef": "Unbekannter Koch"
       },
+      "edit": {
+        "loading": "Rezept-Daten werden geladen...",
+        "deleteConfirmation": "Möchtest du dieses Rezept wirklich dauerhaft löschen?",
+        "deleteSuccess": "Das Rezept wurde erfolgreich gelöscht.",
+        "deleteError": "Das Rezept konnte nicht gelöscht werden. Du bist entweder nicht der Besitzer oder es ist ein Fehler aufgetreten.",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen",
+        "title": "Rezept bearbeiten",
+        "preview": {
+          "cancel": "Abbrechen",
+          "save": "Änderungen speichern",
+          "submitting": "Wird aktualisiert...",
+          "success": "Rezept erfolgreich aktualisiert!"
+        }
+      },
       "createRecipe": {
         "title": "Rezept erstellen",
         "stepNavigation": {

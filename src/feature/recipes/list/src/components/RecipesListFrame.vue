@@ -7,7 +7,9 @@
           :selected="showMyRecipesOnly"
           @change="handleToggleMyRecipes"
         />
-        <span class="filter-label">{{ t('feature.recipes.list.myRecipesOnly') }}</span>
+        <span class="filter-label">{{
+          t('feature.recipes.list.myRecipesOnly')
+        }}</span>
       </div>
       <md-filled-button type="button" @click="navigateToCreate">
         {{ t('feature.recipes.list.createButton') }}
@@ -27,16 +29,15 @@
     <RecipeDetailFull
       v-if="fullscreenRecipe"
       :recipe="fullscreenRecipe"
-      :current-username="currentUsername?.valueOf()"
       @close="handleCloseFullscreen"
       @edit="handleEditRecipe"
-      @delete="handleDeleteRecipe"
+      @deleted="handleRecipeDeleted"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, inject, type Ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';
@@ -45,13 +46,13 @@ import RecipeDetailFull from '../../../detail/src/components/RecipeDetailFull.vu
 import { useRecipeListStore } from '../stores/useRecipeListStore';
 import { useAuth } from '../../../../../composables/useAuth';
 import type { Recipe } from '../shared/types';
+import { useEditRecipeStore } from '../../../edit/src/stores/useEditRecipeStore.ts';
 
 const router = useRouter();
 const { t } = useI18n();
 const store = useRecipeListStore();
+const editStore = useEditRecipeStore();
 const { currentUserId } = useAuth();
-
-const currentUsername = inject<Ref<string | undefined>>('currentUsername');
 
 const fullscreenRecipe = ref<Recipe | null>(null);
 const showMyRecipesOnly = ref(false);
@@ -77,11 +78,14 @@ function handleCloseFullscreen() {
 }
 
 function handleEditRecipe(recipe: Recipe) {
-  console.log('edit aufgerufen', recipe);
+  editStore.fillWithRecipe(recipe);
+  router.push(`/recipes/edit/${recipe.id}`);
 }
 
-function handleDeleteRecipe(recipeId: string) {
-  console.log('delete aufgerufen für Rezept-ID:', recipeId);
+function handleRecipeDeleted() {
+  handleCloseFullscreen();
+  const ownerId = showMyRecipesOnly.value ? currentUserId.value : undefined;
+  store.fetchRecipes(ownerId, store.searchQuery);
 }
 
 function navigateToCreate() {

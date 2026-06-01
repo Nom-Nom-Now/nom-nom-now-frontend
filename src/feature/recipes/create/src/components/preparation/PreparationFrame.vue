@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore';
 import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
-const store = useCreateRecipeStore();
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+
+const store = inject<RecipeStoreInstance>('recipeStore')!;
 const { instructions, cookingTime } = storeToRefs(store);
 
 const prepareHours = ref(String(Math.floor(cookingTime.value / 60)));

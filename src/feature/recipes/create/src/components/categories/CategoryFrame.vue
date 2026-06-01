@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue';
 import MdLabel from '../../../../../../components/MdLabel.vue';
 import { loadCategoryLists } from '../../services/categoryMapper';
 import type {
@@ -14,8 +14,9 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 type TextFieldElement = HTMLElement & { value: string };
+type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
 
-const store = useCreateRecipeStore();
+const store = inject<RecipeStoreInstance>('recipeStore')!;
 
 const selectedIds = ref<number[]>([...store.categoryIds]);
 
@@ -134,7 +135,22 @@ const fetchCategories = async () => {
   } finally {
     loading.value = false;
   }
-  selectedIds.value = [...store.categoryIds];
+
+  if ('rawCategoryNames' in store) {
+    const names = (store as { rawCategoryNames: unknown }).rawCategoryNames;
+    if (Array.isArray(names) && names.length > 0) {
+      const mappedIds = categories.value
+        .filter((cat) => (names as string[]).includes(cat.name))
+        .map((cat) => cat.id);
+
+      store.setCategoryIds(mappedIds);
+      selectedIds.value = mappedIds;
+    } else {
+      selectedIds.value = [...store.categoryIds];
+    }
+  } else {
+    selectedIds.value = [...store.categoryIds];
+  }
 };
 
 onMounted(() => {

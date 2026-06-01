@@ -42,9 +42,12 @@ describe('useRecipeListStore', () => {
     await store.fetchNextPage();
 
     expect(store.recipes.map((recipe) => recipe.id)).toEqual(['42', '43']);
-    expect(fetch).toHaveBeenLastCalledWith('/recipes?page=1&size=20', expect.objectContaining({
-      credentials: 'include',
-    }));
+    expect(fetch).toHaveBeenLastCalledWith(
+      '/recipes?page=1&size=20',
+      expect.objectContaining({
+        credentials: 'include',
+      }),
+    );
     expect(store.canLoadMore).toBe(false);
   });
 
@@ -61,7 +64,10 @@ describe('useRecipeListStore', () => {
 
   it('should resolve relative image urls against the backend base url', () => {
     expect(
-      resolveBackendResourceUrl('/recipes/42/image', 'https://nomnom-now.com/api'),
+      resolveBackendResourceUrl(
+        '/recipes/42/image',
+        'https://nomnom-now.com/api',
+      ),
     ).toBe('https://nomnom-now.com/api/recipes/42/image');
   });
 
@@ -148,9 +154,12 @@ function stubFetch(...responses: unknown[]) {
 }
 
 function expectFetchCalledWith(url: string) {
-  expect(fetch).toHaveBeenCalledWith(url, expect.objectContaining({
-    credentials: 'include',
-  }));
+  expect(fetch).toHaveBeenCalledWith(
+    url,
+    expect.objectContaining({
+      credentials: 'include',
+    }),
+  );
 }
 
 function pageResponse(page: number, last: boolean, id = '42') {
