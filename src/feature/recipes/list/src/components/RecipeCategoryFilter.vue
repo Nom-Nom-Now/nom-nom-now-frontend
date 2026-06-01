@@ -3,24 +3,50 @@
     <md-filled-tonal-button class="filter-button" @click="toggleDropdown">
       <md-icon slot="icon">filter_list</md-icon>
       {{ t('feature.recipes.list.filterCategories') }}
-      <span v-if="selectedCategoryIds.length > 0" class="badge">{{ selectedCategoryIds.length }}</span>
+      <span v-if="selectedCategoryIds.length > 0" class="badge">{{
+        selectedCategoryIds.length
+      }}</span>
     </md-filled-tonal-button>
 
-    <div v-if="isDropdownOpen" class="dropdown-overlay" @click="closeDropdown" />
+    <div
+      v-if="isDropdownOpen"
+      class="dropdown-overlay"
+      @click="closeDropdown"
+    />
 
     <div v-if="isDropdownOpen" class="dropdown-panel">
-      <div v-if="isLoadingCategories" class="dropdown-loading">{{ t('feature.recipes.list.filterLoading') }}</div>
-      <div v-else-if="categoriesError" class="dropdown-error">{{ categoriesError }}</div>
+      <div v-if="isLoadingCategories" class="dropdown-loading">
+        {{ t('feature.recipes.list.filterLoading') }}
+      </div>
+      <div v-else-if="categoriesError" class="dropdown-error">
+        {{ categoriesError }}
+      </div>
       <div v-else class="dropdown-content">
-        <div v-for="superCategory in superCategories" :key="superCategory.id" class="super-category-group">
-          <div class="super-category-header" @click="toggleSuperCategory(superCategory.id)">
+        <div
+          v-for="superCategory in superCategories"
+          :key="superCategory.id"
+          class="super-category-group"
+        >
+          <div
+            class="super-category-header"
+            @click="toggleSuperCategory(superCategory.id)"
+          >
             <md-icon class="expand-icon">
-              {{ expandedSuperCategories.has(superCategory.id) ? 'expand_more' : 'chevron_right' }}
+              {{
+                expandedSuperCategories.has(superCategory.id)
+                  ? 'expand_more'
+                  : 'chevron_right'
+              }}
             </md-icon>
-            <span class="super-category-name">{{ translateCategoryName(superCategory.name) }}</span>
+            <span class="super-category-name">{{
+              translateCategoryName(superCategory.name)
+            }}</span>
           </div>
 
-          <div v-if="expandedSuperCategories.has(superCategory.id)" class="category-list">
+          <div
+            v-if="expandedSuperCategories.has(superCategory.id)"
+            class="category-list"
+          >
             <label
               v-for="category in getCategoriesForSuper(superCategory.id)"
               :key="category.id"
@@ -30,7 +56,9 @@
                 :checked="selectedCategoryIds.includes(category.id)"
                 @change="toggleCategory(category.id)"
               />
-              <span class="category-name">{{ translateCategoryName(category.name) }}</span>
+              <span class="category-name">{{
+                translateCategoryName(category.name)
+              }}</span>
             </label>
           </div>
         </div>
@@ -82,7 +110,10 @@ async function loadCategories() {
     superCategories.value = data.superCategories;
     categories.value = data.categories;
   } catch (err) {
-    categoriesError.value = err instanceof Error ? err.message : t('feature.recipes.list.filterError');
+    categoriesError.value =
+      err instanceof Error
+        ? err.message
+        : t('feature.recipes.list.filterError');
   } finally {
     isLoadingCategories.value = false;
   }
@@ -123,7 +154,9 @@ function toCamelCaseKey(name: string): string {
     const words = name.trim().split(/\s+/);
     return words
       .map((word, index) =>
-        index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+        index === 0
+          ? word.toLowerCase()
+          : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
       )
       .join('');
   }
@@ -283,4 +316,3 @@ onMounted(() => {
   border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 </style>
-
