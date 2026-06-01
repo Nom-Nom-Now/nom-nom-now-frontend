@@ -7,7 +7,9 @@
           :selected="showMyRecipesOnly"
           @change="handleToggleMyRecipes"
         />
-        <span class="filter-label">{{ t('feature.recipes.list.myRecipesOnly') }}</span>
+        <span class="filter-label">{{
+          t('feature.recipes.list.myRecipesOnly')
+        }}</span>
       </div>
       <md-filled-button type="button" @click="navigateToCreate">
         {{ t('feature.recipes.list.createButton') }}
@@ -35,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';

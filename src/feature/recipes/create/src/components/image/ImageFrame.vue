@@ -36,12 +36,15 @@ buildPreviewUrl(recipeImage.value);
 watch(
   [
     recipeImage,
-    () => ('existingImageUrl' in store ? (store as { existingImageUrl: unknown }).existingImageUrl : null)
+    () =>
+      'existingImageUrl' in store
+        ? (store as { existingImageUrl: unknown }).existingImageUrl
+        : null,
   ],
   () => {
     buildPreviewUrl(recipeImage.value);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onBeforeUnmount(() => {

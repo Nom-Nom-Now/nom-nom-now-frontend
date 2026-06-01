@@ -21,7 +21,8 @@ const store = inject<EditRecipeStoreInstance>('recipeStore')!;
 
 const { currentUsername } = useAuth();
 
-const { isDirty, isSubmitting, submitError, isIngredientsStepValid } = storeToRefs(store);
+const { isDirty, isSubmitting, submitError, isIngredientsStepValid } =
+  storeToRefs(store);
 const submitSuccess = ref(false);
 
 const allCategories = ref<CategoryOption[]>([]);
@@ -45,7 +46,10 @@ const previewRecipe = computed<Recipe>(() => {
   }
 
   const mappedCategoryNames = (store.categoryIds || [])
-    .map((id) => allCategories.value.find((cat: CategoryOption) => cat.id === id)?.name)
+    .map(
+      (id) =>
+        allCategories.value.find((cat: CategoryOption) => cat.id === id)?.name,
+    )
     .filter((name): name is string => !!name);
 
   return {
@@ -53,7 +57,10 @@ const previewRecipe = computed<Recipe>(() => {
     title: store.recipeName || '',
     imageUrl: resolvedImageUrl,
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
-    cost: store.pricePerPerson === null ? '' : `${store.pricePerPerson.toFixed(2)} €`,
+    cost:
+      store.pricePerPerson === null
+        ? ''
+        : `${store.pricePerPerson.toFixed(2)} €`,
     description: store.instructions || '',
     owner: currentUsername.value || t('feature.recipes.detail.unknownChef'),
     categories: mappedCategoryNames,
@@ -92,11 +99,8 @@ function handleCancel() {
 
     <div class="actions">
       <div class="button-group">
-        <md-outlined-button
-          @click="handleCancel"
-          :disabled="isSubmitting"
-        >
-          {{ t('feature.recipes.edit.cancel')}}
+        <md-outlined-button @click="handleCancel" :disabled="isSubmitting">
+          {{ t('feature.recipes.edit.cancel') }}
         </md-outlined-button>
 
         <md-filled-button
@@ -133,7 +137,7 @@ function handleCancel() {
   width: 100%;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid
-  var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
+    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
 }
 
 .actions {
@@ -153,8 +157,8 @@ function handleCancel() {
 
 .feedback {
   font: var(--md-sys-typescale-body-medium-weight)
-  var(--md-sys-typescale-body-medium-size)
-  var(--md-sys-typescale-body-medium-font);
+    var(--md-sys-typescale-body-medium-size)
+    var(--md-sys-typescale-body-medium-font);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }

@@ -63,7 +63,12 @@ export const useRecipeListStore = defineStore('recipeList', () => {
       const nextPage = currentPage.value + 1;
       const signal = abortController?.signal;
 
-      const page = await fetchRecipePage(nextPage, currentOwnerId.value, searchQuery.value, signal);
+      const page = await fetchRecipePage(
+        nextPage,
+        currentOwnerId.value,
+        searchQuery.value,
+        signal,
+      );
 
       const nextRecipes = page.content.map((recipe) => mapRecipe(recipe));
       const knownRecipeIds = new Set(recipes.value.map((recipe) => recipe.id));
@@ -75,7 +80,10 @@ export const useRecipeListStore = defineStore('recipeList', () => {
       currentPage.value = page.number;
       isLastPage.value = page.last;
     } catch (fetchError) {
-      if (fetchError instanceof DOMException && fetchError.name === 'AbortError') {
+      if (
+        fetchError instanceof DOMException &&
+        fetchError.name === 'AbortError'
+      ) {
         return;
       }
       error.value =

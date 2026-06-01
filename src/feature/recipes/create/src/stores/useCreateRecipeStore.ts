@@ -48,7 +48,8 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
       $reset();
       return response;
     } catch (error) {
-      submitError.value = error instanceof Error ? error.message : 'Unknown error';
+      submitError.value =
+        error instanceof Error ? error.message : 'Unknown error';
       throw error;
     } finally {
       isSubmitting.value = false;
@@ -90,10 +91,10 @@ export const useCreateRecipeStore = defineStore('createRecipe', () => {
 
     submitRecipe,
     $reset,
-    setRecipeName: (val: string) => recipeName.value = val,
-    setRecipeImage: (file: File | null) => recipeImage.value = file,
-    setCategoryIds: (ids: number[]) => categoryIds.value = ids,
-    setServings: (val: number) => ingModule.servings.value = Math.max(1, val),
-    setTotalPrice: (val: number | null) => ingModule.totalPrice.value = val,
+    setRecipeName: (val: string) => (recipeName.value = val),
+    setRecipeImage: (file: File | null) => (recipeImage.value = file),
+    setCategoryIds: (ids: number[]) => (categoryIds.value = ids),
+    setServings: (val: number) => (ingModule.servings.value = Math.max(1, val)),
+    setTotalPrice: (val: number | null) => (ingModule.totalPrice.value = val),
   };
 });

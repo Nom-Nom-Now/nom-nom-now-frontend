@@ -40,12 +40,16 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     return JSON.stringify({
       recipeName: recipeName.value,
       servings: ingModule.servings.value,
-      ingredients: ingModule.ingredients.value.map(i => ({ name: i.name, amount: i.amount, unit: i.unit })),
+      ingredients: ingModule.ingredients.value.map((i) => ({
+        name: i.name,
+        amount: i.amount,
+        unit: i.unit,
+      })),
       instructions: instructions.value,
       cookingTime: cookingTime.value,
       categoryIds: [...categoryIds.value].sort((a, b) => a - b),
       totalPrice: ingModule.totalPrice.value,
-      hasNewImage: recipeImage.value !== null
+      hasNewImage: recipeImage.value !== null,
     });
   }
 
@@ -88,11 +92,16 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
         pricePerPerson: ingModule.calculatedPricePerPersonCents.value,
       };
 
-      const response = await updateRecipe(recipeId.value, updateData, recipeImage.value);
+      const response = await updateRecipe(
+        recipeId.value,
+        updateData,
+        recipeImage.value,
+      );
       $reset();
       return response;
     } catch (error) {
-      submitError.value = error instanceof Error ? error.message : 'Unknown error';
+      submitError.value =
+        error instanceof Error ? error.message : 'Unknown error';
       throw error;
     } finally {
       isSubmitting.value = false;
@@ -136,10 +145,10 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     fillWithRecipe,
     submitUpdatedRecipe,
     $reset,
-    setRecipeName: (name: string) => recipeName.value = name,
-    setCategoryIds: (ids: number[]) => categoryIds.value = ids,
-    setServings: (val: number) => ingModule.servings.value = Math.max(1, val),
-    setTotalPrice: (val: number | null) => ingModule.totalPrice.value = val,
+    setRecipeName: (name: string) => (recipeName.value = name),
+    setCategoryIds: (ids: number[]) => (categoryIds.value = ids),
+    setServings: (val: number) => (ingModule.servings.value = Math.max(1, val)),
+    setTotalPrice: (val: number | null) => (ingModule.totalPrice.value = val),
     setRecipeImage: (file: File | null) => {
       recipeImage.value = file;
       if (file) existingImageUrl.value = null;

@@ -18,7 +18,6 @@ type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
 
 const store = inject<RecipeStoreInstance>('recipeStore')!;
 
-
 const selectedIds = ref<number[]>([...store.categoryIds]);
 
 const categories = ref<CategoryOption[]>([]);

@@ -31,8 +31,12 @@
       <div class="custom-modal">
         <p>{{ t('feature.recipes.edit.deleteConfirmation') }}</p>
         <div class="modal-actions">
-          <button @click="showDeleteDialog = false">{{ t('feature.recipes.edit.cancel') }}</button>
-          <button class="danger-btn" @click="confirmDelete">{{ t('feature.recipes.edit.confirm') }}</button>
+          <button @click="showDeleteDialog = false">
+            {{ t('feature.recipes.edit.cancel') }}
+          </button>
+          <button class="danger-btn" @click="confirmDelete">
+            {{ t('feature.recipes.edit.confirm') }}
+          </button>
         </div>
       </div>
     </div>
@@ -64,7 +68,9 @@ const showDeleteDialog = ref(false);
 
 const isOwner = computed(() => {
   if (!currentUsername.value || !props.recipe?.owner) return false;
-  return props.recipe.owner.toLowerCase() === currentUsername.value.toLowerCase();
+  return (
+    props.recipe.owner.toLowerCase() === currentUsername.value.toLowerCase()
+  );
 });
 
 async function confirmDelete() {
@@ -108,7 +114,9 @@ async function confirmDelete() {
   justify-content: center;
   border-radius: 50%;
   z-index: 1010;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .close-button:hover {
@@ -139,7 +147,9 @@ async function confirmDelete() {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   color: var(--md-sys-color-on-surface-variant);
 }
 
@@ -223,6 +233,9 @@ async function confirmDelete() {
 }
 
 .modal-actions .danger-btn:hover {
-  background-color: var(--md-sys-color-error-container, rgba(186, 26, 26, 0.08));
+  background-color: var(
+    --md-sys-color-error-container,
+    rgba(186, 26, 26, 0.08)
+  );
 }
 </style>

@@ -5,7 +5,11 @@
       {{ error }}
     </div>
     <div v-else-if="recipes.length === 0" class="status">
-      {{ props.searchQuery ? `Keine Rezepte für "${props.searchQuery}" gefunden.` : 'Keine Rezepte vorhanden.' }}
+      {{
+        props.searchQuery
+          ? `Keine Rezepte für "${props.searchQuery}" gefunden.`
+          : 'Keine Rezepte vorhanden.'
+      }}
     </div>
 
     <div class="recipes-grid">

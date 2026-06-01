@@ -33,7 +33,12 @@ export function useRecipeIngredients() {
   });
 
   function addIngredient() {
-    ingredients.value.push({ id: nextId++, amount: null, unit: 'GRAM', name: '' });
+    ingredients.value.push({
+      id: nextId++,
+      amount: null,
+      unit: 'GRAM',
+      name: '',
+    });
   }
 
   function removeIngredient(id: number) {
@@ -77,7 +82,7 @@ export function useRecipeIngredients() {
       id: index + 1,
       amount: ing.quantity,
       unit: (ing.unit as Unit) || 'GRAM',
-      name: ing.ingredientName || ''
+      name: ing.ingredientName || '',
     }));
     nextId = recipeIngredients.length + 1;
   }
@@ -97,6 +102,6 @@ export function useRecipeIngredients() {
     updateIngredientUnit,
     updateIngredientName,
     moveIngredientUp,
-    moveIngredientDown
+    moveIngredientDown,
   };
 }

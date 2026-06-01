@@ -8,11 +8,7 @@
       no-asterisk
     >
       <md-icon slot="leading-icon">search</md-icon>
-      <md-icon-button
-        v-if="query"
-        slot="trailing-icon"
-        @click="clearSearch"
-      >
+      <md-icon-button v-if="query" slot="trailing-icon" @click="clearSearch">
         <md-icon>close</md-icon>
       </md-icon-button>
     </md-filled-text-field>

@@ -115,7 +115,7 @@ async function handleSubmit() {
   width: 100%;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid
-  var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
+    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.1));
 }
 
 .actions {
@@ -128,8 +128,8 @@ async function handleSubmit() {
 
 .feedback {
   font: var(--md-sys-typescale-body-medium-weight)
-  var(--md-sys-typescale-body-medium-size)
-  var(--md-sys-typescale-body-medium-font);
+    var(--md-sys-typescale-body-medium-size)
+    var(--md-sys-typescale-body-medium-font);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }

@@ -2,7 +2,7 @@ import type { Ingredient } from '../../../create/src/shared/types/recipe';
 import type {
   CreateRecipeRequestDto,
   CreateRecipeResponseDto,
-  CreateRecipeComponentDto
+  CreateRecipeComponentDto,
 } from '../../../create/src/services/createRecipeApi.ts';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
@@ -17,7 +17,9 @@ export interface EditRecipePayload {
   pricePerPerson: number | null;
 }
 
-function mapIngredientToComponent(ingredient: Ingredient): CreateRecipeComponentDto {
+function mapIngredientToComponent(
+  ingredient: Ingredient,
+): CreateRecipeComponentDto {
   return {
     name: ingredient.name.trim(),
     quantity: ingredient.amount ?? 0,
@@ -25,7 +27,9 @@ function mapIngredientToComponent(ingredient: Ingredient): CreateRecipeComponent
   };
 }
 
-function mapPayloadToRequestDto(payload: EditRecipePayload): CreateRecipeRequestDto {
+function mapPayloadToRequestDto(
+  payload: EditRecipePayload,
+): CreateRecipeRequestDto {
   return {
     name: payload.recipeName.trim(),
     instructions: payload.instructions?.trim() ?? '',
@@ -33,7 +37,9 @@ function mapPayloadToRequestDto(payload: EditRecipePayload): CreateRecipeRequest
     pricePerPerson: payload.pricePerPerson ?? undefined,
     categoryIds: payload.categoryIds ?? [],
     components: payload.ingredients
-      .filter((i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0)
+      .filter(
+        (i) => i.name.trim().length > 0 && i.amount !== null && i.amount > 0,
+      )
       .map(mapIngredientToComponent),
   };
 }
@@ -47,11 +53,16 @@ async function putJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
   });
 
   const text = await response.text();
-  if (!response.ok) throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
+  if (!response.ok)
+    throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
   return text ? (JSON.parse(text) as TRes) : ({} as TRes);
 }
 
-async function putMultipart<TRes>(path: string, recipe: CreateRecipeRequestDto, image: File): Promise<TRes> {
+async function putMultipart<TRes>(
+  path: string,
+  recipe: CreateRecipeRequestDto,
+  image: File,
+): Promise<TRes> {
   const formData = new FormData();
   formData.append(
     'recipe',
@@ -66,14 +77,15 @@ async function putMultipart<TRes>(path: string, recipe: CreateRecipeRequestDto, 
   });
 
   const text = await response.text();
-  if (!response.ok) throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
+  if (!response.ok)
+    throw new Error(`PUT ${path} failed (${response.status}): ${text}`);
   return text ? (JSON.parse(text) as TRes) : ({} as TRes);
 }
 
 export async function updateRecipe(
   id: number,
   payload: EditRecipePayload,
-  image: File | null
+  image: File | null,
 ): Promise<CreateRecipeResponseDto> {
   const dto = mapPayloadToRequestDto(payload);
 
@@ -81,5 +93,8 @@ export async function updateRecipe(
     return putMultipart<CreateRecipeResponseDto>(`/recipes/${id}`, dto, image);
   }
 
-  return putJson<CreateRecipeRequestDto, CreateRecipeResponseDto>(`/recipes/${id}`, dto);
+  return putJson<CreateRecipeRequestDto, CreateRecipeResponseDto>(
+    `/recipes/${id}`,
+    dto,
+  );
 }
