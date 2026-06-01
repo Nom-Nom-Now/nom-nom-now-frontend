@@ -245,7 +245,12 @@
       },
       "list": {
         "createButton": "New Recipe",
-        "myRecipesOnly": "My Recipes"
+        "myRecipesOnly": "My Recipes",
+        "filterCategories": "Categories",
+        "filterClear": "Clear",
+        "filterApply": "Apply",
+        "filterLoading": "Loading...",
+        "filterError": "Categories could not be loaded."
       }
     },
     "listAllRecipes": {
