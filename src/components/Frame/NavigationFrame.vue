@@ -137,6 +137,14 @@ ul li {
   text-align-last: center;
 }
 
+.nav-link:not(.nav-link-active):hover :deep(.icon-badge) {
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.nav-link-active :deep(.icon-badge) {
+  background-color: var(--md-sys-color-secondary-container);
+}
+
 .lang-select:hover {
   background-color: var(--md-sys-color-surface-variant);
   border-color: var(--md-sys-color-outline);
