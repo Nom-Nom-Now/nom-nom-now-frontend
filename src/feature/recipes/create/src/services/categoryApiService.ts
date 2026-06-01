@@ -1,9 +1,10 @@
 import type { GetCategoriesResponseDto } from './categoryApiTypes.ts';
+import { apiFetch } from '../../../../../services/apiFetch';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
 async function getJson<TRes>(path: string): Promise<TRes> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await apiFetch(`${API_BASE_URL}${path}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });

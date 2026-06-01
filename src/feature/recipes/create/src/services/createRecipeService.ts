@@ -4,6 +4,7 @@ import type {
   CreateRecipeComponentDto,
   CreateRecipeResponseDto,
 } from './createRecipeApi.ts';
+import { apiFetch } from '../../../../../services/apiFetch';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
@@ -48,7 +49,7 @@ function mapStateToRequestDto(
 // ---------------------------------------------------------------------------
 
 async function postJson<TReq, TRes>(path: string, body: TReq): Promise<TRes> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await apiFetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -76,7 +77,7 @@ async function postMultipart<TRes>(
   );
   formData.append('image', image, image.name);
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await apiFetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
     credentials: 'include',
     body: formData,

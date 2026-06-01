@@ -1,3 +1,5 @@
+import { apiFetch } from '../../../../services/apiFetch';
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
 type CurrentUserResponseDto = {
@@ -7,7 +9,7 @@ type CurrentUserResponseDto = {
 export async function fetchAccountCreatedAt(): Promise<Date | undefined> {
   const url = new URL(`${API_BASE_URL}/auth/me`, window.location.origin);
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     credentials: 'include',
   });
 

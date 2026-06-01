@@ -52,6 +52,7 @@
     "login": {
       "title": "Anmelden",
       "headline": "Willkommen bei Nom Nom Now",
+      "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
       "description": "Melde dich mit Google an, um fortzufahren.",
       "button": "Mit Google anmelden",
       "privacy": "Datenschutz",

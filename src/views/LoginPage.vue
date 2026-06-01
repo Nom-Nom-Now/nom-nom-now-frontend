@@ -2,6 +2,9 @@
   <section class="login-page">
     <div class="login-card">
       <h1>{{ t('feature.login.headline') }}</h1>
+      <p v-if="sessionExpired" class="session-expired-message">
+        {{ t('feature.login.sessionExpired') }}
+      </p>
       <p>{{ t('feature.login.description') }}</p>
       <button
         class="google-login-button"
@@ -23,14 +26,18 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n();
+const route = useRoute();
 
 const backendUrl = (import.meta.env.VITE_BACKEND_URL ?? '').replace(/\/+$/, '');
 const googleLoginUrl = `${backendUrl}/oauth2/authorization/google`;
 const privacyUrl = `${backendUrl}/datenschutz`;
 const imprintUrl = `${backendUrl}/impressum`;
+const sessionExpired = computed(() => route.query.sessionExpired === '1');
 
 const redirectToGoogle = () => {
   window.location.href = googleLoginUrl;
@@ -72,6 +79,16 @@ p {
   color: var(--md-sys-color-on-surface-variant);
   font-size: var(--md-sys-typescale-body-large-size);
   line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.session-expired-message {
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--md-sys-color-on-error-container);
+  background-color: var(--md-sys-color-error-container);
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
 }
 
 .legal-links {

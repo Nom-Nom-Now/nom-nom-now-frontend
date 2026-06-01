@@ -1,3 +1,5 @@
+import { apiFetch } from '../../../../services/apiFetch';
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '';
 
 export type ShoppingListSummaryDto = {
@@ -28,7 +30,7 @@ export async function generateShoppingList(
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -52,7 +54,7 @@ export async function fetchShoppingLists(): Promise<ShoppingListSummaryDto[]> {
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     credentials: 'include',
   });
 
@@ -76,7 +78,7 @@ export async function fetchShoppingList(
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     credentials: 'include',
   });
 
