@@ -251,7 +251,12 @@
       },
       "list": {
         "createButton": "Neues Rezept",
-        "myRecipesOnly": "Meine Rezepte"
+        "myRecipesOnly": "Meine Rezepte",
+        "filterCategories": "Kategorien",
+        "filterClear": "Zurücksetzen",
+        "filterApply": "Anwenden",
+        "filterLoading": "Laden...",
+        "filterError": "Kategorien konnten nicht geladen werden."
       }
     },
 
