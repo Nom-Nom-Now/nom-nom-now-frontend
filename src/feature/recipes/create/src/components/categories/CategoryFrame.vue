@@ -6,6 +6,7 @@ import type {
   CategoryOption,
   SuperCategoryOption,
 } from '../../services/categoryApiTypes.ts';
+import { useEditRecipeStore } from '../../../../edit/src/stores/useEditRecipeStore.ts';
 import type { ComponentPublicInstance } from 'vue';
 import { useCreateRecipeStore } from '../../stores/useCreateRecipeStore.ts';
 
@@ -15,8 +16,9 @@ const { t } = useI18n();
 
 type TextFieldElement = HTMLElement & { value: string };
 type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
+type EditStoreInstance = ReturnType<typeof useEditRecipeStore>;
 
-const store = inject<RecipeStoreInstance>('recipeStore')!;
+const store = inject<RecipeStoreInstance | EditStoreInstance>('recipeStore')!;
 
 const selectedIds = ref<number[]>([...store.categoryIds]);
 
@@ -136,17 +138,16 @@ const fetchCategories = async () => {
     loading.value = false;
   }
 
-  if ('rawCategoryNames' in store) {
-    const names = (store as { rawCategoryNames: unknown }).rawCategoryNames;
-    if (Array.isArray(names) && names.length > 0) {
-      const mappedIds = categories.value
-        .filter((cat) => (names as string[]).includes(cat.name))
-        .map((cat) => cat.id);
+  if ('rawCategoryNames' in store && Array.isArray(store.rawCategoryNames) && store.rawCategoryNames.length > 0) {
+    const mappedIds = categories.value
+      .filter((cat) => (store.rawCategoryNames as string[]).includes(cat.name))
+      .map((cat) => cat.id);
 
-      store.setCategoryIds(mappedIds);
-      selectedIds.value = mappedIds;
-    } else {
-      selectedIds.value = [...store.categoryIds];
+    store.setCategoryIds(mappedIds);
+    selectedIds.value = mappedIds;
+
+    if ('clearRawCategoryNames' in store) {
+      (store as EditStoreInstance).clearRawCategoryNames();
     }
   } else {
     selectedIds.value = [...store.categoryIds];

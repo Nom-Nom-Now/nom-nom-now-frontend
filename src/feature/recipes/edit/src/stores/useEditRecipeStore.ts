@@ -31,6 +31,10 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     );
   });
 
+  const clearRawCategoryNames = () => {
+    rawCategoryNames.value = [];
+  };
+
   const isDirty = computed(() => {
     if (!originalSnapshot.value) return false;
     return originalSnapshot.value !== createSnapshotString();
@@ -132,6 +136,7 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     cookingTime,
     categoryIds,
     rawCategoryNames,
+    clearRawCategoryNames,
     recipeImage,
     existingImageUrl,
     isSubmitting,
