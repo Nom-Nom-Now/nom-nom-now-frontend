@@ -45,13 +45,25 @@
             <h2>{{ formatWeek(store.selectedShoppingList.weekStart) }}</h2>
             <p>{{ formatCreatedAt(store.selectedShoppingList.createdAt) }}</p>
           </div>
-          <span class="item-count">
-            {{
-              t('feature.shoppingLists.itemCount', {
-                count: store.selectedShoppingList.items.length,
-              })
-            }}
-          </span>
+          <div class="detail-actions">
+            <span class="item-count">
+              {{
+                t('feature.shoppingLists.itemCount', {
+                  count: store.selectedShoppingList.items.length,
+                })
+              }}
+            </span>
+            <md-icon-button
+              type="button"
+              class="delete-list-button"
+              :disabled="store.isDeleting"
+              :aria-label="t('feature.shoppingLists.delete')"
+              :title="t('feature.shoppingLists.delete')"
+              @click="openDeleteDialog"
+            >
+              <md-icon>delete</md-icon>
+            </md-icon-button>
+          </div>
         </div>
 
         <ul class="items-list">
@@ -72,12 +84,41 @@
         {{ t('feature.shoppingLists.selectList') }}
       </div>
     </section>
+
+    <md-dialog
+      :open="isDeleteDialogOpen"
+      @closed="isDeleteDialogOpen = false"
+    >
+      <div slot="headline">
+        {{ t('feature.shoppingLists.deleteDialogTitle') }}
+      </div>
+      <div slot="content">
+        {{ t('feature.shoppingLists.deleteDialogDescription') }}
+      </div>
+      <div slot="actions">
+        <md-text-button
+          type="button"
+          :disabled="store.isDeleting"
+          @click="closeDeleteDialog"
+        >
+          {{ t('global.cancel') }}
+        </md-text-button>
+        <md-text-button
+          type="button"
+          class="confirm-delete-button"
+          :disabled="store.isDeleting"
+          @click="confirmDeleteShoppingList"
+        >
+          {{ t('global.delete') }}
+        </md-text-button>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useShoppingListStore } from '../stores/useShoppingListStore';
 import {
@@ -86,8 +127,10 @@ import {
 } from '../../../../formatters/dateFormatters';
 
 const route = useRoute();
+const router = useRouter();
 const { t, locale } = useI18n();
 const store = useShoppingListStore();
+const isDeleteDialogOpen = ref(false);
 
 onMounted(async () => {
   await store.loadShoppingLists();
@@ -104,9 +147,36 @@ watch(
 async function loadSelectedList() {
   const id = route.params.id;
 
-  if (typeof id === 'string') {
+  if (typeof id === 'string' && id.trim() !== '') {
     await store.loadShoppingList(id);
+    return;
   }
+
+  store.clearSelectedShoppingList();
+}
+
+function openDeleteDialog() {
+  if (store.selectedShoppingList) {
+    isDeleteDialogOpen.value = true;
+  }
+}
+
+function closeDeleteDialog() {
+  if (!store.isDeleting) {
+    isDeleteDialogOpen.value = false;
+  }
+}
+
+async function confirmDeleteShoppingList() {
+  const id = store.selectedShoppingList?.id;
+  if (!id) {
+    isDeleteDialogOpen.value = false;
+    return;
+  }
+
+  await store.deleteShoppingList(id);
+  isDeleteDialogOpen.value = false;
+  await router.push('/shopping-lists');
 }
 
 function formatWeek(weekStart: string) {
@@ -213,6 +283,16 @@ function formatUnit(unit: string) {
 .item-count {
   white-space: nowrap;
   color: var(--md-sys-color-on-surface-variant);
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-list-button {
+  color: var(--md-sys-color-error);
 }
 
 .items-list {
