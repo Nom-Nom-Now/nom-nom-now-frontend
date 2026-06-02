@@ -22,7 +22,18 @@ describe('WeeklyRecipePlanService', () => {
           Promise.resolve({
             id: 10,
             planDate: '2026-05-27',
-            recipe: { id: 42, name: 'Pasta', components: [] },
+            recipe: {
+              id: 42,
+              name: 'Pasta',
+              instructions: null,
+              cookingTime: null,
+              servings: 1,
+              pricePerPerson: null,
+              imageUrl: null,
+              ownerName: 'Chef',
+              categories: null,
+              components: [],
+            },
           }),
       }),
     );

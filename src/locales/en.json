@@ -63,6 +63,10 @@
       "refreshPlan": "Refresh",
       "refreshDay": "Refresh {day}",
       "generateShoppingList": "Generate shopping list",
+      "peopleCountLabel": "People",
+      "peopleCountValue": "{count} ppl.",
+      "decreasePeople": "Fewer people for {day}",
+      "increasePeople": "More people for {day}",
       "today": "Today",
       "loading": "Loading..."
     },

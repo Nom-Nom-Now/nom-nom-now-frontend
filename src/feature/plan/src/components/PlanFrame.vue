@@ -35,8 +35,10 @@
       :error="store.error"
       :current-week="currentWeekStart"
       :refreshing-day-keys="store.refreshingDayKeys"
+      :people-counts-by-date="peopleCountsForCurrentWeek"
       @open-fullscreen="handleOpenFullscreen"
       @refresh-day="refreshDay"
+      @update-people-count="setPeopleCount"
     />
 
     <div v-if="fullscreenRecipe" class="local-fullscreen-container">
@@ -59,7 +61,10 @@ import PlanGridContent from './PlanGridContent.vue';
 import RecipeDetailFull from '../../../recipes/detail/src/components/RecipeDetailFull.vue';
 import { useRecipePlanStore } from '../stores/useRecipePlanStore.ts';
 import { fetchAccountCreatedAt } from '../services/authService.ts';
-import { generateShoppingList } from '../../../shopping-lists/src/services/ShoppingListService';
+import {
+  generateShoppingList,
+  type ShoppingListDayRequestDto,
+} from '../../../shopping-lists/src/services/ShoppingListService';
 import type { Recipe } from '../shared/types';
 import { useEditRecipeStore } from '../../../recipes/edit/src/stores/useEditRecipeStore.ts';
 
@@ -71,9 +76,12 @@ const editStore = useEditRecipeStore();
 const currentWeekStart = ref(getStartOfWeek(new Date()));
 const accountCreatedAt = ref<Date | undefined>();
 const isGeneratingShoppingList = ref(false);
+const peopleCountsByDate = ref<Record<string, number>>({});
 
 const currentUsername = inject<Ref<string | undefined>>('currentUsername');
 const fullscreenRecipe = ref<Recipe | null>(null);
+const minPeopleCount = 1;
+const maxPeopleCount = 20;
 
 function handleOpenFullscreen(recipe: Recipe) {
   fullscreenRecipe.value = recipe;
@@ -170,6 +178,21 @@ const formattedWeekRange = computed(() => {
   return `${monthFormatter.format(start)} - ${monthFormatter.format(end)}`;
 });
 
+const peopleCountsForCurrentWeek = computed<Record<string, number>>(() => {
+  const peopleCounts: Record<string, number> = {};
+
+  for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
+    const date = new Date(currentWeekStart.value);
+    date.setDate(date.getDate() + dayIndex);
+
+    const dateKey = formatDateOnly(date);
+    peopleCounts[dateKey] =
+      peopleCountsByDate.value[dateKey] ?? minPeopleCount;
+  }
+
+  return peopleCounts;
+});
+
 async function refreshPlan() {
   await loadPlanForCurrentWeek(true);
 }
@@ -187,7 +210,10 @@ async function generateList() {
   store.error = null;
 
   try {
-    const shoppingList = await generateShoppingList(currentWeekStart.value);
+    const shoppingList = await generateShoppingList(
+      currentWeekStart.value,
+      buildShoppingListDays(),
+    );
     await router.push(`/shopping-lists/${shoppingList.id}`);
   } catch (generateError) {
     store.error =
@@ -197,6 +223,41 @@ async function generateList() {
   } finally {
     isGeneratingShoppingList.value = false;
   }
+}
+
+function setPeopleCount(planDate: string, peopleCount: number) {
+  peopleCountsByDate.value = {
+    ...peopleCountsByDate.value,
+    [planDate]: normalizePeopleCount(peopleCount),
+  };
+}
+
+function normalizePeopleCount(peopleCount: number) {
+  if (!Number.isFinite(peopleCount)) {
+    return minPeopleCount;
+  }
+
+  return Math.min(
+    maxPeopleCount,
+    Math.max(minPeopleCount, Math.round(peopleCount)),
+  );
+}
+
+function buildShoppingListDays(): ShoppingListDayRequestDto[] {
+  return Object.entries(peopleCountsForCurrentWeek.value).map(
+    ([planDate, peopleCount]) => ({
+      planDate,
+      peopleCount,
+    }),
+  );
+}
+
+function formatDateOnly(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }
 
 async function initializePlan() {

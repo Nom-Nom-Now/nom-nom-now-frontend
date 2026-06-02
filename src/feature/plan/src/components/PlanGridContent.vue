@@ -36,6 +36,43 @@
             :recipe="recipes[index]"
             @select="selectedRecipe = recipes[index]"
           />
+          <div v-if="recipes[index]" class="people-control">
+            <span class="people-label">
+              <md-icon>group</md-icon>
+              {{ t('feature.plan.peopleCountLabel') }}
+            </span>
+            <div class="people-stepper">
+              <button
+                class="people-stepper-button"
+                type="button"
+                :disabled="getPeopleCount(day.key) <= minPeopleCount"
+                :aria-label="
+                  t('feature.plan.decreasePeople', { day: day.name })
+                "
+                @click.stop="updatePeopleCount(day.key, getPeopleCount(day.key) - 1)"
+              >
+                <md-icon>remove</md-icon>
+              </button>
+              <span class="people-count">
+                {{
+                  t('feature.plan.peopleCountValue', {
+                    count: getPeopleCount(day.key),
+                  })
+                }}
+              </span>
+              <button
+                class="people-stepper-button"
+                type="button"
+                :disabled="getPeopleCount(day.key) >= maxPeopleCount"
+                :aria-label="
+                  t('feature.plan.increasePeople', { day: day.name })
+                "
+                @click.stop="updatePeopleCount(day.key, getPeopleCount(day.key) + 1)"
+              >
+                <md-icon>add</md-icon>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,14 +101,18 @@ const props = defineProps<{
   error: string | null;
   currentWeek: Date;
   refreshingDayKeys: string[];
+  peopleCountsByDate: Record<string, number>;
 }>();
 
 const emit = defineEmits<{
   'open-fullscreen': [recipe: Recipe];
   'refresh-day': [dayIndex: number];
+  'update-people-count': [planDate: string, peopleCount: number];
 }>();
 
 const selectedRecipe = ref<Recipe | null>(null);
+const minPeopleCount = 1;
+const maxPeopleCount = 20;
 
 function switchToFullscreen() {
   if (selectedRecipe.value) {
@@ -122,6 +163,14 @@ function formatDateOnly(date: Date) {
 
 function isDayRefreshing(dayKey: string) {
   return props.refreshingDayKeys.includes(dayKey);
+}
+
+function getPeopleCount(dayKey: string) {
+  return props.peopleCountsByDate[dayKey] ?? minPeopleCount;
+}
+
+function updatePeopleCount(dayKey: string, peopleCount: number) {
+  emit('update-people-count', dayKey, peopleCount);
 }
 </script>
 
@@ -193,6 +242,69 @@ function isDayRefreshing(dayKey: string) {
 .day-date.is-today {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
+}
+
+.people-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-sm);
+  background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.people-label,
+.people-stepper,
+.people-count {
+  display: flex;
+  align-items: center;
+}
+
+.people-label {
+  gap: 0.35rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.people-label md-icon {
+  font-size: 1rem;
+}
+
+.people-stepper {
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.people-stepper-button {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 999px;
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+}
+
+.people-stepper-button:disabled {
+  cursor: not-allowed;
+  color: var(--md-sys-color-outline);
+  opacity: 0.55;
+}
+
+.people-stepper-button md-icon {
+  font-size: 1.05rem;
+}
+
+.people-count {
+  min-width: 3.9rem;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .loading {

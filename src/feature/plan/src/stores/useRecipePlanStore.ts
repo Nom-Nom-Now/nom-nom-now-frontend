@@ -211,6 +211,7 @@ function mapRecipeResponse(recipe: RecipeResponseDto): Recipe {
     title: recipe.name,
     imageUrl: resolveBackendResourceUrl(recipe.imageUrl),
     duration: formatPlanDuration(recipe.cookingTime),
+    servings: recipe.servings ?? 1,
     cost: formatPlanCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
     owner: recipe.ownerName || 'Unbekannter Koch',

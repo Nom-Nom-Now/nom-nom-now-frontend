@@ -33,6 +33,7 @@ describe('createRecipeService', () => {
     name: 'Pasta Bolognese',
     instructions: 'Alles kochen.',
     cookingTime: 30,
+    servings: 4,
     pricePerPerson: null,
     imageUrl: null,
     ownerName: 'chef',
@@ -68,6 +69,7 @@ describe('createRecipeService', () => {
     const body = JSON.parse(options.body as string);
     expect(body.name).toBe('Pasta Bolognese');
     expect(body.cookingTime).toBe(30);
+    expect(body.servings).toBe(4);
     expect(body.categoryIds).toEqual([1, 3]);
     expect(body.components).toHaveLength(2);
     expect(body.components[0]).toEqual({

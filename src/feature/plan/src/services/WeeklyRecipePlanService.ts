@@ -19,6 +19,7 @@ export type RecipeResponseDto = {
   name: string;
   instructions: string | null;
   cookingTime: number | null;
+  servings: number | null;
   pricePerPerson: number | null;
   imageUrl: string | null;
   ownerName: string;

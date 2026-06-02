@@ -58,6 +58,7 @@ export const useEditRecipeStore = defineStore('editRecipe', () => {
     recipeId.value = Number(recipe.id);
     recipeName.value = recipe.title || '';
     instructions.value = recipe.description || '';
+    ingModule.servings.value = recipe.servings ?? 1;
 
     const parsedTime = Number.parseInt(recipe.duration);
     cookingTime.value = Number.isNaN(parsedTime) ? 0 : parsedTime;
