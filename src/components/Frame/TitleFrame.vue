@@ -1,10 +1,6 @@
 <template>
   <div class="header-container">
-    <md-tabs>
-      <md-primary-tab>
-        <span class="tab-title"> {{ pageTitle }} </span>
-      </md-primary-tab>
-    </md-tabs>
+    <div class="page-title">{{ pageTitle }}</div>
 
     <div v-if="currentUsername" class="account-menu-container">
       <button
@@ -170,8 +166,7 @@ async function confirmDeleteAccount() {
 .header-container {
   height: 4.5rem;
   background-color: var(--md-sys-color-surface);
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding: 0 2rem;
 
   display: flex;
   align-items: center;
@@ -180,10 +175,16 @@ async function confirmDeleteAccount() {
   box-sizing: border-box;
 }
 
-.tab-title {
+.page-title {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
   font-size: var(--md-sys-typescale-title-large-size);
   line-height: var(--md-sys-typescale-title-large-line-height);
-  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  padding: 0.4rem 0 1rem;
 }
 
 .account-menu-container {
@@ -194,14 +195,15 @@ async function confirmDeleteAccount() {
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  min-height: 2.75rem;
-  padding: 0.375rem 0.5rem 0.375rem 0.875rem;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0.375rem 0.5rem 0.375rem 1rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--nnn-radius-pill);
   background: transparent;
   font: inherit;
   cursor: pointer;
+  transition: background-color 0.18s ease;
 }
 
 .user-profile:hover,
@@ -216,17 +218,20 @@ async function confirmDeleteAccount() {
 
 .user-name {
   font-family: inherit;
-  font-size: var(--md-sys-typescale-body-medium-size);
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--md-sys-color-on-surface-variant);
 }
 
 .avatar-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--md-sys-color-secondary);
-  --md-icon-size: 28px;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  --md-icon-size: 26px;
 }
 
 .danger-menu-item {
@@ -256,13 +261,27 @@ async function confirmDeleteAccount() {
   max-width: 18rem;
   margin: 0;
   padding: 0.625rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--nnn-radius-xs);
   background-color: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  box-shadow: var(--nnn-elevation-2);
 }
 
 .confirm-delete-button {
   color: var(--md-sys-color-error);
+}
+
+@media (max-width: 760px) {
+  .header-container {
+    padding: 0 1rem;
+  }
+
+  .page-title {
+    font-size: 1.125rem;
+  }
+
+  .user-name {
+    display: none;
+  }
 }
 </style>

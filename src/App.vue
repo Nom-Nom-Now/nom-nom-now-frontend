@@ -61,6 +61,7 @@ watch(
   display: flex;
   overflow: hidden;
   height: 100vh;
+  background-color: var(--md-sys-color-background);
 }
 
 .auth-layout {
@@ -68,11 +69,12 @@ watch(
   height: 100%;
 }
 
-aside {
-  width: 5.5rem;
+.aside {
+  width: 6rem;
   flex-shrink: 0;
   background-color: var(--md-sys-color-surface);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .main-section {
@@ -84,7 +86,7 @@ aside {
 }
 
 .content-area {
-  padding: 0 1rem 1rem 1rem;
+  padding: 0 1rem 1rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -93,10 +95,21 @@ aside {
 
 .content-box {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  border-radius: 1rem;
-  background-color: var(--md-sys-color-surface);
-  overflow: auto;
+  border-radius: var(--nnn-radius-md);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  overflow: hidden;
+}
+
+@media (max-width: 760px) {
+  .aside {
+    width: 5rem;
+  }
+
+  .content-area {
+    padding: 0 0.75rem 0.75rem;
+  }
 }
 </style>

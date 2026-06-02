@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes-list-container">
+  <div class="plan-container">
     <div class="top-bar">
       <div class="week-navigation">
         <md-outlined-button @click="goToToday">
@@ -274,11 +274,11 @@ onMounted(initializePlan);
 </script>
 
 <style scoped>
-.recipes-list-container {
+.plan-container {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -291,7 +291,7 @@ onMounted(initializePlan);
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   flex-shrink: 0;
 }
 
@@ -308,7 +308,7 @@ onMounted(initializePlan);
   width: 100%;
   height: 100%;
   z-index: 10;
-  background-color: var(--md-sys-color-background);
+  background-color: var(--md-sys-color-surface-container-lowest);
   box-sizing: border-box;
 }
 
@@ -326,18 +326,40 @@ onMounted(initializePlan);
 
 .current-date {
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--md-sys-color-on-surface);
-  min-width: 12rem;
+  min-width: 8rem;
   text-align: center;
 }
 
 .top-bar md-filled-button,
 .top-bar md-filled-tonal-button,
 .top-bar md-outlined-button {
-  height: 3rem;
-  --md-filled-button-container-shape: 1rem;
-  --md-filled-tonal-button-container-shape: 1rem;
-  --md-outlined-button-container-shape: 1rem;
+  height: 2.75rem;
+  --md-filled-button-container-shape: var(--nnn-radius-md);
+  --md-filled-tonal-button-container-shape: var(--nnn-radius-md);
+  --md-outlined-button-container-shape: var(--nnn-radius-md);
+}
+
+@media (max-width: 900px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .week-navigation,
+  .plan-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .plan-container {
+    padding: 1rem;
+  }
+
+  .plan-actions > * {
+    flex: 1 1 100%;
+  }
 }
 </style>

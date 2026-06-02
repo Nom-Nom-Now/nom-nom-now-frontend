@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import MdLabel from '../../../../../components/MdLabel.vue';
-import MdText from '../../../../../components/MdText.vue';
 import type { Recipe } from '../../../list/src/shared/types.ts';
 
 defineProps<{
@@ -13,299 +11,392 @@ defineEmits<{
   fullscreen: [];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 
-const getCategoryLabel = (name: string) =>
-  t(`feature.recipes.createRecipe.categories.${name}`);
+const getCategoryLabel = (name: string) => {
+  const key = `feature.recipes.createRecipe.categories.${name}`;
+  return te(key) ? t(key) : name;
+};
+
+const getUnitLabel = (unit: string | null) => {
+  if (!unit) return '';
+  const key = `feature.recipes.createRecipe.ingredients.unitValues.${unit.toUpperCase()}`;
+  return te(key) ? t(key) : unit;
+};
 </script>
 
 <template>
   <div class="recipe-detail-overlay" @click.self="$emit('close')">
-    <div class="recipe-detail-page">
-      <div class="detail-header-actions">
-        <button class="action-button close-button" @click="$emit('close')">
-          <md-icon>close</md-icon>
-        </button>
-
-        <button
-          class="action-button fullscreen-button"
-          @click="$emit('fullscreen')"
-        >
-          <md-icon>fullscreen</md-icon>
-        </button>
-      </div>
-
-      <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
-
-      <div class="recipe-image-container">
+    <article class="recipe-detail-card">
+      <div class="detail-hero">
+        <div v-if="!recipe.imageUrl" class="detail-placeholder">
+          <md-icon>restaurant</md-icon>
+        </div>
         <img
           v-if="recipe.imageUrl"
           :src="recipe.imageUrl"
           :alt="recipe.title"
-          class="recipe-image"
+          class="detail-image"
         />
-        <div v-else class="recipe-image-placeholder">
-          <md-icon>restaurant</md-icon>
-        </div>
-      </div>
 
-      <div
-        v-if="recipe.categories && recipe.categories.length"
-        class="recipe-detail-chips"
-      >
-        <div
-          v-for="categoryName in recipe.categories"
-          :key="categoryName"
-          class="detail-chip"
+        <button
+          class="hero-button hero-button-left"
+          type="button"
+          :title="t('global.fullscreen')"
+          @click="$emit('fullscreen')"
         >
-          <md-icon class="chip-icon">label</md-icon>
-          <span>{{ getCategoryLabel(categoryName) }}</span>
-        </div>
+          <md-icon>fullscreen</md-icon>
+        </button>
+        <button
+          class="hero-button hero-button-right"
+          type="button"
+          :title="t('global.close')"
+          @click="$emit('close')"
+        >
+          <md-icon>close</md-icon>
+        </button>
+        <span class="hero-cost">{{ recipe.cost }}</span>
       </div>
 
-      <div class="recipe-meta">
-        <div class="recipe-time">
-          <md-icon>schedule</md-icon>
-          <MdText size="medium"> {{ recipe.duration }} </MdText>
+      <div class="detail-body">
+        <h2 class="detail-title">{{ recipe.title }}</h2>
+
+        <div
+          v-if="recipe.categories && recipe.categories.length"
+          class="detail-chips"
+          aria-label="Recipe categories"
+        >
+          <span
+            v-for="(categoryName, index) in recipe.categories"
+            :key="categoryName"
+            class="detail-chip"
+          >
+            <md-icon v-if="index === 0">label</md-icon>
+            {{ getCategoryLabel(categoryName) }}
+          </span>
         </div>
-        <span class="recipe-cost">{{ recipe.cost }}</span>
-      </div>
 
-      <MdText class="recipe-description">
-        {{ recipe.description || t('feature.recipes.detail.noDescription') }}
-      </MdText>
+        <div class="detail-meta-row">
+          <span class="detail-meta-item">
+            <md-icon>schedule</md-icon>
+            {{ recipe.duration }}
+          </span>
+          <span class="detail-meta-item">
+            <md-icon>restaurant_menu</md-icon>
+            {{ recipe.servings }}
+            {{ t('feature.recipes.createRecipe.ingredients.servings') }}
+          </span>
+        </div>
 
-      <div class="recipe-owner-section">
-        <md-icon>person</md-icon>
-        <MdText size="medium">
+        <p class="detail-description">
+          {{ recipe.description || t('feature.recipes.detail.noDescription') }}
+        </p>
+
+        <div class="detail-owner">
+          <span class="detail-avatar"><md-icon>person</md-icon></span>
           {{
             t('feature.recipes.detail.byOwner', {
               owner: recipe.owner || t('feature.recipes.detail.unknownChef'),
             })
           }}
-        </MdText>
-      </div>
-
-      <div class="recipe-ingredients-section">
-        <div class="ingredients-header">
-          <md-icon>list</md-icon>
-          <MdLabel size="medium">{{
-            t('feature.recipes.detail.ingredientsTitle')
-          }}</MdLabel>
         </div>
 
-        <ul class="ingredients-list">
-          <li
-            v-for="(item, index) in recipe.ingredients"
-            :key="index"
-            class="ingredient-item"
-          >
-            <span class="ingredient-name"
-              ><strong>{{ item.ingredientName }}</strong></span
-            >
-            <span class="ingredient-quantity">{{ item.quantity || '' }}</span>
-            <span class="ingredient-unit">
-              {{
-                item.unit
-                  ? t(
-                      `feature.recipes.createRecipe.ingredients.unitValues.${item.unit.toUpperCase()}`,
-                    )
-                  : ''
-              }}
+        <section class="detail-ingredients">
+          <div class="ingredients-header">
+            <h3>
+              <md-icon>list</md-icon>
+              {{ t('feature.recipes.detail.ingredientsTitle') }}
+            </h3>
+            <span class="ingredient-count">
+              {{ recipe.ingredients.length }}
+              {{ t('feature.recipes.detail.ingredientsTitle') }}
             </span>
-          </li>
-        </ul>
+          </div>
+
+          <ul class="ingredient-list">
+            <li
+              v-for="(item, index) in recipe.ingredients"
+              :key="index"
+              class="ingredient-item"
+            >
+              <span class="ingredient-name">{{ item.ingredientName }}</span>
+              <span class="ingredient-quantity">
+                {{ item.quantity || '' }} {{ getUnitLabel(item.unit) }}
+              </span>
+            </li>
+          </ul>
+        </section>
       </div>
-    </div>
+    </article>
   </div>
 </template>
 
 <style scoped>
 .recipe-detail-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  inset: 0;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(16, 38, 26, 0.42);
 }
 
-.recipe-detail-page {
+.recipe-detail-card {
   position: relative;
-  background-color: var(--md-sys-color-surface);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  width: 90%;
-  max-width: 24rem;
-  max-height: 75vh;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-}
-
-.detail-header-actions {
-  position: absolute;
-  top: 0.35rem;
-  left: 0.35rem;
-  right: 0.35rem;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.action-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--md-sys-color-on-surface-variant);
-  padding: 0.3rem;
-  display: flex;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-  pointer-events: auto;
-}
-
-.action-button:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
-.action-button md-icon {
-  font-size: 1.2rem;
-}
-
-.recipe-title {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.recipe-image-container {
-  width: 100%;
-  height: 9rem;
-  border-radius: 0.35rem;
+  width: min(30rem, 100%);
+  max-height: 88%;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  border-radius: var(--nnn-radius-xl);
+  background: var(--md-sys-color-surface-container-lowest);
+  box-shadow: var(--nnn-elevation-3);
 }
 
-.recipe-image {
+.detail-hero {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.recipe-image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
+  aspect-ratio: 16 / 10;
+  flex-shrink: 0;
   background: var(--md-sys-color-surface-container-high);
 }
 
-.recipe-image-placeholder md-icon {
-  font-size: 2.2rem;
+.detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.recipe-detail-chips {
+.detail-placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.detail-placeholder md-icon {
+  --md-icon-size: 3.5rem;
+}
+
+.hero-button {
+  position: absolute;
+  top: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--nnn-elevation-1);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.hero-button:hover {
+  background: #ffffff;
+}
+
+.hero-button md-icon {
+  --md-icon-size: 22px;
+}
+
+.hero-button-left {
+  left: 0.75rem;
+}
+
+.hero-button-right {
+  right: 0.75rem;
+}
+
+.hero-cost {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--nnn-radius-pill);
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  overflow-y: auto;
+}
+
+.detail-title {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.detail-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
+  gap: 0.4rem;
 }
 
 .detail-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--md-sys-color-outline-variant, #c7c7c7);
-  border-radius: 6px;
-  background: var(--md-sys-color-surface-container-low, #f3f3f3);
-  font-size: 0.75rem;
-  color: var(--md-sys-color-on-surface);
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--nnn-radius-pill);
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
-.chip-icon {
-  font-size: 0.9rem !important;
-  color: var(--md-sys-color-primary);
+.detail-chip md-icon {
+  --md-icon-size: 16px;
 }
 
-.recipe-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
-}
-
-.recipe-time {
+.detail-meta-row {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-}
-
-.recipe-time md-icon {
-  font-size: 1rem;
-}
-
-.recipe-cost {
-  font-weight: 500;
-}
-
-.recipe-description {
-  margin-bottom: 0.5rem;
-  line-height: 1.35;
-  text-align: left;
-  width: 100%;
-  font-size: 0.875rem;
-}
-
-.recipe-owner-section {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  width: 100%;
-  margin-bottom: 0.75rem;
+  gap: 1.25rem;
   color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
-.recipe-owner-section md-icon {
-  font-size: 1rem;
+.detail-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.recipe-ingredients-section {
-  width: 100%;
+.detail-meta-item md-icon {
+  --md-icon-size: 20px;
+}
+
+.detail-description {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.975rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.detail-owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+}
+
+.detail-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.detail-avatar md-icon {
+  --md-icon-size: 18px;
+}
+
+.detail-ingredients {
+  padding: 1rem 1.1rem;
+  border-radius: var(--nnn-radius-md);
+  background: var(--md-sys-color-surface-container-low);
 }
 
 .ingredients-header {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 0.35rem;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ingredients-header h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .ingredients-header md-icon {
-  font-size: 1.1rem;
+  --md-icon-size: 20px;
+  color: var(--md-sys-color-primary);
 }
 
-.ingredients-list {
+.ingredient-count {
+  color: var(--md-sys-color-tertiary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ingredient-list {
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
 .ingredient-item {
-  padding: 4px 0;
-  border-bottom: 1px solid
-    var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
-  display: grid;
-  grid-template-columns: 1fr 3.5rem 3rem;
-  font-size: 0.875rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.ingredient-item:last-child {
+  border-bottom: none;
+}
+
+.ingredient-name {
+  font-weight: 500;
+}
+
+.ingredient-quantity {
+  color: var(--md-sys-color-on-surface);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .recipe-detail-overlay {
+    padding: 0.75rem;
+  }
+
+  .recipe-detail-card {
+    max-height: 92%;
+    border-radius: var(--nnn-radius-lg);
+  }
+
+  .detail-body {
+    padding: 1rem;
+  }
+
+  .detail-meta-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
 }
 </style>

@@ -93,13 +93,13 @@ watch(loadMoreSentinel, connectObserver);
   flex-grow: 1;
   overflow-y: auto;
   min-height: 0;
+  padding: 1rem 0.25rem 0.5rem;
 }
 
 .recipes-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.25rem;
 }
 
 .loading,

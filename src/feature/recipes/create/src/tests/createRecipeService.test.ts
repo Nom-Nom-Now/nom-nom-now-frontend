@@ -114,6 +114,22 @@ describe('createRecipeService', () => {
     expect(body.instructions).toBe('Waschen und schneiden.');
   });
 
+  it('should preserve line breaks inside instructions', async () => {
+    const state = buildValidState({
+      instructions: '  Schritt 1\nSchritt 2\n\n- Punkt A\n- Punkt B  ',
+    });
+
+    await createRecipe(state);
+
+    const body = JSON.parse(
+      ((fetch as ReturnType<typeof vi.fn>).mock.calls[0]![1] as RequestInit)
+        .body as string,
+    );
+    expect(body.instructions).toBe(
+      'Schritt 1\nSchritt 2\n\n- Punkt A\n- Punkt B',
+    );
+  });
+
   it('should throw on non-ok response', async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,

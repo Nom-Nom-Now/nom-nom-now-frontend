@@ -25,7 +25,9 @@
     "edit": "Bearbeiten",
     "cancel": "Abbrechen",
     "delete": "Löschen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "back": "Zurück",
+    "fullscreen": "Vollbild"
   },
   "feature": {
     "browse": {
@@ -96,6 +98,11 @@
         "title": "Rezept-Details",
         "byOwner": "Rezept von: {owner}",
         "ingredientsTitle": "Zutaten",
+        "preparationTitle": "Zubereitung",
+        "pricePerPerson": "Preis pro Person",
+        "createdBy": "Erstellt von",
+        "durationLabel": "Zubereitungszeit",
+        "peopleLabel": "Personen",
         "noDescription": "Keine Beschreibung vorhanden.",
         "unknownChef": "Unbekannter Koch"
       },
@@ -270,6 +277,7 @@
       "list": {
         "createButton": "Neues Rezept",
         "myRecipesOnly": "Meine Rezepte",
+        "searchPlaceholder": "Rezepte suchen…",
         "filterCategories": "Kategorien",
         "filterClear": "Zurücksetzen",
         "filterApply": "Anwenden",

@@ -203,10 +203,10 @@ function formatUnit(unit: string) {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 1rem;
+  padding: 1.25rem;
   display: grid;
-  grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: minmax(16rem, 20rem) minmax(0, 1fr);
+  gap: 1.25rem;
   box-sizing: border-box;
 }
 
@@ -214,8 +214,8 @@ function formatUnit(unit: string) {
 .shopping-list-detail {
   min-height: 0;
   overflow: auto;
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--nnn-radius-md);
+  background-color: var(--md-sys-color-surface-container-low);
 }
 
 .shopping-list-sidebar {
@@ -228,14 +228,19 @@ function formatUnit(unit: string) {
 .shopping-list-link {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.875rem;
-  border-radius: 8px;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--nnn-radius-sm);
   color: var(--md-sys-color-on-surface);
   text-decoration: none;
+  transition: background-color 0.15s ease;
 }
 
-.shopping-list-link:hover,
+.shopping-list-link:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+}
+
 .shopping-list-link-active {
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
@@ -255,24 +260,26 @@ function formatUnit(unit: string) {
 }
 
 .shopping-list-detail {
-  padding: 1.5rem;
+  padding: 1.75rem 2rem;
 }
 
 .detail-content {
-  max-width: 48rem;
+  max-width: 46rem;
   margin: 0 auto;
 }
 
 .detail-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .detail-header h2 {
   margin: 0 0 0.25rem;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
 }
 
 .detail-header p {
@@ -282,7 +289,12 @@ function formatUnit(unit: string) {
 
 .item-count {
   white-space: nowrap;
-  color: var(--md-sys-color-on-surface-variant);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--nnn-radius-pill);
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .detail-actions {
@@ -293,24 +305,38 @@ function formatUnit(unit: string) {
 
 .delete-list-button {
   color: var(--md-sys-color-error);
+  --md-icon-button-hover-state-layer-color: var(--md-sys-color-error);
+  --md-icon-button-icon-color: var(--md-sys-color-error);
 }
 
 .items-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .shopping-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.875rem 0;
+  gap: 0.85rem;
+  padding: 0.85rem 0.25rem;
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.shopping-item:last-child {
+  border-bottom: none;
+}
+
+.shopping-item span {
+  flex-grow: 1;
+  font-size: 1rem;
+}
+
+.shopping-item strong {
+  color: var(--md-sys-color-on-surface);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .status {
@@ -323,7 +349,7 @@ function formatUnit(unit: string) {
   margin: 2rem auto;
   max-width: 32rem;
   padding: 1rem 1.25rem;
-  border-radius: 8px;
+  border-radius: var(--nnn-radius-xs);
   background-color: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
   text-align: center;
@@ -334,6 +360,7 @@ function formatUnit(unit: string) {
   .shopping-lists-container {
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(0, 1fr);
+    padding: 1rem;
   }
 
   .shopping-list-sidebar {

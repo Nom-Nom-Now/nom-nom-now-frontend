@@ -13,6 +13,7 @@
         }}</span>
       </div>
       <md-filled-button type="button" @click="navigateToCreate">
+        <md-icon slot="icon">add</md-icon>
         {{ t('feature.recipes.list.createButton') }}
       </md-filled-button>
     </div>
@@ -109,7 +110,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -119,9 +120,8 @@ onMounted(() => {
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-right: 2rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
   flex-shrink: 0;
 }
 
@@ -129,17 +129,48 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-left: auto;
 }
 
 .filter-label {
   font-family: var(--md-sys-typescale-label-large-font);
   font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: var(--md-sys-typescale-label-large-weight);
   color: var(--md-sys-color-on-surface);
   white-space: nowrap;
 }
 
 .top-bar md-filled-button {
-  height: 3rem;
-  --md-filled-button-container-shape: 16px;
+  height: 2.75rem;
+  --md-filled-button-container-shape: var(--nnn-radius-md);
+}
+
+.top-bar md-switch {
+  --md-switch-selected-handle-color: var(--md-sys-color-on-primary);
+  --md-switch-selected-track-color: var(--md-sys-color-primary);
+}
+
+@media (max-width: 860px) {
+  .top-bar {
+    flex-wrap: wrap;
+  }
+
+  .filter-toggle {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .recipes-list-container {
+    padding: 1rem;
+  }
+
+  .top-bar > * {
+    flex: 1 1 100%;
+  }
+
+  .filter-toggle {
+    flex-basis: auto;
+  }
 }
 </style>

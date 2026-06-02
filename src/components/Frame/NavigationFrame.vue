@@ -47,14 +47,14 @@ const { t, locale } = useI18n();
 const navigationItems = [
   { textKey: 'navigation.home', iconName: 'home_24dp_1F1F1F', to: '/home' },
   {
-    textKey: 'navigation.plan',
-    iconName: 'calendar_meal_24dp_1F1F1F',
-    to: '/plan',
-  },
-  {
     textKey: 'navigation.recipes',
     iconName: 'chef_hat_24dp_1F1F1F',
     to: '/recipes',
+  },
+  {
+    textKey: 'navigation.plan',
+    iconName: 'calendar_meal_24dp_1F1F1F',
+    to: '/plan',
   },
   {
     textKey: 'navigation.shoppingLists',
@@ -67,14 +67,15 @@ const availableLanguageCodes = ['de', 'en'];
 
 <style scoped>
 .nav-bar {
-  width: 5.5rem;
+  width: 6rem;
   height: 100vh;
   background-color: var(--md-sys-color-surface);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  padding-bottom: 2rem;
+  padding: 0.75rem 0 1.5rem;
+  overflow-x: hidden;
 }
 
 .top-section {
@@ -85,25 +86,32 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 5.5rem;
+  width: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 ul li {
-  padding-top: 2rem;
+  padding: 0;
 }
 
 .nav-link {
-  display: block;
-  color: var(--md-sys-color-secondary);
+  display: flex;
+  justify-content: center;
+  padding: 0.4rem 0;
+  color: var(--md-sys-color-on-surface-variant);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .logo {
-  height: 4rem;
-  width: 4rem;
+  height: 3rem;
+  width: 3rem;
   display: flex;
   margin: auto;
-  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.75rem;
 }
 
 .lang-selector-wrapper {
@@ -124,12 +132,12 @@ ul li {
 
 .lang-select {
   font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: bold;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--md-sys-color-on-surface-variant);
   background: transparent;
   border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 4px;
+  border-radius: var(--nnn-radius-xs);
   padding: 0.2rem 0.4rem;
   cursor: pointer;
   outline: none;
@@ -141,12 +149,24 @@ ul li {
   background-color: var(--md-sys-color-surface-variant);
 }
 
+.nav-link-active {
+  color: var(--md-sys-color-on-surface);
+}
+
 .nav-link-active :deep(.icon-badge) {
   background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
 }
 
 .lang-select:hover {
   background-color: var(--md-sys-color-surface-variant);
   border-color: var(--md-sys-color-outline);
+}
+
+@media (max-width: 760px) {
+  .nav-bar,
+  ul {
+    width: 5rem;
+  }
 }
 </style>

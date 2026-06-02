@@ -1,31 +1,41 @@
 <template>
   <div class="recipe-box" @click="$emit('select')">
-    <div class="recipe-title">{{ recipe.title }}</div>
-
     <div class="recipe-image-container">
+      <div v-if="!recipe.imageUrl" class="recipe-image-placeholder">
+        <md-icon>restaurant</md-icon>
+      </div>
       <img
         v-if="recipe.imageUrl"
         :src="recipe.imageUrl"
         :alt="recipe.title"
         class="recipe-image"
       />
-      <div v-else class="recipe-image-placeholder">
-        <md-icon>restaurant</md-icon>
-      </div>
-    </div>
-
-    <div class="recipe-tags">
-      <span v-for="category in displayCategories" :key="category" class="tag">
-        {{ category }}
-      </span>
-    </div>
-
-    <div class="recipe-meta">
-      <div class="recipe-time">
-        <md-icon>schedule</md-icon>
-        <span class="time-text">{{ recipe.duration }}</span>
-      </div>
       <span class="recipe-cost">{{ recipe.cost }}</span>
+    </div>
+
+    <div class="recipe-body">
+      <h3 class="recipe-title">{{ recipe.title }}</h3>
+
+      <div
+        v-if="displayCategories.length"
+        class="recipe-tags"
+        aria-label="Recipe categories"
+      >
+        <span
+          v-for="category in displayCategories"
+          :key="category"
+          class="tag"
+        >
+          {{ category }}
+        </span>
+      </div>
+
+      <p class="recipe-description">{{ recipe.description }}</p>
+
+      <div class="recipe-meta">
+        <md-icon>schedule</md-icon>
+        <span>{{ recipe.duration }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -45,56 +55,45 @@ defineEmits<{
 
 const { t, te } = useI18n();
 
-const displayCategories = computed(() => {
-  return props.recipe.categories.slice(0, 2).map((category) => {
+const displayCategories = computed(() =>
+  props.recipe.categories.slice(0, 2).map((category) => {
     const key = `feature.recipes.createRecipe.categories.${category}`;
     return te(key) ? t(key) : category;
-  });
-});
+  }),
+);
 </script>
 
 <style scoped>
 .recipe-box {
-  background-color: var(--md-sys-color-surface-container-low);
-  border-radius: 0.875rem;
-  padding: 0.75rem;
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  height: 16rem;
+  min-width: 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-md);
+  background-color: var(--md-sys-color-surface-container-low);
+  overflow: hidden;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .recipe-box:hover {
-  background-color: var(--md-sys-color-surface-container);
-}
-
-.recipe-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: var(--md-sys-color-on-surface);
-  text-align: center;
-  line-height: 1.2;
-  height: 2.1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--nnn-elevation-2);
 }
 
 .recipe-image-container {
+  position: relative;
   width: 100%;
-  height: 6.5rem;
-  border-radius: 0.625rem;
-  overflow: hidden;
-  flex-shrink: 0;
+  aspect-ratio: 16 / 11;
+  background: var(--md-sys-color-surface-container-high);
 }
 
 .recipe-image {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -102,66 +101,89 @@ const displayCategories = computed(() => {
 }
 
 .recipe-image-placeholder {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
   color: var(--md-sys-color-on-surface-variant);
-  background: var(--md-sys-color-surface-container-high);
 }
 
 .recipe-image-placeholder md-icon {
-  font-size: 2.5rem;
+  --md-icon-size: 3rem;
+}
+
+.recipe-cost {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--nnn-radius-pill);
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.recipe-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.recipe-title {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
 .recipe-tags {
   display: flex;
-  gap: 0.375rem;
-  justify-content: center;
   flex-wrap: wrap;
-  height: 2rem;
-  align-items: center;
+  gap: 0.375rem;
 }
 
 .tag {
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--nnn-radius-xs);
   background-color: var(--md-sys-color-surface-container-high);
-  color: var(--md-sys-color-on-surface);
-  padding: 0.25rem 0.625rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  white-space: nowrap;
-  line-height: 1;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.recipe-description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .recipe-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  gap: 0.35rem;
   margin-top: auto;
-  padding-top: 0.25rem;
-}
-
-.recipe-time {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
   color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
 }
 
-.recipe-time md-icon {
-  font-size: 1rem;
-  --md-icon-size: 1rem;
-}
-
-.time-text {
-  font-size: 0.75rem;
-}
-
-.recipe-cost {
-  font-size: 0.75rem;
-  color: var(--md-sys-color-on-surface-variant);
-  font-weight: 500;
+.recipe-meta md-icon {
+  --md-icon-size: 18px;
 }
 </style>

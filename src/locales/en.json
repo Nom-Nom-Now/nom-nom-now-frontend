@@ -25,7 +25,9 @@
     "edit": "Edit",
     "cancel": "Cancel",
     "delete": "Delete",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back",
+    "fullscreen": "Fullscreen"
   },
   "feature": {
     "browse": {
@@ -96,6 +98,11 @@
         "title": "Recipe Details",
         "byOwner": "Recipe by: {owner}",
         "ingredientsTitle": "Ingredients",
+        "preparationTitle": "Preparation",
+        "pricePerPerson": "Price per person",
+        "createdBy": "Created by",
+        "durationLabel": "Preparation time",
+        "peopleLabel": "people",
         "noDescription": "No description available.",
         "unknownChef": "Unknown chef"
       },
@@ -260,6 +267,7 @@
       "list": {
         "createButton": "New Recipe",
         "myRecipesOnly": "My Recipes",
+        "searchPlaceholder": "Search recipes...",
         "filterCategories": "Categories",
         "filterClear": "Clear",
         "filterApply": "Apply",

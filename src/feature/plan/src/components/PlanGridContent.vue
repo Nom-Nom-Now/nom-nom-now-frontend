@@ -15,7 +15,7 @@
         >
           <div class="day-header">
             <div class="day-title-row">
-              <span class="day-name">{{ day.name }}</span>
+              <span class="day-name">{{ day.shortName }}</span>
               <md-icon-button
                 class="day-refresh-button"
                 type="button"
@@ -146,6 +146,7 @@ const weekDays = computed(() => {
       date,
       key: formatDateOnly(date),
       name: t(`common.weekdays.${weekDayKeys[i]}`),
+      shortName: t(`common.weekdays.${weekDayKeys[i]}`).slice(0, 2),
       dateNum: date.getDate(),
       isToday,
     });
@@ -185,16 +186,16 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
 
 .week-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(6rem, 1fr));
+  grid-template-columns: repeat(7, minmax(8rem, 1fr));
   gap: 1rem;
   align-items: start;
-  min-width: min(100%, 48rem);
+  min-width: min(100%, 60rem);
 }
 
 .day-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .day-header {
@@ -216,19 +217,19 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
 
 .day-name {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--md-sys-color-on-surface-variant);
   text-transform: capitalize;
 }
 
 .day-refresh-button {
-  width: 2rem;
-  height: 2rem;
+  width: 1.85rem;
+  height: 1.85rem;
   --md-icon-button-icon-size: 1.125rem;
 }
 
 .day-date {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 500;
   color: var(--md-sys-color-on-surface);
   width: 2.5rem;
@@ -247,7 +248,7 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
 .people-control {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.5rem;
   padding: 0.65rem;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--nnn-radius-sm);
@@ -296,7 +297,12 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
 }
 
 .people-stepper-button md-icon {
-  font-size: 1.05rem;
+  display: grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  line-height: 1;
+  --md-icon-size: 1.05rem;
 }
 
 .people-count {
@@ -317,7 +323,7 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
   margin: 2rem auto;
   max-width: 32rem;
   padding: 1rem 1.25rem;
-  border-radius: 16px;
+  border-radius: var(--nnn-radius-md);
   background-color: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
   text-align: center;
