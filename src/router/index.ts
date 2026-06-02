@@ -16,6 +16,11 @@ const router = createRouter({
       meta: { titleKey: 'feature.login.title', hideShell: true },
     },
     {
+      path: '/login',
+      component: LoginPage,
+      meta: { titleKey: 'feature.login.title', hideShell: true },
+    },
+    {
       path: '/home',
       component: HomePage,
       meta: { titleKey: 'feature.home.title' },

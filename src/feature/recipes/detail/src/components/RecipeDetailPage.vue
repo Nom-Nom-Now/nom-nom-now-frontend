@@ -150,7 +150,7 @@ const getUnitLabel = (unit: string | null) => {
   width: min(30rem, 100%);
   max-height: 88%;
   overflow: hidden;
-  border-radius: var(--nnn-radius-xl);
+  border-radius: var(--nnn-radius-xl, 28px);
   background: var(--md-sys-color-surface-container-lowest);
   box-shadow: var(--nnn-elevation-3);
 }
