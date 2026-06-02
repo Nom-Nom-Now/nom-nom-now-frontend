@@ -12,7 +12,7 @@
       }}
     </div>
 
-    <div class="recipes-grid">
+    <div ref="recipesGrid" class="recipes-grid">
       <RecipeBox
         v-for="recipe in recipes"
         :key="recipe.id"
@@ -66,9 +66,12 @@ function switchToFullscreen() {
 
 const loadMoreSentinel = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
+const recipesGrid = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let underfilledCheckQueued = false;
+let underfilledRetryTimer: number | undefined;
+let lastUnderfilledLoadRequestKey: string | null = null;
 
 function maybeLoadMore(entries: IntersectionObserverEntry[]) {
   if (entries.some((entry) => entry.isIntersecting) && shouldLoadMore()) {
@@ -93,15 +96,48 @@ function queueUnderfilledLoadCheck() {
     underfilledCheckQueued = false;
     const container = scrollContainer.value;
 
-    if (!container || !shouldLoadMore()) return;
+    if (!container) return;
 
-    const hasScrollableOverflow =
-      container.scrollHeight > container.clientHeight + 2;
+    if (hasScrollableOverflow(container)) {
+      clearUnderfilledRetry();
+      return;
+    }
 
-    if (!hasScrollableOverflow) {
+    if (shouldLoadMore() && hasNewUnderfilledLoadState()) {
+      lastUnderfilledLoadRequestKey = getUnderfilledLoadStateKey();
       emit('loadMore');
+      scheduleUnderfilledRetry();
+      return;
+    }
+
+    if (props.recipes.length > 0 && props.canLoadMore && !props.error) {
+      scheduleUnderfilledRetry();
     }
   });
+}
+
+function hasScrollableOverflow(container: HTMLElement) {
+  return container.scrollHeight > container.clientHeight + 2;
+}
+
+function hasNewUnderfilledLoadState() {
+  return lastUnderfilledLoadRequestKey !== getUnderfilledLoadStateKey();
+}
+
+function getUnderfilledLoadStateKey() {
+  const recipeIds = props.recipes.map((recipe) => recipe.id).join(',');
+  return `${props.searchQuery ?? ''}|${recipeIds}`;
+}
+
+function scheduleUnderfilledRetry() {
+  clearUnderfilledRetry();
+  underfilledRetryTimer = window.setTimeout(queueUnderfilledLoadCheck, 250);
+}
+
+function clearUnderfilledRetry() {
+  if (underfilledRetryTimer === undefined) return;
+  window.clearTimeout(underfilledRetryTimer);
+  underfilledRetryTimer = undefined;
 }
 
 function connectObserver() {
@@ -120,6 +156,9 @@ function connectResizeObserver() {
 
   resizeObserver = new ResizeObserver(queueUnderfilledLoadCheck);
   resizeObserver.observe(scrollContainer.value);
+  if (recipesGrid.value) {
+    resizeObserver.observe(recipesGrid.value);
+  }
 }
 
 onMounted(() => {
@@ -131,6 +170,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   observer?.disconnect();
   resizeObserver?.disconnect();
+  clearUnderfilledRetry();
   window.removeEventListener('resize', queueUnderfilledLoadCheck);
 });
 watch(loadMoreSentinel, connectObserver);
@@ -138,8 +178,10 @@ watch(scrollContainer, () => {
   connectObserver();
   connectResizeObserver();
 });
+watch(recipesGrid, connectResizeObserver);
 watch(
   () => [
+    props.recipes.map((recipe) => recipe.id).join(','),
     props.recipes.length,
     props.isLoading,
     props.canLoadMore,

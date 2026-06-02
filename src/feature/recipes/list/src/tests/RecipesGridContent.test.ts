@@ -6,11 +6,15 @@ import type { Recipe } from '../shared/types';
 
 describe('RecipesGridContent', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
     vi.stubGlobal('ResizeObserver', MockResizeObserver);
+    MockResizeObserver.instances = [];
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
     vi.unstubAllGlobals();
   });
 
@@ -36,6 +40,42 @@ describe('RecipesGridContent', () => {
     expect(wrapper.emitted('loadMore')).toHaveLength(1);
   });
 
+  it('keeps loading pages while additional recipes still do not fill the scroll area', async () => {
+    const wrapper = mountGrid({
+      recipes: [],
+      isLoading: true,
+      canLoadMore: false,
+    });
+
+    setScrollSize(wrapper.element, {
+      clientHeight: 2000,
+      scrollHeight: 900,
+    });
+
+    await wrapper.setProps({
+      recipes: createRecipes(20),
+      isLoading: false,
+      canLoadMore: true,
+    });
+    await nextTick();
+
+    expect(wrapper.emitted('loadMore')).toHaveLength(1);
+
+    await wrapper.setProps({ isLoading: true });
+    await vi.advanceTimersByTimeAsync(250);
+
+    expect(wrapper.emitted('loadMore')).toHaveLength(1);
+
+    await wrapper.setProps({
+      recipes: createRecipes(40),
+      isLoading: false,
+      canLoadMore: true,
+    });
+    await nextTick();
+
+    expect(wrapper.emitted('loadMore')).toHaveLength(2);
+  });
+
   it('does not load another page when the rendered recipes already overflow', async () => {
     const wrapper = mountGrid({
       recipes: [],
@@ -57,6 +97,25 @@ describe('RecipesGridContent', () => {
 
     expect(wrapper.emitted('loadMore')).toBeUndefined();
   });
+
+  it('rechecks underfilled content when the recipe grid is resized', async () => {
+    const wrapper = mountGrid({
+      recipes: createRecipes(20),
+      isLoading: false,
+      canLoadMore: true,
+    });
+
+    setScrollSize(wrapper.element, {
+      clientHeight: 1200,
+      scrollHeight: 1000,
+    });
+
+    await nextTick();
+    MockResizeObserver.instances[0]?.trigger();
+    await nextTick();
+
+    expect(wrapper.emitted('loadMore')).toHaveLength(1);
+  });
 });
 
 class MockIntersectionObserver {
@@ -65,8 +124,21 @@ class MockIntersectionObserver {
 }
 
 class MockResizeObserver {
+  static instances: MockResizeObserver[] = [];
+
+  private readonly callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+    MockResizeObserver.instances.push(this);
+  }
+
   disconnect = vi.fn();
   observe = vi.fn();
+
+  trigger() {
+    this.callback([], this as unknown as ResizeObserver);
+  }
 }
 
 function mountGrid(
