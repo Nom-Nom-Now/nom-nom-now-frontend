@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-bar">
     <div class="top-section">
-      <img class="logo" src="../../assets/Logo.png" alt="Nom Nom Now" />
+      <img class="logo" src="/app-icon.svg" alt="Nom Nom Now" />
       <ul>
         <li v-for="item in navigationItems" :key="item.textKey">
           <RouterLink
@@ -109,6 +109,7 @@ ul li {
   height: 3rem;
   width: 3rem;
   display: flex;
+  object-fit: cover;
   margin: auto;
   margin-bottom: 0.5rem;
   border-radius: 0.75rem;

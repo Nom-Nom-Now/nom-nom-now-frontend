@@ -3,7 +3,7 @@
     <section class="brand-panel">
       <div class="brand-top">
         <span class="brand-logo">
-          <img src="../assets/Logo.png" alt="" />
+          <img src="/app-icon.svg" alt="" />
         </span>
         <span class="brand-wordmark">Nom Nom Now</span>
       </div>
@@ -165,6 +165,8 @@ const redirectToGoogle = () => {
 .brand-logo img {
   width: 3rem;
   height: 3rem;
+  object-fit: cover;
+  border-radius: var(--nnn-radius-sm);
 }
 
 .brand-wordmark {
