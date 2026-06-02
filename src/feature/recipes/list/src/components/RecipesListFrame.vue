@@ -24,6 +24,7 @@
       :error="store.error"
       :can-load-more="store.canLoadMore"
       :search-query="store.searchQuery"
+      :load-context-key="loadContextKey"
       @load-more="store.fetchNextPage"
       @open-fullscreen="handleOpenFullscreen"
     />
@@ -39,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import RecipeSearchBar from './RecipeSearchBar.vue';
@@ -59,6 +60,13 @@ const { currentUserId } = useAuth();
 
 const fullscreenRecipe = ref<Recipe | null>(null);
 const showMyRecipesOnly = ref(false);
+
+const loadContextKey = computed(() => {
+  const ownerId = showMyRecipesOnly.value ? currentUserId.value : 'all';
+  const categoryIds = store.selectedCategoryIds.join(',');
+
+  return `${ownerId}|${store.searchQuery ?? ''}|${categoryIds}`;
+});
 
 function handleToggleMyRecipes(event: Event) {
   const target = event.target as HTMLElement & { selected: boolean };

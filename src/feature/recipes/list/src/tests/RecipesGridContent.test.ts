@@ -98,6 +98,28 @@ describe('RecipesGridContent', () => {
     expect(wrapper.emitted('loadMore')).toBeUndefined();
   });
 
+  it('loads another page when the user scrolls close to the end', async () => {
+    const wrapper = mountGrid({
+      recipes: createRecipes(20),
+      isLoading: false,
+      canLoadMore: true,
+    });
+
+    setScrollSize(wrapper.element, {
+      clientHeight: 600,
+      scrollHeight: 1400,
+    });
+    setScrollTop(wrapper.element, 780);
+
+    await nextTick();
+
+    expect(wrapper.emitted('loadMore')).toBeUndefined();
+
+    await wrapper.trigger('scroll');
+
+    expect(wrapper.emitted('loadMore')).toHaveLength(1);
+  });
+
   it('rechecks underfilled content when the recipe grid is resized', async () => {
     const wrapper = mountGrid({
       recipes: createRecipes(20),
@@ -184,6 +206,13 @@ function setScrollSize(
   Object.defineProperty(element, 'scrollHeight', {
     configurable: true,
     value: size.scrollHeight,
+  });
+}
+
+function setScrollTop(element: Element, scrollTop: number) {
+  Object.defineProperty(element, 'scrollTop', {
+    configurable: true,
+    value: scrollTop,
   });
 }
 

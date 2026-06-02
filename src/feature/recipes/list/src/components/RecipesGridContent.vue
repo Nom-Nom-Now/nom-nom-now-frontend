@@ -1,5 +1,9 @@
 <template>
-  <div ref="scrollContainer" class="recipes-grid-scroll">
+  <div
+    ref="scrollContainer"
+    class="recipes-grid-scroll"
+    @scroll.passive="handleScroll"
+  >
     <div v-if="isLoading && recipes.length === 0" class="loading">Laden...</div>
     <div v-else-if="error && recipes.length === 0" class="status status--error">
       {{ error }}
@@ -48,6 +52,7 @@ const props = defineProps<{
   error: string | null;
   canLoadMore: boolean;
   searchQuery?: string;
+  loadContextKey?: string;
 }>();
 
 const emit = defineEmits<{
@@ -71,11 +76,11 @@ let observer: IntersectionObserver | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let underfilledCheckQueued = false;
 let underfilledRetryTimer: number | undefined;
-let lastUnderfilledLoadRequestKey: string | null = null;
+let lastLoadRequestKey: string | null = null;
 
 function maybeLoadMore(entries: IntersectionObserverEntry[]) {
-  if (entries.some((entry) => entry.isIntersecting) && shouldLoadMore()) {
-    emit('loadMore');
+  if (entries.some((entry) => entry.isIntersecting)) {
+    requestLoadMore();
   }
 }
 
@@ -86,6 +91,23 @@ function shouldLoadMore() {
     !props.isLoading &&
     !props.error
   );
+}
+
+function requestLoadMore() {
+  if (!shouldLoadMore()) return;
+
+  const loadRequestKey = getLoadRequestKey();
+  if (lastLoadRequestKey === loadRequestKey) return;
+
+  lastLoadRequestKey = loadRequestKey;
+  emit('loadMore');
+}
+
+function handleScroll() {
+  const container = scrollContainer.value;
+  if (!container || !isNearScrollEnd(container)) return;
+
+  requestLoadMore();
 }
 
 function queueUnderfilledLoadCheck() {
@@ -103,9 +125,8 @@ function queueUnderfilledLoadCheck() {
       return;
     }
 
-    if (shouldLoadMore() && hasNewUnderfilledLoadState()) {
-      lastUnderfilledLoadRequestKey = getUnderfilledLoadStateKey();
-      emit('loadMore');
+    if (shouldLoadMore()) {
+      requestLoadMore();
       scheduleUnderfilledRetry();
       return;
     }
@@ -120,13 +141,16 @@ function hasScrollableOverflow(container: HTMLElement) {
   return container.scrollHeight > container.clientHeight + 2;
 }
 
-function hasNewUnderfilledLoadState() {
-  return lastUnderfilledLoadRequestKey !== getUnderfilledLoadStateKey();
+function isNearScrollEnd(container: HTMLElement) {
+  const distanceToEnd =
+    container.scrollHeight - container.scrollTop - container.clientHeight;
+
+  return distanceToEnd <= 320;
 }
 
-function getUnderfilledLoadStateKey() {
+function getLoadRequestKey() {
   const recipeIds = props.recipes.map((recipe) => recipe.id).join(',');
-  return `${props.searchQuery ?? ''}|${recipeIds}`;
+  return `${props.loadContextKey ?? props.searchQuery ?? ''}|${recipeIds}`;
 }
 
 function scheduleUnderfilledRetry() {
@@ -165,6 +189,7 @@ onMounted(() => {
   connectObserver();
   connectResizeObserver();
   window.addEventListener('resize', queueUnderfilledLoadCheck);
+  queueUnderfilledLoadCheck();
 });
 
 onBeforeUnmount(() => {
@@ -187,6 +212,7 @@ watch(
     props.canLoadMore,
     props.error,
     props.searchQuery,
+    props.loadContextKey,
   ],
   queueUnderfilledLoadCheck,
   { flush: 'post' },

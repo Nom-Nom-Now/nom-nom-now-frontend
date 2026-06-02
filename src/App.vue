@@ -60,7 +60,7 @@ watch(
 .app-layout {
   display: flex;
   overflow: hidden;
-  height: 100vh;
+  height: 100dvh;
   background-color: var(--md-sys-color-background);
 }
 
@@ -80,6 +80,7 @@ watch(
 .main-section {
   display: flex;
   flex-direction: column;
+  min-height: 0;
   min-width: 0;
   flex-grow: 1;
   overflow: hidden;
@@ -88,6 +89,7 @@ watch(
 .content-area {
   padding: 0 1rem 1rem;
   flex-grow: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -97,10 +99,12 @@ watch(
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   border-radius: var(--nnn-radius-md);
   background-color: var(--md-sys-color-surface-container-lowest);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 @media (max-width: 760px) {
