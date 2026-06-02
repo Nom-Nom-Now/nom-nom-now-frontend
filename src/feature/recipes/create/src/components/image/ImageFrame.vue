@@ -10,7 +10,6 @@ type RecipeStoreInstance = ReturnType<typeof useCreateRecipeStore>;
 const store = inject<RecipeStoreInstance>('recipeStore')!;
 const { recipeImage } = toRefs(store);
 const fileInput = ref<HTMLInputElement | null>(null);
-const cameraInput = ref<HTMLInputElement | null>(null);
 const imagePreviewUrl = ref<string | null>(null);
 
 function buildPreviewUrl(file: File | null) {
@@ -64,25 +63,16 @@ function handleFileSelect(event: Event) {
   setRecipeImageFromInput(event.target as HTMLInputElement);
 }
 
-function handleCapture(event: Event) {
-  setRecipeImageFromInput(event.target as HTMLInputElement);
-}
-
 function removeImage() {
   store.setRecipeImage(null);
   if ('existingImageUrl' in store) {
     (store as { existingImageUrl: string | null }).existingImageUrl = null;
   }
   if (fileInput.value) fileInput.value.value = '';
-  if (cameraInput.value) cameraInput.value.value = '';
 }
 
 function openGallery() {
   fileInput.value?.click();
-}
-
-function openCamera() {
-  cameraInput.value?.click();
 }
 
 const isDragging = ref(false);
@@ -145,15 +135,10 @@ function onDrop(event: DragEvent) {
     </div>
 
     <div class="actions">
-      <md-filled-button @click="openCamera">
-        <md-icon slot="icon">photo_camera</md-icon>
+      <md-filled-button @click="openGallery">
+        <md-icon slot="icon">add_photo_alternate</md-icon>
         {{ t('feature.recipes.createRecipe.image.takePhoto') }}
       </md-filled-button>
-
-      <md-outlined-button @click="openGallery">
-        <md-icon slot="icon">photo_library</md-icon>
-        {{ t('feature.recipes.createRecipe.image.fromGallery') }}
-      </md-outlined-button>
     </div>
 
     <input
@@ -162,14 +147,6 @@ function onDrop(event: DragEvent) {
       accept="image/*"
       class="hidden-input"
       @change="handleFileSelect"
-    />
-    <input
-      ref="cameraInput"
-      type="file"
-      accept="image/*"
-      capture="environment"
-      class="hidden-input"
-      @change="handleCapture"
     />
   </div>
 </template>

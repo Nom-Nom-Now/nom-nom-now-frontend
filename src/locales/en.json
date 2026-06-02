@@ -58,6 +58,15 @@
       "privacy": "Privacy",
       "imprint": "Imprint"
     },
+    "account": {
+      "menuLabel": "Open account menu for {name}",
+      "logout": "Sign out",
+      "logoutError": "Sign out failed.",
+      "deleteAccount": "Delete account",
+      "deleteDialogTitle": "Delete account?",
+      "deleteDialogDescription": "Your account and all of your recipes will be permanently deleted. This action cannot be undone.",
+      "deleteError": "Account could not be deleted."
+    },
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
@@ -226,7 +235,7 @@
         },
         "image": {
           "heading": "Image",
-          "takePhoto": "Take Photo",
+          "takePhoto": "Select Photo",
           "fromGallery": "Choose from Gallery",
           "removeImage": "Remove",
           "noImage": "No image selected yet",

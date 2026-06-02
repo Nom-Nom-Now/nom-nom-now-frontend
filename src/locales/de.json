@@ -58,6 +58,15 @@
       "privacy": "Datenschutz",
       "imprint": "Impressum"
     },
+    "account": {
+      "menuLabel": "Kontomenü für {name} öffnen",
+      "logout": "Abmelden",
+      "logoutError": "Abmelden fehlgeschlagen.",
+      "deleteAccount": "Konto löschen",
+      "deleteDialogTitle": "Konto löschen?",
+      "deleteDialogDescription": "Dein Konto und alle deine Rezepte werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteError": "Konto konnte nicht gelöscht werden."
+    },
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
@@ -236,7 +245,7 @@
         },
         "image": {
           "heading": "Foto",
-          "takePhoto": "Foto aufnehmen",
+          "takePhoto": "Foto auswählen",
           "fromGallery": "Aus Galerie wählen",
           "removeImage": "Entfernen",
           "noImage": "Noch kein Foto ausgewählt",
