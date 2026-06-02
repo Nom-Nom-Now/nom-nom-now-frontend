@@ -96,9 +96,15 @@ function onNameInput(event: Event) {
 <style scoped>
 .ingredient-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-left: 2rem;
   align-items: center;
+}
+
+.ingredient-row md-outlined-text-field {
+  flex: 1 1 12rem;
+  min-width: 0;
 }
 
 .select-wrapper {
@@ -106,6 +112,7 @@ function onNameInput(event: Event) {
   height: 56px;
   display: inline-flex;
   align-items: center;
+  flex: 0 0 8rem;
   min-width: 88px;
 }
 
@@ -193,5 +200,15 @@ function onNameInput(event: Event) {
 
 .remove-btn {
   color: var(--md-sys-color-error);
+}
+
+@media (max-width: 700px) {
+  .ingredient-row {
+    margin-left: 0;
+  }
+
+  .select-wrapper {
+    flex: 1 1 8rem;
+  }
 }
 </style>

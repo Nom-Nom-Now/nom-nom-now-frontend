@@ -81,18 +81,24 @@ const stepNavigationItems = [
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 100%;
 }
 
 .progressBox {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 4rem;
+  min-height: 4rem;
+  flex-shrink: 0;
+  overflow-x: auto;
   border-radius: 1rem;
   background-color: var(--md-sys-color-surface-container);
 }
 
 .createBox {
+  flex: 1;
+  min-height: 0;
   margin-top: 1rem;
+  padding-bottom: 2rem;
 }
 </style>

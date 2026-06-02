@@ -246,41 +246,39 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   --select-width: 20%;
 }
 
-.search-field {
+.frame > div {
   width: 100%;
+  min-width: 0;
+}
+
+.search-field {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .search-dropdown {
   position: relative;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .super-category-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   gap: 1rem;
   margin-top: 1rem;
-}
-
-@media (min-width: 40rem) {
-  .super-category-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 64rem) {
-  .super-category-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 90rem) {
-  .super-category-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .dropdown-panel {
@@ -293,7 +291,10 @@ onBeforeUnmount(() => {
   border: 0.0625rem solid #c7c7c7;
   border-radius: 0.75rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  max-width: 100%;
   max-height: 16rem;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -301,8 +302,14 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
   padding: 0.75rem 1rem;
   cursor: pointer;
+}
+
+.dropdown-option span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .dropdown-option:hover {
@@ -320,11 +327,18 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  max-width: 100%;
+  min-width: 0;
   padding: 0.35rem 0.75rem;
   border: 0.0625rem solid #c7c7c7;
   border-radius: 999rem;
   background: #f3f3f3;
   font-size: 0.9rem;
+}
+
+.chip span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .chip-remove {
@@ -340,6 +354,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .super-category-title {
