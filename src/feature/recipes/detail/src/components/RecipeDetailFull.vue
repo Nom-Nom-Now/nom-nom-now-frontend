@@ -64,12 +64,12 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
-const { currentUsername } = useAuth();
+const { currentUsername: authCurrentUsername } = useAuth();
 
 const showDeleteDialog = ref(false);
 
 const activeUsername = computed(
-  () => props.currentUsername || currentUsername.value,
+  () => props.currentUsername || authCurrentUsername.value,
 );
 
 const isOwner = computed(() => {
