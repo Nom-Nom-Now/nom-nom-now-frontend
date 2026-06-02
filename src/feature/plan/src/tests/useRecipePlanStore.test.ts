@@ -8,6 +8,7 @@ import type {
 
 const serviceMocks = vi.hoisted(() => ({
   fetchWeeklyRecipePlan: vi.fn(),
+  refreshWeeklyRecipePlan: vi.fn(),
   refreshRecipePlanDay: vi.fn(),
   saveWeeklyRecipePlan: vi.fn(),
 }));
@@ -65,6 +66,7 @@ describe('useRecipePlanStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     serviceMocks.fetchWeeklyRecipePlan.mockReset();
+    serviceMocks.refreshWeeklyRecipePlan.mockReset();
     serviceMocks.refreshRecipePlanDay.mockReset();
     serviceMocks.saveWeeklyRecipePlan.mockReset();
   });
@@ -95,5 +97,26 @@ describe('useRecipePlanStore', () => {
       null,
       null,
     ]);
+  });
+
+  it('refreshes a whole week through the backend instead of the paginated recipe list', async () => {
+    serviceMocks.refreshWeeklyRecipePlan.mockResolvedValue([
+      createPlannedRecipe(
+        '2026-06-01',
+        createRecipeResponse(21, 'Frisch erstelltes Rezept'),
+      ),
+    ]);
+
+    const store = useRecipePlanStore();
+
+    await store.fetchRecipes(new Date('2026-06-01T00:00:00'), undefined, true);
+
+    expect(serviceMocks.fetchWeeklyRecipePlan).not.toHaveBeenCalled();
+    expect(serviceMocks.refreshWeeklyRecipePlan).toHaveBeenCalledWith(
+      new Date('2026-06-01T00:00:00'),
+    );
+    expect(serviceMocks.saveWeeklyRecipePlan).not.toHaveBeenCalled();
+    expect(store.recipes).toHaveLength(7);
+    expect(store.recipes[0]?.title).toBe('Frisch erstelltes Rezept');
   });
 });
