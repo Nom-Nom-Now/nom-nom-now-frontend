@@ -19,6 +19,7 @@
       </button>
 
       <md-menu
+        class="account-action-menu"
         anchor="account-menu-anchor"
         :open="isAccountMenuOpen"
         @closed="isAccountMenuOpen = false"
@@ -46,6 +47,7 @@
       </p>
 
       <md-dialog
+        class="account-delete-dialog"
         :open="isDeleteDialogOpen"
         @closed="isDeleteDialogOpen = false"
       >
@@ -164,6 +166,8 @@ async function confirmDeleteAccount() {
 
 <style scoped>
 .header-container {
+  position: relative;
+  z-index: 20000;
   height: 4.5rem;
   background-color: var(--md-sys-color-surface);
   padding: 0 2rem;
@@ -190,6 +194,12 @@ async function confirmDeleteAccount() {
 .account-menu-container {
   position: relative;
   display: flex;
+  z-index: 20001;
+}
+
+.account-action-menu,
+.account-delete-dialog {
+  z-index: 20002;
 }
 
 .user-profile {
@@ -256,7 +266,7 @@ async function confirmDeleteAccount() {
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  z-index: 10;
+  z-index: 20003;
   width: max-content;
   max-width: 18rem;
   margin: 0;

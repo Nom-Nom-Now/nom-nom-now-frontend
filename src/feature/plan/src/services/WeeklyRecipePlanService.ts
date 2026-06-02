@@ -75,6 +75,30 @@ export async function saveWeeklyRecipePlan(
   return (await response.json()) as RecipePlanResponseDto[];
 }
 
+export async function refreshWeeklyRecipePlan(
+  weekStart: Date,
+): Promise<RecipePlanResponseDto[]> {
+  const dateKey = formatDateOnly(weekStart);
+  const url = new URL(
+    `${API_BASE_URL}/api/recipe-plans/refresh`,
+    globalThis.location.origin,
+  );
+  url.searchParams.set('weekStart', dateKey);
+
+  const response = await apiFetch(toRequestUrl(url), {
+    method: 'PATCH',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `PATCH /api/recipe-plans/refresh?weekStart=${dateKey} failed (${response.status})`,
+    );
+  }
+
+  return (await response.json()) as RecipePlanResponseDto[];
+}
+
 export async function refreshRecipePlanDay(
   planDate: Date,
 ): Promise<RecipePlanResponseDto> {

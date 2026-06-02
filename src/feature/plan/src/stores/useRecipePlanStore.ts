@@ -8,6 +8,7 @@ import {
 import {
   formatDateOnly,
   fetchWeeklyRecipePlan,
+  refreshWeeklyRecipePlan,
   refreshRecipePlanDay,
   saveWeeklyRecipePlan,
   type RecipePlanResponseDto,
@@ -56,6 +57,17 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
     error.value = null;
 
     try {
+      if (weekStart && forceRandom) {
+        const refreshedPlan = await refreshWeeklyRecipePlan(weekStart);
+
+        if (refreshedPlan.length === 0) {
+          throw new Error('No recipes available for creating a weekly plan.');
+        }
+
+        recipes.value = mapPlanToWeekSlots(refreshedPlan, weekStart);
+        return;
+      }
+
       if (weekStart && !forceRandom) {
         const savedPlan = await fetchWeeklyRecipePlan(weekStart);
 

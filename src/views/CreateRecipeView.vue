@@ -12,8 +12,10 @@ import CreateRecipeProgressBar from '../feature/recipes/create/src/components/Cr
 .viewContainer {
   display: flex;
   height: 100%;
+  min-height: 0;
   width: 100%;
-
-  margin: 1rem;
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 </style>

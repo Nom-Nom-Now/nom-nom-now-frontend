@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes-grid-scroll">
+  <div ref="scrollContainer" class="recipes-grid-scroll">
     <div v-if="isLoading && recipes.length === 0" class="loading">Laden...</div>
     <div v-else-if="error && recipes.length === 0" class="status status--error">
       {{ error }}
@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RecipeBox from './RecipeBox.vue';
 import type { Recipe } from '../shared/types';
 import RecipeDetailPage from '../../../detail/src/components/RecipeDetailPage.vue';
@@ -65,27 +65,90 @@ function switchToFullscreen() {
 }
 
 const loadMoreSentinel = ref<HTMLElement | null>(null);
+const scrollContainer = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
+let resizeObserver: ResizeObserver | null = null;
+let underfilledCheckQueued = false;
 
 function maybeLoadMore(entries: IntersectionObserverEntry[]) {
-  if (entries.some((entry) => entry.isIntersecting) && props.canLoadMore) {
+  if (entries.some((entry) => entry.isIntersecting) && shouldLoadMore()) {
     emit('loadMore');
   }
 }
 
+function shouldLoadMore() {
+  return (
+    props.recipes.length > 0 &&
+    props.canLoadMore &&
+    !props.isLoading &&
+    !props.error
+  );
+}
+
+function queueUnderfilledLoadCheck() {
+  if (underfilledCheckQueued) return;
+  underfilledCheckQueued = true;
+
+  nextTick(() => {
+    underfilledCheckQueued = false;
+    const container = scrollContainer.value;
+
+    if (!container || !shouldLoadMore()) return;
+
+    const hasScrollableOverflow =
+      container.scrollHeight > container.clientHeight + 2;
+
+    if (!hasScrollableOverflow) {
+      emit('loadMore');
+    }
+  });
+}
+
 function connectObserver() {
   observer?.disconnect();
-  if (!loadMoreSentinel.value) return;
+  if (!loadMoreSentinel.value || !scrollContainer.value) return;
   observer = new IntersectionObserver(maybeLoadMore, {
-    root: loadMoreSentinel.value.parentElement,
+    root: scrollContainer.value,
     rootMargin: '320px',
   });
   observer.observe(loadMoreSentinel.value);
 }
 
-onMounted(connectObserver);
-onBeforeUnmount(() => observer?.disconnect());
+function connectResizeObserver() {
+  resizeObserver?.disconnect();
+  if (!scrollContainer.value || typeof ResizeObserver === 'undefined') return;
+
+  resizeObserver = new ResizeObserver(queueUnderfilledLoadCheck);
+  resizeObserver.observe(scrollContainer.value);
+}
+
+onMounted(() => {
+  connectObserver();
+  connectResizeObserver();
+  window.addEventListener('resize', queueUnderfilledLoadCheck);
+});
+
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  resizeObserver?.disconnect();
+  window.removeEventListener('resize', queueUnderfilledLoadCheck);
+});
 watch(loadMoreSentinel, connectObserver);
+watch(scrollContainer, () => {
+  connectObserver();
+  connectResizeObserver();
+});
+watch(
+  () => [
+    props.recipes.length,
+    props.isLoading,
+    props.canLoadMore,
+    props.error,
+    props.searchQuery,
+  ],
+  queueUnderfilledLoadCheck,
+  { flush: 'post' },
+);
 </script>
 
 <style scoped>
@@ -99,6 +162,7 @@ watch(loadMoreSentinel, connectObserver);
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-auto-rows: 24rem;
   gap: 1.25rem;
 }
 

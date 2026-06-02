@@ -67,6 +67,7 @@ const displayCategories = computed(() =>
 .recipe-box {
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-width: 0;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--nnn-radius-md);
@@ -88,7 +89,8 @@ const displayCategories = computed(() =>
 .recipe-image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 11;
+  height: 11rem;
+  flex: 0 0 11rem;
   background: var(--md-sys-color-surface-container-high);
 }
 
@@ -129,6 +131,7 @@ const displayCategories = computed(() =>
   flex: 1;
   flex-direction: column;
   gap: 0.5rem;
+  min-height: 0;
   padding: 0.9rem 1rem 1rem;
 }
 
@@ -148,6 +151,8 @@ const displayCategories = computed(() =>
   display: flex;
   flex-wrap: wrap;
   gap: 0.375rem;
+  max-height: 3.1rem;
+  overflow: hidden;
 }
 
 .tag {
@@ -162,6 +167,7 @@ const displayCategories = computed(() =>
 
 .recipe-description {
   display: -webkit-box;
+  flex: 1;
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
