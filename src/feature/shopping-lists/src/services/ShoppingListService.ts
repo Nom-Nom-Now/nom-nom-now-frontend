@@ -22,13 +22,20 @@ export type ShoppingListItemDto = {
   unit: string;
 };
 
+export type ShoppingListDayRequestDto = {
+  planDate: string;
+  peopleCount: number;
+};
+
 export async function generateShoppingList(
   weekStart: Date,
+  days: ShoppingListDayRequestDto[] = [],
 ): Promise<ShoppingListDto> {
   const url = new URL(
     `${API_BASE_URL}/api/shopping-lists`,
     globalThis.location.origin,
   );
+  const weekStartKey = formatDateOnly(weekStart);
 
   const response = await apiFetch(toRequestUrl(url), {
     method: 'POST',
@@ -36,9 +43,16 @@ export async function generateShoppingList(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      weekStart: formatDateOnly(weekStart),
-    }),
+    body: JSON.stringify(
+      days.length > 0
+        ? {
+            weekStart: weekStartKey,
+            days,
+          }
+        : {
+            weekStart: weekStartKey,
+          },
+    ),
   });
 
   if (!response.ok) {

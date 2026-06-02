@@ -128,6 +128,7 @@ function recipePlan(planDate: string, name: string) {
       name,
       instructions: 'Cook it.',
       cookingTime: 45,
+      servings: 1,
       pricePerPerson: 450,
       imageUrl: null,
       ownerName: 'Chef',

@@ -42,6 +42,42 @@ describe('ShoppingListService', () => {
     expect(response.id).toBe(7);
   });
 
+  it('should include daily people counts when generating a shopping list', async () => {
+    stubFetch({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: 7,
+          weekStart: '2026-05-25',
+          createdAt: '2026-05-31T12:00:00Z',
+          items: [],
+        }),
+    });
+
+    await generateShoppingList(new Date(2026, 4, 25), [
+      { planDate: '2026-05-25', peopleCount: 2 },
+      { planDate: '2026-05-26', peopleCount: 4 },
+    ]);
+
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
+      method: 'POST',
+      credentials: 'include',
+      redirect: 'manual',
+    });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('Content-Type')).toBe(
+      'application/json',
+    );
+    expect(JSON.parse(init?.body as string)).toEqual({
+      weekStart: '2026-05-25',
+      days: [
+        { planDate: '2026-05-25', peopleCount: 2 },
+        { planDate: '2026-05-26', peopleCount: 4 },
+      ],
+    });
+  });
+
   it('should fetch shopping list summaries', async () => {
     stubFetch({
       ok: true,

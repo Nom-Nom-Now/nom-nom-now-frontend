@@ -12,6 +12,7 @@ type RecipeResponseDto = {
   name: string;
   instructions: string | null;
   cookingTime: number | null;
+  servings: number | null;
   pricePerPerson: number | null;
   imageUrl: string | null;
   ownerName: string;
@@ -179,6 +180,7 @@ function mapRecipe(recipe: RecipeResponseDto): Recipe {
     title: recipe.name,
     imageUrl: resolveBackendResourceUrl(recipe.imageUrl),
     duration: formatDuration(recipe.cookingTime),
+    servings: recipe.servings ?? 1,
     cost: formatCost(recipe.pricePerPerson),
     description: recipe.instructions?.trim() || 'Keine Beschreibung vorhanden.',
     owner: recipe.ownerName || 'Unbekannter Koch',

@@ -34,6 +34,7 @@ function mapStateToRequestDto(
     name: state.recipeName.trim(),
     instructions: state.instructions?.trim() ?? '',
     cookingTime: state.cookingTime ?? 0,
+    servings: Math.max(1, state.servings),
     pricePerPerson: state.pricePerPerson ?? undefined,
     categoryIds: state.categoryIds ?? [],
     components: state.ingredients

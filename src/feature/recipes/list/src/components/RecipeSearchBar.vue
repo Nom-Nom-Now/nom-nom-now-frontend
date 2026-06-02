@@ -1,27 +1,32 @@
 <template>
-  <div>
-    <md-filled-text-field
+  <label class="search-field">
+    <md-icon>search</md-icon>
+    <input
       v-model="query"
-      placeholder="Search Recipes"
+      :placeholder="t('feature.recipes.list.searchPlaceholder')"
       type="text"
-      class="search-field"
-      no-asterisk
+    />
+    <button
+      v-if="query"
+      type="button"
+      class="clear-search-button"
+      :aria-label="t('feature.recipes.list.filterClear')"
+      @click="clearSearch"
     >
-      <md-icon slot="leading-icon">search</md-icon>
-      <md-icon-button v-if="query" slot="trailing-icon" @click="clearSearch">
-        <md-icon>close</md-icon>
-      </md-icon-button>
-    </md-filled-text-field>
-  </div>
+      <md-icon>close</md-icon>
+    </button>
+  </label>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   'update:search': [query: string];
 }>();
 
+const { t } = useI18n();
 const query = ref('');
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 let skipNextWatch = false;
@@ -54,11 +59,56 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .search-field {
-  width: 25rem;
-  height: 3rem;
-  --md-filled-text-field-container-shape: 16px;
-  --md-filled-text-field-active-indicator-height: 0px;
-  --md-filled-text-field-hover-active-indicator-height: 0px;
-  --md-filled-text-field-focus-active-indicator-height: 0px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 20rem;
+  max-width: 26rem;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: var(--nnn-radius-pill);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.search-field md-icon {
+  --md-icon-size: 22px;
+  flex-shrink: 0;
+}
+
+.search-field input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.search-field input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 1;
+}
+
+.clear-search-button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+}
+
+.clear-search-button:hover {
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.clear-search-button md-icon {
+  --md-icon-size: 18px;
 }
 </style>

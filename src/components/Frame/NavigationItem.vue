@@ -24,16 +24,16 @@ const iconSrc = new URL(
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 3.1875rem;
-  gap: 0.25rem;
+  gap: 0.3rem;
 
   user-select: none;
   -webkit-user-select: none;
 }
 
 .item-label {
-  width: 5rem;
-  font-size: 0.78rem;
+  width: 5.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   line-height: 1.05;
   text-align: center;
   overflow-wrap: anywhere;
@@ -45,11 +45,20 @@ const iconSrc = new URL(
   height: 2rem;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  border-radius: var(--nnn-radius-md);
+  transition: background-color 0.18s ease;
 }
 
 .icon {
   height: 24px;
   width: 24px;
+}
+
+@media (max-width: 760px) {
+  .item-label {
+    width: 4.75rem;
+    font-size: 0.625rem;
+    line-height: 1;
+  }
 }
 </style>

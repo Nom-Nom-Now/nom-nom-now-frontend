@@ -1,7 +1,7 @@
 <template>
   <div class="category-filter">
     <md-filled-tonal-button class="filter-button" @click="toggleDropdown">
-      <md-icon slot="icon">filter_list</md-icon>
+      <md-icon slot="icon">tune</md-icon>
       {{ t('feature.recipes.list.filterCategories') }}
       <span v-if="selectedCategoryIds.length > 0" class="badge">{{
         selectedCategoryIds.length
@@ -195,8 +195,20 @@ onMounted(() => {
 }
 
 .filter-button {
-  height: 3rem;
-  --md-filled-tonal-button-container-shape: 16px;
+  height: 2.5rem;
+  --md-filled-tonal-button-container-shape: var(--nnn-radius-xs);
+  --md-filled-tonal-button-container-color: transparent;
+  --md-filled-tonal-button-label-text-color: var(
+    --md-sys-color-on-surface-variant
+  );
+  --md-filled-tonal-button-hover-label-text-color: var(
+    --md-sys-color-on-surface
+  );
+  --md-filled-tonal-button-hover-state-layer-color: var(
+    --md-sys-color-surface-container-high
+  );
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-xs);
 }
 
 .badge {
@@ -225,9 +237,10 @@ onMounted(() => {
   left: 0;
   z-index: 100;
   margin-top: 0.5rem;
-  background: var(--md-sys-color-surface-container);
-  border-radius: 16px;
-  box-shadow: var(--md-sys-elevation-2, 0 2px 6px rgba(0, 0, 0, 0.15));
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-md);
+  box-shadow: var(--nnn-elevation-2);
   min-width: 280px;
   max-width: 360px;
   max-height: 400px;
@@ -253,7 +266,7 @@ onMounted(() => {
 }
 
 .super-category-group {
-  border-radius: 8px;
+  border-radius: var(--nnn-radius-xs);
 }
 
 .super-category-header {
@@ -262,7 +275,7 @@ onMounted(() => {
   gap: 0.5rem;
   padding: 0.5rem;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--nnn-radius-xs);
   user-select: none;
 }
 
@@ -294,7 +307,7 @@ onMounted(() => {
   gap: 0.5rem;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--nnn-radius-xs);
 }
 
 .category-item:hover {

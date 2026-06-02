@@ -33,6 +33,7 @@ describe('createRecipeService', () => {
     name: 'Pasta Bolognese',
     instructions: 'Alles kochen.',
     cookingTime: 30,
+    servings: 4,
     pricePerPerson: null,
     imageUrl: null,
     ownerName: 'chef',
@@ -68,6 +69,7 @@ describe('createRecipeService', () => {
     const body = JSON.parse(options.body as string);
     expect(body.name).toBe('Pasta Bolognese');
     expect(body.cookingTime).toBe(30);
+    expect(body.servings).toBe(4);
     expect(body.categoryIds).toEqual([1, 3]);
     expect(body.components).toHaveLength(2);
     expect(body.components[0]).toEqual({
@@ -110,6 +112,22 @@ describe('createRecipeService', () => {
     );
     expect(body.name).toBe('Salat');
     expect(body.instructions).toBe('Waschen und schneiden.');
+  });
+
+  it('should preserve line breaks inside instructions', async () => {
+    const state = buildValidState({
+      instructions: '  Schritt 1\nSchritt 2\n\n- Punkt A\n- Punkt B  ',
+    });
+
+    await createRecipe(state);
+
+    const body = JSON.parse(
+      ((fetch as ReturnType<typeof vi.fn>).mock.calls[0]![1] as RequestInit)
+        .body as string,
+    );
+    expect(body.instructions).toBe(
+      'Schritt 1\nSchritt 2\n\n- Punkt A\n- Punkt B',
+    );
   });
 
   it('should throw on non-ok response', async () => {

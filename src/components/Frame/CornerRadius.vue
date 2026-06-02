@@ -20,7 +20,7 @@
   width: 100%;
   height: 100%;
 
-  background-color: #fff;
+  background-color: var(--md-sys-color-surface);
   border-top-left-radius: 1rem;
 }
 </style>

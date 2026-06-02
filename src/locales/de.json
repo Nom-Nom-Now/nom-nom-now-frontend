@@ -25,7 +25,9 @@
     "edit": "Bearbeiten",
     "cancel": "Abbrechen",
     "delete": "Löschen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "back": "Zurück",
+    "fullscreen": "Vollbild"
   },
   "feature": {
     "browse": {
@@ -41,6 +43,7 @@
       "viewAll": "Alle ansehen",
       "loadingPlan": "Wochenplan wird geladen...",
       "noRecipe": "Kein Rezept",
+      "addRecipe": "Rezept hinzufügen",
       "shoppingTitle": "Einkauf",
       "openShoppingLists": "Zu den Einkaufslisten",
       "loadingShoppingLists": "Einkaufslisten werden geladen...",
@@ -51,19 +54,43 @@
     },
     "login": {
       "title": "Anmelden",
-      "headline": "Willkommen bei Nom Nom Now",
+      "headline": "Willkommen zurück",
       "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
-      "description": "Melde dich mit Google an, um fortzufahren.",
+      "description": "Melde dich mit deinem Google-Konto an, um loszulegen.",
       "button": "Mit Google anmelden",
+      "brandEyebrow": "Dein Wochenplaner für die Küche",
+      "brandHeadline": "Plane deine Woche.",
+      "brandHeadlineAccent": "Koche entspannt.",
+      "brandDescription": "Erstelle Rezepte, lass dir einen Wochenplan zusammenstellen und verwandle ihn mit einem Klick in deine Einkaufsliste.",
+      "featurePlan": "Automatischer Wochenplan",
+      "featureRecipes": "Deine Rezeptsammlung",
+      "featureShopping": "Einkaufsliste auf Knopfdruck",
+      "divider": "Sicher & ohne Passwort",
       "privacy": "Datenschutz",
       "imprint": "Impressum"
+    },
+    "account": {
+      "menuLabel": "Kontomenü für {name} öffnen",
+      "logout": "Abmelden",
+      "logoutError": "Abmelden fehlgeschlagen.",
+      "deleteAccount": "Konto löschen",
+      "deleteDialogTitle": "Konto löschen?",
+      "deleteDialogDescription": "Dein Konto und alle deine Rezepte werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteError": "Konto konnte nicht gelöscht werden."
     },
     "plan": {
       "title": "Plan",
       "refreshPlan": "Refresh",
       "refreshDay": "{day} refreshen",
       "generateShoppingList": "Einkaufsliste generieren",
+      "peopleCountLabel": "Personen",
+      "peopleCountValue": "{count} Pers.",
+      "decreasePeople": "Weniger Personen für {day}",
+      "increasePeople": "Mehr Personen für {day}",
       "today": "Heute",
+      "addRecipe": "Rezept hinzufügen",
+      "regeneratingRecipe": "Rezept wird geladen",
+      "emptyDayCopy": "Für diesen Tag neu generieren",
       "loading": "Lädt..."
     },
     "shoppingLists": {
@@ -83,6 +110,11 @@
         "title": "Rezept-Details",
         "byOwner": "Rezept von: {owner}",
         "ingredientsTitle": "Zutaten",
+        "preparationTitle": "Zubereitung",
+        "pricePerPerson": "Preis pro Person",
+        "createdBy": "Erstellt von",
+        "durationLabel": "Zubereitungszeit",
+        "peopleLabel": "Personen",
         "noDescription": "Keine Beschreibung vorhanden.",
         "unknownChef": "Unbekannter Koch"
       },
@@ -232,7 +264,7 @@
         },
         "image": {
           "heading": "Foto",
-          "takePhoto": "Foto aufnehmen",
+          "takePhoto": "Foto auswählen",
           "fromGallery": "Aus Galerie wählen",
           "removeImage": "Entfernen",
           "noImage": "Noch kein Foto ausgewählt",
@@ -257,6 +289,7 @@
       "list": {
         "createButton": "Neues Rezept",
         "myRecipesOnly": "Meine Rezepte",
+        "searchPlaceholder": "Rezepte suchen…",
         "filterCategories": "Kategorien",
         "filterClear": "Zurücksetzen",
         "filterApply": "Anwenden",

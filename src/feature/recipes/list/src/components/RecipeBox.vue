@@ -1,80 +1,99 @@
 <template>
   <div class="recipe-box" @click="$emit('select')">
-    <MdLabel size="large" class="recipe-title"> {{ recipe.title }} </MdLabel>
-
     <div class="recipe-image-container">
+      <div v-if="!recipe.imageUrl" class="recipe-image-placeholder">
+        <md-icon>restaurant</md-icon>
+      </div>
       <img
         v-if="recipe.imageUrl"
         :src="recipe.imageUrl"
         :alt="recipe.title"
         class="recipe-image"
       />
-      <div v-else class="recipe-image-placeholder">
-        <md-icon>restaurant</md-icon>
-      </div>
-    </div>
-
-    <div class="recipe-meta">
-      <div class="recipe-time">
-        <md-icon>schedule</md-icon>
-        <MdText size="medium"> {{ recipe.duration }} </MdText>
-      </div>
       <span class="recipe-cost">{{ recipe.cost }}</span>
     </div>
-    <MdText class="recipe-description"> {{ recipe.description }} </MdText>
+
+    <div class="recipe-body">
+      <h3 class="recipe-title">{{ recipe.title }}</h3>
+
+      <div
+        v-if="displayCategories.length"
+        class="recipe-tags"
+        aria-label="Recipe categories"
+      >
+        <span
+          v-for="category in displayCategories"
+          :key="category"
+          class="tag"
+        >
+          {{ category }}
+        </span>
+      </div>
+
+      <p class="recipe-description">{{ recipe.description }}</p>
+
+      <div class="recipe-meta">
+        <md-icon>schedule</md-icon>
+        <span>{{ recipe.duration }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Recipe } from '../shared/types';
-import MdLabel from '../../../../../components/MdLabel.vue';
-import MdText from '../../../../../components/MdText.vue';
 
-defineProps<{
+const props = defineProps<{
   recipe: Recipe;
 }>();
 
 defineEmits<{
   select: [];
 }>();
+
+const { t, te } = useI18n();
+
+const displayCategories = computed(() =>
+  props.recipe.categories.slice(0, 2).map((category) => {
+    const key = `feature.recipes.createRecipe.categories.${category}`;
+    return te(key) ? t(key) : category;
+  }),
+);
 </script>
 
 <style scoped>
 .recipe-box {
-  background-color: var(--md-sys-color-inverse-on-surface);
-  border-radius: 1rem;
-  padding: 0.25rem 1.25rem 1.25rem 1.25rem;
-  width: 18rem;
-  height: 26rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  min-width: 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-md);
+  background-color: var(--md-sys-color-surface-container-low);
+  overflow: hidden;
   cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .recipe-box:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.recipe-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  margin: 0;
-  color: var(--md-sys-color-on-surface);
+  border-color: transparent;
+  box-shadow: var(--nnn-elevation-2);
 }
 
 .recipe-image-container {
+  position: relative;
   width: 100%;
-  height: 12rem;
-  min-height: 12rem;
-  max-height: 12rem;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  flex-shrink: 0;
+  aspect-ratio: 16 / 11;
+  background: var(--md-sys-color-surface-container-high);
 }
 
 .recipe-image {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -82,45 +101,89 @@ defineEmits<{
 }
 
 .recipe-image-placeholder {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
   color: var(--md-sys-color-on-surface-variant);
-  background: var(--md-sys-color-surface-container-high);
 }
 
 .recipe-image-placeholder md-icon {
-  font-size: 3rem;
+  --md-icon-size: 3rem;
+}
+
+.recipe-cost {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--nnn-radius-pill);
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.recipe-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.recipe-title {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.tag {
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--nnn-radius-xs);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.recipe-description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .recipe-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding: 0.5rem 0;
-}
-
-.recipe-time {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  margin-top: auto;
   color: var(--md-sys-color-on-surface-variant);
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
-.recipe-cost {
-  font-size: 1rem;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.recipe-description {
-  margin: 0;
-  text-align: left;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--md-sys-color-on-surface);
-  line-height: 1.4;
+.recipe-meta md-icon {
+  --md-icon-size: 18px;
 }
 </style>

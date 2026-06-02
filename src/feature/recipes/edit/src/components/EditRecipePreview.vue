@@ -57,6 +57,7 @@ const previewRecipe = computed<Recipe>(() => {
     title: store.recipeName || '',
     imageUrl: resolvedImageUrl,
     duration: store.cookingTime ? `${store.cookingTime} Min.` : '',
+    servings: store.servings,
     cost:
       store.pricePerPerson === null
         ? ''

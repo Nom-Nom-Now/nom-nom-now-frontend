@@ -35,6 +35,7 @@ function mapPayloadToRequestDto(
     name: payload.recipeName.trim(),
     instructions: payload.instructions?.trim() ?? '',
     cookingTime: payload.cookingTime ?? 0,
+    servings: Math.max(1, payload.servings),
     pricePerPerson: payload.pricePerPerson ?? undefined,
     categoryIds: payload.categoryIds ?? [],
     components: payload.ingredients
