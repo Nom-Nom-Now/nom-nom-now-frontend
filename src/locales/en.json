@@ -88,6 +88,9 @@
       "decreasePeople": "Fewer people for {day}",
       "increasePeople": "More people for {day}",
       "today": "Today",
+      "addRecipe": "Add recipe",
+      "regeneratingRecipe": "Loading recipe",
+      "emptyDayCopy": "Regenerate this day",
       "loading": "Loading..."
     },
     "shoppingLists": {

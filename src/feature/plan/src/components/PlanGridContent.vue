@@ -36,6 +36,29 @@
             :recipe="recipes[index]"
             @select="selectedRecipe = recipes[index]"
           />
+          <button
+            v-else
+            class="empty-day-card"
+            type="button"
+            :disabled="isDayRefreshing(day.key)"
+            @click.stop="emit('refresh-day', index)"
+          >
+            <span class="empty-day-icon">
+              <md-icon>
+                {{ isDayRefreshing(day.key) ? 'sync' : 'add' }}
+              </md-icon>
+            </span>
+            <span class="empty-day-title">
+              {{
+                isDayRefreshing(day.key)
+                  ? t('feature.plan.regeneratingRecipe')
+                  : t('feature.plan.addRecipe')
+              }}
+            </span>
+            <span class="empty-day-copy">
+              {{ t('feature.plan.emptyDayCopy') }}
+            </span>
+          </button>
           <div v-if="recipes[index]" class="people-control">
             <span class="people-label">
               <md-icon>group</md-icon>
@@ -96,7 +119,7 @@ import RecipeDetailPage from '../../../recipes/detail/src/components/RecipeDetai
 const { t } = useI18n();
 
 const props = defineProps<{
-  recipes: Recipe[];
+  recipes: Array<Recipe | null>;
   isLoading: boolean;
   error: string | null;
   currentWeek: Date;
@@ -253,6 +276,65 @@ function updatePeopleCount(dayKey: string, peopleCount: number) {
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--nnn-radius-sm);
   background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.empty-day-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 15.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-md);
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.empty-day-card:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: var(--nnn-elevation-1);
+}
+
+.empty-day-card:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.empty-day-icon {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.empty-day-icon md-icon {
+  --md-icon-size: 1.4rem;
+}
+
+.empty-day-title {
+  color: var(--md-sys-color-on-surface);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.empty-day-copy {
+  max-width: 9rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .people-label,

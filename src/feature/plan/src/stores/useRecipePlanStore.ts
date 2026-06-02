@@ -15,7 +15,7 @@ import {
 } from '../services/WeeklyRecipePlanService.ts';
 
 export const useRecipePlanStore = defineStore('recipePlan', () => {
-  const recipes = ref<Recipe[]>([]);
+  const recipes = ref<Array<Recipe | null>>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const refreshingDayKeys = ref<string[]>([]);
@@ -60,9 +60,7 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
         const savedPlan = await fetchWeeklyRecipePlan(weekStart);
 
         if (savedPlan.length > 0) {
-          recipes.value = savedPlan
-            .sort((left, right) => left.planDate.localeCompare(right.planDate))
-            .map(mapPlannedRecipe);
+          recipes.value = mapPlanToWeekSlots(savedPlan, weekStart);
           return;
         }
       }
@@ -94,9 +92,7 @@ export const useRecipePlanStore = defineStore('recipePlan', () => {
           throw new Error('Meal plan could not be created.');
         }
 
-        recipes.value = savedPlan
-          .sort((left, right) => left.planDate.localeCompare(right.planDate))
-          .map(mapPlannedRecipe);
+        recipes.value = mapPlanToWeekSlots(savedPlan, weekStart);
         return;
       }
 
@@ -203,6 +199,25 @@ function createSeededRandom(seed: number): () => number {
 
 function mapPlannedRecipe(plan: RecipePlanResponseDto): Recipe {
   return mapRecipeResponse(plan.recipe);
+}
+
+function mapPlanToWeekSlots(
+  plan: RecipePlanResponseDto[],
+  weekStart: Date,
+): Array<Recipe | null> {
+  const recipesByDate = new Map(
+    plan.map((plannedRecipe) => [
+      plannedRecipe.planDate,
+      mapPlannedRecipe(plannedRecipe),
+    ]),
+  );
+
+  return Array.from({ length: 7 }, (_, dayIndex) => {
+    const date = new Date(weekStart);
+    date.setDate(date.getDate() + dayIndex);
+
+    return recipesByDate.get(formatDateOnly(date)) ?? null;
+  });
 }
 
 function mapRecipeResponse(recipe: RecipeResponseDto): Recipe {
