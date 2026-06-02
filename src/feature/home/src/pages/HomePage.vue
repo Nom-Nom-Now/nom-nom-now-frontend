@@ -1,113 +1,189 @@
 <template>
   <div class="home-dashboard">
-    <section class="today-panel">
-      <div class="panel-copy">
-        <span class="eyebrow">{{ t('feature.home.todayEyebrow') }}</span>
-        <h2>{{ t('feature.home.todayTitle') }}</h2>
-        <p v-if="todayRecipe" class="today-recipe-title">
-          {{ todayRecipe.title }}
-        </p>
-        <p v-else class="muted">
+    <section class="hero">
+      <img
+        v-if="todayRecipe?.imageUrl"
+        class="hero-image"
+        :src="todayRecipe.imageUrl"
+        :alt="todayRecipe.title"
+      />
+      <div v-else class="hero-placeholder">
+        <md-icon>restaurant</md-icon>
+      </div>
+      <div class="hero-scrim"></div>
+
+      <div class="hero-content">
+        <span class="hero-eyebrow">
+          <md-icon>today</md-icon>
+          {{ t('feature.home.todayEyebrow') }} · {{ formattedToday }}
+        </span>
+
+        <h2 class="hero-title">
+          {{ todayRecipe?.title || t('feature.home.todayTitle') }}
+        </h2>
+
+        <p v-if="!todayRecipe" class="hero-empty">
           {{ planError || t('feature.home.noTodayRecipe') }}
         </p>
 
-        <div v-if="todayRecipe" class="recipe-meta">
-          <span>{{ todayRecipe.duration }}</span>
-          <span>{{ todayRecipe.cost }}</span>
+        <div v-if="todayRecipe" class="hero-meta">
+          <span class="hero-chip">
+            <md-icon>schedule</md-icon>
+            {{ todayRecipe.duration }}
+          </span>
+          <span class="hero-chip cost">{{ todayRecipe.cost }}</span>
         </div>
 
-        <md-filled-button type="button" @click="navigateTo('/plan')">
-          <md-icon slot="icon">calendar_month</md-icon>
+        <button class="hero-button" type="button" @click="navigateTo('/plan')">
+          <md-icon>calendar_month</md-icon>
           {{ t('feature.home.openPlan') }}
-        </md-filled-button>
-      </div>
-
-      <div class="today-image-frame">
-        <img
-          v-if="todayRecipe?.imageUrl"
-          :src="todayRecipe.imageUrl"
-          :alt="todayRecipe.title"
-        />
-        <md-icon v-else>restaurant</md-icon>
+        </button>
       </div>
     </section>
 
-    <section class="week-panel">
-      <div class="section-header">
-        <h3>{{ t('feature.home.weekTitle') }}</h3>
-        <md-text-button type="button" @click="navigateTo('/plan')">
-          {{ t('feature.home.viewAll') }}
-        </md-text-button>
-      </div>
+    <div class="home-main-row">
+      <section class="week-section">
+        <div class="section-header">
+          <h3>{{ t('feature.home.weekTitle') }}</h3>
+          <button class="link-button" type="button" @click="navigateTo('/plan')">
+            {{ t('feature.home.openPlan') }}
+            <md-icon>chevron_right</md-icon>
+          </button>
+        </div>
 
-      <div v-if="isPlanLoading" class="status">
-        {{ t('feature.home.loadingPlan') }}
-      </div>
-      <div v-else class="week-strip">
-        <article
-          v-for="day in weekDays"
-          :key="day.key"
-          class="day-summary"
-          :class="{ 'is-today': day.isToday }"
-        >
-          <span class="day-name">{{ day.name }}</span>
-          <span class="day-date">{{ day.dateNum }}</span>
-          <strong>{{ day.recipeTitle || t('feature.home.noRecipe') }}</strong>
-        </article>
-      </div>
-    </section>
+        <div v-if="isPlanLoading" class="status">
+          {{ t('feature.home.loadingPlan') }}
+        </div>
 
-    <section class="shopping-panel">
-      <div class="section-header">
-        <h3>{{ t('feature.home.shoppingTitle') }}</h3>
-        <md-text-button type="button" @click="navigateTo('/shopping-lists')">
-          {{ t('feature.home.openShoppingLists') }}
-        </md-text-button>
-      </div>
+        <div v-else class="agenda">
+          <article
+            v-for="day in weekDays"
+            :key="day.key"
+            class="agenda-row"
+            :class="{ 'is-today': day.isToday }"
+            @click="navigateTo('/plan')"
+          >
+            <div class="agenda-date">
+              <span class="day-name">{{ day.shortName }}</span>
+              <span class="day-number">{{ day.dateNum }}</span>
+            </div>
 
-      <div v-if="isShoppingListsLoading" class="status">
-        {{ t('feature.home.loadingShoppingLists') }}
-      </div>
-      <div v-else-if="latestShoppingList" class="shopping-summary">
-        <span class="shopping-week">
-          {{ formatWeek(latestShoppingList.weekStart) }}
-        </span>
-        <strong>
-          {{
-            t('feature.shoppingLists.itemCount', {
-              count: latestShoppingList.itemCount,
-            })
-          }}
-        </strong>
-        <span class="muted">{{
-          formatCreatedAt(latestShoppingList.createdAt)
-        }}</span>
-      </div>
-      <div v-else class="status">
-        {{ shoppingListsError || t('feature.home.noShoppingList') }}
-      </div>
-    </section>
+            <div class="agenda-thumb" :class="{ empty: !day.recipeTitle }">
+              <img
+                v-if="day.imageUrl"
+                :src="day.imageUrl"
+                :alt="day.recipeTitle || ''"
+              />
+              <md-icon v-else-if="day.recipeTitle">restaurant</md-icon>
+            </div>
 
-    <section class="actions-panel">
-      <h3>{{ t('feature.home.actionsTitle') }}</h3>
-      <div class="action-grid">
-        <md-outlined-button
-          type="button"
-          @click="navigateTo('/recipes/create')"
-        >
-          <md-icon slot="icon">add</md-icon>
-          {{ t('feature.home.createRecipe') }}
-        </md-outlined-button>
-        <md-outlined-button type="button" @click="navigateTo('/recipes')">
-          <md-icon slot="icon">menu_book</md-icon>
-          {{ t('feature.home.browseRecipes') }}
-        </md-outlined-button>
-        <md-outlined-button type="button" @click="navigateTo('/plan')">
-          <md-icon slot="icon">calendar_month</md-icon>
-          {{ t('feature.home.openPlan') }}
-        </md-outlined-button>
+            <div class="agenda-main">
+              <strong :class="{ empty: !day.recipeTitle }">
+                {{ day.recipeTitle || t('feature.home.noRecipe') }}
+              </strong>
+              <span v-if="day.recipeTitle" class="agenda-sub">
+                {{ day.duration }}
+                <template v-if="day.isToday">
+                  · {{ t('feature.home.todayEyebrow') }}
+                </template>
+              </span>
+              <span v-else class="agenda-add">
+                <md-icon>add</md-icon>
+                {{ t('feature.home.addRecipe') }}
+              </span>
+            </div>
+
+            <md-icon v-if="day.recipeTitle" class="agenda-go">
+              chevron_right
+            </md-icon>
+          </article>
+        </div>
+      </section>
+
+      <div class="home-right-column">
+        <section class="shopping-section">
+          <div class="section-header">
+            <h3>{{ t('feature.home.shoppingTitle') }}</h3>
+            <span v-if="latestShoppingList" class="count-pill">
+              {{
+                t('feature.shoppingLists.itemCount', {
+                  count: latestShoppingList.itemCount,
+                })
+              }}
+            </span>
+          </div>
+
+          <div v-if="isShoppingListsLoading" class="status">
+            {{ t('feature.home.loadingShoppingLists') }}
+          </div>
+          <div v-else-if="latestShoppingList" class="shopping-summary">
+            <p class="shopping-sub">
+              {{ formatWeek(latestShoppingList.weekStart) }} ·
+              {{ formatCreatedAt(latestShoppingList.createdAt) }}
+            </p>
+
+            <div class="shopping-stat-row">
+              <span class="shopping-dot"></span>
+              <span class="shopping-stat-label">{{
+                t('feature.home.shoppingTitle')
+              }}</span>
+              <strong>
+                {{
+                  t('feature.shoppingLists.itemCount', {
+                    count: latestShoppingList.itemCount,
+                  })
+                }}
+              </strong>
+            </div>
+
+            <button
+              class="link-button shopping-link"
+              type="button"
+              @click="navigateTo(`/shopping-lists/${latestShoppingList.id}`)"
+            >
+              {{ t('feature.home.openShoppingLists') }}
+              <md-icon>chevron_right</md-icon>
+            </button>
+          </div>
+          <div v-else class="status">
+            {{ shoppingListsError || t('feature.home.noShoppingList') }}
+          </div>
+        </section>
+
+        <section class="actions-section">
+          <div class="section-header">
+            <h3>{{ t('feature.home.actionsTitle') }}</h3>
+          </div>
+
+          <div class="actions-grid">
+            <button
+              class="action-tile primary"
+              type="button"
+              @click="navigateTo('/recipes/create')"
+            >
+              <span class="tile-icon"><md-icon>add</md-icon></span>
+              <span>{{ t('feature.home.createRecipe') }}</span>
+            </button>
+            <button
+              class="action-tile tonal"
+              type="button"
+              @click="navigateTo('/recipes')"
+            >
+              <span class="tile-icon"><md-icon>menu_book</md-icon></span>
+              <span>{{ t('feature.home.browseRecipes') }}</span>
+            </button>
+            <button
+              class="action-tile tonal"
+              type="button"
+              @click="navigateTo('/plan')"
+            >
+              <span class="tile-icon"><md-icon>calendar_month</md-icon></span>
+              <span>{{ t('feature.home.openPlan') }}</span>
+            </button>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -157,6 +233,14 @@ const todayRecipe = computed(() =>
 
 const latestShoppingList = computed(() => shoppingLists.value[0] ?? null);
 
+const formattedToday = computed(() =>
+  new Intl.DateTimeFormat(locale.value, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(new Date()),
+);
+
 const weekDays = computed(() => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -173,9 +257,12 @@ const weekDays = computed(() => {
     return {
       key: dayKey,
       name: t(`common.weekdays.${weekdayKey}`),
+      shortName: formatShortWeekday(date),
       dateNum: date.getDate(),
       isToday: date.getTime() === today.getTime(),
       recipeTitle: recipe?.title,
+      duration: recipe?.duration,
+      imageUrl: recipe?.imageUrl,
     };
   });
 });
@@ -244,6 +331,12 @@ function getStartOfWeek(date: Date): Date {
   return new Date(d.setDate(diff));
 }
 
+function formatShortWeekday(date: Date) {
+  return new Intl.DateTimeFormat(locale.value, { weekday: 'short' })
+    .format(date)
+    .replace(/\.$/, '');
+}
+
 function formatWeek(weekStart: string) {
   return formatWeekRange(weekStart, locale.value);
 }
@@ -281,220 +374,545 @@ const weekDayKeys = [
 
 <style scoped>
 .home-dashboard {
+  display: flex;
   width: 100%;
   min-height: 100%;
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(20rem, 0.7fr);
-  grid-template-areas:
-    'today shopping'
-    'week actions';
-  gap: 1rem;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
   box-sizing: border-box;
 }
 
-.today-panel,
-.week-panel,
-.shopping-panel,
-.actions-panel {
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface-container-lowest);
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.today-panel {
-  grid-area: today;
-  min-height: 18rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem);
-  gap: 1.5rem;
-  padding: 1.5rem;
-  align-items: center;
-}
-
-.panel-copy {
+.hero {
+  position: relative;
+  min-height: 15rem;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--md-sys-color-primary);
-}
-
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-h2 {
-  font-size: 1.75rem;
-  line-height: 1.15;
-}
-
-h3 {
-  font-size: 1rem;
-}
-
-.today-recipe-title {
-  font-size: 1.375rem;
-  font-weight: 650;
-}
-
-.muted,
-.status {
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.recipe-meta {
-  display: flex;
-  gap: 0.5rem;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.recipe-meta span,
-.item-count {
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
-.today-image-frame {
-  aspect-ratio: 4 / 3;
-  border-radius: 8px;
+  flex-shrink: 0;
+  align-items: flex-end;
   overflow: hidden;
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  border-radius: var(--nnn-radius-lg);
+  background: var(--md-sys-color-surface-container-high);
+  box-shadow: var(--nnn-elevation-2);
+}
+
+.hero-image,
+.hero-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image {
+  object-fit: cover;
+}
+
+.hero-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  background:
+    radial-gradient(
+      80% 90% at 100% 0%,
+      var(--md-sys-color-primary-container) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      135deg,
+      var(--md-sys-color-surface-container-high) 0%,
+      var(--md-sys-color-surface-container-low) 100%
+    );
+}
+
+.hero-placeholder md-icon {
+  --md-icon-size: 5rem;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 40, 28, 0.94) 0%,
+    rgba(15, 40, 28, 0.74) 42%,
+    rgba(15, 40, 28, 0.1) 80%,
+    rgba(15, 40, 28, 0) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  max-width: 34rem;
+  padding: 1.75rem 2rem;
+  color: #ffffff;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--nnn-radius-pill);
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow md-icon {
+  --md-icon-size: 16px;
+  color: var(--md-sys-color-tertiary-container);
+}
+
+.hero-title {
+  margin: 0 0 0.85rem;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.hero-empty {
+  max-width: 28rem;
+  margin: 0 0 1.4rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.45;
+}
+
+.hero-meta {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--nnn-radius-pill);
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.hero-chip md-icon {
+  --md-icon-size: 17px;
+}
+
+.hero-chip.cost {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.hero-button,
+.link-button,
+.action-tile {
+  font: inherit;
+  cursor: pointer;
+}
+
+.hero-button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  height: 2.85rem;
+  padding: 0 1.4rem;
+  border: none;
+  border-radius: var(--nnn-radius-md);
+  background: #ffffff;
+  color: var(--md-sys-color-on-primary-container);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.today-image-frame img {
+.hero-button:hover {
+  filter: brightness(0.94);
+}
+
+.hero-button md-icon {
+  --md-icon-size: 20px;
+}
+
+.home-main-row {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1.55fr) minmax(19rem, 1fr);
+  gap: 1.25rem;
+  min-height: 0;
+}
+
+.week-section,
+.home-right-column {
+  min-height: 0;
+}
+
+.week-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.3rem 0.5rem;
+  border: none;
+  border-radius: var(--nnn-radius-xs);
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.link-button:hover {
+  background: var(--md-sys-color-surface-container);
+}
+
+.link-button md-icon {
+  --md-icon-size: 18px;
+}
+
+.agenda {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.agenda-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: var(--nnn-radius-md);
+  background: var(--md-sys-color-surface-container-low);
+  cursor: pointer;
+  transition:
+    box-shadow 0.16s ease,
+    transform 0.16s ease;
+}
+
+.agenda-row:hover {
+  transform: translateX(2px);
+  box-shadow: var(--nnn-elevation-1);
+}
+
+.agenda-row.is-today {
+  border-color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-primary-container);
+}
+
+.agenda-date {
+  display: flex;
+  width: 3rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.day-name {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.day-number {
+  margin-top: 0.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.agenda-row.is-today .day-name,
+.agenda-row.is-today .day-number {
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.agenda-thumb {
+  position: relative;
+  width: 3.4rem;
+  height: 3.4rem;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--nnn-radius-sm);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.agenda-thumb.empty {
+  border: 1px dashed var(--md-sys-color-outline-variant);
+  background: transparent;
+}
+
+.agenda-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.today-image-frame md-icon {
-  font-size: 4rem;
-  width: 4rem;
-  height: 4rem;
+.agenda-thumb md-icon {
+  --md-icon-size: 1.4rem;
 }
 
-.week-panel {
-  grid-area: week;
-  padding: 1rem;
+.agenda-main {
+  flex: 1;
+  min-width: 0;
 }
 
-.shopping-panel {
-  grid-area: shopping;
-  padding: 1rem;
+.agenda-main strong {
+  display: block;
+  overflow: hidden;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.actions-panel {
-  grid-area: actions;
-  padding: 1rem;
+.agenda-main strong.empty {
+  color: var(--md-sys-color-outline);
+  font-weight: 500;
 }
 
-.section-header {
-  display: flex;
+.agenda-sub {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.82rem;
+}
+
+.agenda-row.is-today .agenda-sub {
+  color: var(--md-sys-color-on-primary-container);
+  opacity: 0.85;
+}
+
+.agenda-add {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.3rem;
+  color: var(--md-sys-color-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-.week-strip {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(6.5rem, 1fr));
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
+.agenda-add md-icon {
+  --md-icon-size: 18px;
 }
 
-.day-summary {
-  min-height: 7rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface-container-low);
+.agenda-go {
+  --md-icon-size: 22px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.home-right-column {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 1.25rem;
 }
 
-.day-summary.is-today {
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
+.shopping-section {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  padding: 1.35rem 1.4rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--nnn-radius-lg);
 }
 
-.day-name {
-  font-size: 0.8125rem;
-  color: var(--md-sys-color-on-surface-variant);
-  text-transform: capitalize;
-}
-
-.day-summary.is-today .day-name {
-  color: var(--md-sys-color-on-primary-container);
-}
-
-.day-date {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.day-summary strong {
-  font-size: 0.875rem;
-  line-height: 1.2;
+.count-pill {
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--nnn-radius-pill);
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .shopping-summary {
   display: flex;
+  flex: 1;
+  min-height: 0;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
-.shopping-week {
-  font-weight: 650;
+.shopping-sub {
+  margin: -0.4rem 0 0.9rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-.action-grid {
+.shopping-stat-row {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  font-size: 0.95rem;
+}
+
+.shopping-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+}
+
+.shopping-stat-label {
+  flex: 1;
+}
+
+.shopping-stat-row strong {
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+}
+
+.shopping-link {
+  align-self: flex-start;
+  margin-top: 0.6rem;
+}
+
+.actions-section {
+  flex-shrink: 0;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-  margin-top: 1rem;
+}
+
+.action-tile {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  border: none;
+  border-radius: var(--nnn-radius-md);
+  color: var(--md-sys-color-on-surface);
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.action-tile:hover {
+  filter: brightness(1.02);
+  box-shadow: var(--nnn-elevation-1);
+}
+
+.action-tile.primary {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.action-tile.tonal {
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.tile-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.action-tile.primary .tile-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.action-tile.tonal .tile-icon {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.tile-icon md-icon {
+  --md-icon-size: 22px;
+}
+
+.action-tile span:last-child {
+  overflow-wrap: anywhere;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 .status {
   padding: 1rem 0;
-}
-
-md-filled-button,
-md-outlined-button,
-md-text-button {
-  --md-filled-button-container-shape: 8px;
-  --md-outlined-button-container-shape: 8px;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 @media (max-width: 900px) {
-  .home-dashboard {
+  .home-main-row {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      'today'
-      'week'
-      'shopping'
-      'actions';
+  }
+
+  .agenda-row {
+    min-height: 3.6rem;
   }
 }
 
 @media (max-width: 640px) {
-  .today-panel {
+  .home-dashboard {
+    padding: 1rem;
+  }
+
+  .hero {
+    min-height: 17rem;
+  }
+
+  .hero-content {
+    padding: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions-grid {
     grid-template-columns: 1fr;
   }
 }
