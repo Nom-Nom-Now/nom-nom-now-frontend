@@ -23,9 +23,15 @@ describe('authService', () => {
 
     const createdAt = await fetchAccountCreatedAt();
 
-    expect(fetch).toHaveBeenCalledWith('/auth/me', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(createdAt?.toISOString()).toBe('2026-05-01T12:30:00.000Z');
   });
 

@@ -25,14 +25,20 @@ describe('ShoppingListService', () => {
 
     const response = await generateShoppingList(new Date(2026, 4, 25));
 
-    expect(fetch).toHaveBeenCalledWith('/api/shopping-lists', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      redirect: 'manual',
       body: JSON.stringify({ weekStart: '2026-05-25' }),
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('Content-Type')).toBe(
+      'application/json',
+    );
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(response.id).toBe(7);
   });
 
@@ -52,9 +58,15 @@ describe('ShoppingListService', () => {
 
     const response = await fetchShoppingLists();
 
-    expect(fetch).toHaveBeenCalledWith('/api/shopping-lists', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(response).toHaveLength(1);
   });
 
@@ -72,9 +84,15 @@ describe('ShoppingListService', () => {
 
     const response = await fetchShoppingList(7);
 
-    expect(fetch).toHaveBeenCalledWith('/api/shopping-lists/7', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(response.items[0]?.ingredientName).toBe('Tomato');
   });
 
@@ -96,10 +114,16 @@ describe('ShoppingListService', () => {
 
     await deleteShoppingList(7);
 
-    expect(fetch).toHaveBeenCalledWith('/api/shopping-lists/7', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       method: 'DELETE',
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
   });
 
   it('should reject empty shopping list ids before deleting', async () => {

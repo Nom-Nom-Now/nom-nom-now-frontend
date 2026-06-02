@@ -29,10 +29,16 @@ describe('WeeklyRecipePlanService', () => {
 
     const response = await refreshRecipePlanDay(new Date(2026, 4, 27));
 
-    expect(fetch).toHaveBeenCalledWith('/api/recipe-plans/2026-05-27/refresh', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       method: 'PATCH',
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(response.planDate).toBe('2026-05-27');
   });
 });

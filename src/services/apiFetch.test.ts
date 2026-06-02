@@ -18,10 +18,16 @@ describe('apiFetch', () => {
 
     await apiFetch('/api/test', { method: 'POST' });
 
-    expect(fetch).toHaveBeenCalledWith('/api/test', {
+    const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       method: 'POST',
       credentials: 'include',
+      redirect: 'manual',
     });
+    expect(init?.headers).toBeInstanceOf(Headers);
+    expect((init?.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
   });
 
   it('redirects once an authenticated request is rejected', async () => {
@@ -32,6 +38,20 @@ describe('apiFetch', () => {
     await expect(apiFetch('/api/test')).rejects.toBeInstanceOf(
       UnauthorizedError,
     );
+    expect(onUnauthorized).toHaveBeenCalledOnce();
+  });
+
+  it('redirects when an auth request becomes an opaque OAuth redirect', async () => {
+    const onUnauthorized = vi.fn();
+    setUnauthorizedHandler(onUnauthorized);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ status: 0, type: 'opaqueredirect' }),
+    );
+
+    await expect(apiFetch('/api/test')).rejects.toMatchObject({
+      status: 401,
+    });
     expect(onUnauthorized).toHaveBeenCalledOnce();
   });
 });

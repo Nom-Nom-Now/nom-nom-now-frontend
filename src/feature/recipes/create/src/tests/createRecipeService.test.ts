@@ -172,7 +172,11 @@ describe('createRecipeService', () => {
     const [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]!;
     expect(options.method).toBe('POST');
     expect(options.credentials).toBe('include');
-    expect(options.headers).toBeUndefined();
+    expect(options.headers).toBeInstanceOf(Headers);
+    expect((options.headers as Headers).get('Content-Type')).toBeNull();
+    expect((options.headers as Headers).get('X-Requested-With')).toBe(
+      'XMLHttpRequest',
+    );
     expect(options.body).toBeInstanceOf(FormData);
 
     const formData = options.body as FormData;

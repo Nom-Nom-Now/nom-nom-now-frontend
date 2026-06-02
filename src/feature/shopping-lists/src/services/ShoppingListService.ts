@@ -102,7 +102,7 @@ export async function deleteShoppingList(id: number | string): Promise<void> {
     globalThis.location.origin,
   );
 
-  const response = await fetch(toRequestUrl(url), {
+  const response = await apiFetch(toRequestUrl(url), {
     method: 'DELETE',
     credentials: 'include',
   });
