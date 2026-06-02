@@ -116,11 +116,25 @@ defineEmits<{
 }
 
 .recipe-description {
+  width: 100%;
+  min-height: 0;
+  max-height: calc(1.4em * 3);
   margin: 0;
   text-align: left;
   font-size: 1rem;
   font-weight: 500;
   color: var(--md-sys-color-on-surface);
   line-height: 1.4;
+  overflow: hidden;
+}
+
+.recipe-description :deep(span) {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 </style>
